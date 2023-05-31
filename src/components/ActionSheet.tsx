@@ -1,52 +1,70 @@
-import { Modal, Alert, Pressable, Text, StyleSheet, View, Button } from "react-native";
+import {
+  Modal,
+  Alert,
+  Pressable,
+  Text,
+  StyleSheet,
+  View,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import { useState } from "react";
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 function ActionSheet() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const tabBarHeight = useBottomTabBarHeight();
-  
+
   return (
     <View>
-      <Button title="click" onPress={() => { setModalVisible(true) }} />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={{marginBottom: 0 && tabBarHeight, ...styles.modalView}}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text>Cancel</Text>
-            </Pressable>
+        <Button
+          title="click me"
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        />
+        <TouchableOpacity style={{backgroundColor: "orange", width: 500, height: 1000}} onPress={()=> console.log(1)}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View
+              style={{ marginBottom: 0 && tabBarHeight, ...styles.modalView }}
+            >
+              <Text style={styles.modalText}>Hello World!</Text>
+              <Pressable onPress={() => setModalVisible(!modalVisible)}>
+                <Text>Cancel</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </TouchableOpacity>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    alignItems: 'center',
-    position: 'relative'
+    alignItems: "center",
+    position: "relative",
   },
   modalView: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    position: 'absolute',
+    alignItems: "center",
+    position: "absolute",
     width: "100%",
     bottom: 0,
-    minHeight: 500
+    minHeight: 500,
   },
   button: {
     borderRadius: 20,
@@ -54,19 +72,19 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: '#F194FF',
+    backgroundColor: "#F194FF",
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: "#2196F3",
   },
   textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

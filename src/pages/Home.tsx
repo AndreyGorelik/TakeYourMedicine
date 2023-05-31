@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View, StyleSheet } from 'react-native';
 import FloatingButton from "../components/FloatingButton";
 import ActionSheet from "../components/ActionSheet";
-
+import BottomSheet from "../components/BottomSheet";
 function HomePage() {
   const { t } = useTranslation();
 
@@ -16,7 +16,7 @@ function HomePage() {
       <Text>{t('greeting')}</Text>
       <Text>AA22213123hgfhfg222AA</Text>
       <FloatingButton onPress={sayHi}/>
-      <ActionSheet/>
+      <BottomSheet/>
     </View>
   );
 }
