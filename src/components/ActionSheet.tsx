@@ -1,90 +1,147 @@
-import {
-  Modal,
-  Alert,
-  Pressable,
-  Text,
-  StyleSheet,
-  View,
-  Button,
-  TouchableOpacity,
-} from "react-native";
-import { useState } from "react";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useImperativeHandle } from "react";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedProps,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 
-function ActionSheet() {
-  const [modalVisible, setModalVisible] = useState(false);
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
-  const tabBarHeight = useBottomTabBarHeight();
+const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
 
-  return (
-    <View>
-        <Button
-          title="click me"
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        />
-        <TouchableOpacity style={{backgroundColor: "orange", width: 500, height: 1000}} onPress={()=> console.log(1)}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View
-              style={{ marginBottom: 0 && tabBarHeight, ...styles.modalView }}
-            >
-              <Text style={styles.modalText}>Hello World!</Text>
-              <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                <Text>Cancel</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-      </TouchableOpacity>
-    </View>
-  );
+interface MenuItem {
+  label: string
+  function: () => void
 }
 
+interface BottomSheetProps {
+  opt: MenuItem[]
+};
+
+export interface BottomSheetRefProps {
+  scrollTo: (destination: number) => void;
+  isActive: boolean;
+};
+
+const ActionSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
+  ({ opt }, ref) => {
+    const translateY = useSharedValue(0);
+    const active = useSharedValue(false);
+
+    const scrollTo = (destination: number) => {
+      "worklet";
+      active.value = destination !== 0;
+
+      translateY.value = withSpring(destination, { damping: 50 });
+    };
+
+    const isActive = active.value
+
+    useImperativeHandle(ref, () => ({ scrollTo, isActive }), [
+      scrollTo,
+      isActive,
+    ]);
+
+    const context = useSharedValue({ y: 0 });
+    const gesture = Gesture.Pan()
+      .onStart(() => {
+        context.value = { y: translateY.value };
+      })
+      .onUpdate((event) => {
+        translateY.value = event.translationY + context.value.y;
+        translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
+      })
+      .onEnd(() => {
+        if (translateY.value > -SCREEN_HEIGHT / 3) {
+          scrollTo(0);
+        } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
+          scrollTo(MAX_TRANSLATE_Y);
+        }
+      });
+
+    const rBottomSheetStyle = useAnimatedStyle(() => {
+      const borderRadius = interpolate(
+        translateY.value,
+        [MAX_TRANSLATE_Y + 50, MAX_TRANSLATE_Y],
+        [25, 5],
+        Extrapolate.CLAMP
+      );
+
+      return {
+        borderRadius,
+        transform: [{ translateY: translateY.value }],
+      };
+    });
+
+    const rBackdropStyle = useAnimatedStyle(() => {
+      return {
+        opacity: withTiming(active.value ? 1 : 0),
+      };
+    }, []);
+
+    const rBackdropProps = useAnimatedProps(() => {
+      return {
+        pointerEvents: active.value ? "auto" : "none",
+      } as any;
+    }, []);
+
+    return (
+      <>
+        <Animated.View
+          onTouchStart={() => {
+            scrollTo(0);
+          }}
+          animatedProps={rBackdropProps}
+          style={[
+            {
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: "rgba(0,0,0,0.4)",
+            },
+            rBackdropStyle,
+          ]}
+        />
+        <GestureDetector gesture={gesture}>
+          <Animated.View
+            style={[styles.bottomSheetContainer, rBottomSheetStyle]}
+          >
+            <View
+              style={{ flex: 1, backgroundColor: "orange", borderRadius: 25 }}
+            >
+              {
+                opt.map(item => {
+                  return <Text>{item.label}</Text>
+                })
+              }
+            </View>
+          </Animated.View>
+        </GestureDetector>
+      </>
+    );
+  }
+);
+
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    alignItems: "center",
-    position: "relative",
-  },
-  modalView: {
+  bottomSheetContainer: {
+    height: SCREEN_HEIGHT,
+    width: SCREEN_WIDTH,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
     position: "absolute",
-    width: "100%",
-    bottom: 0,
-    minHeight: 500,
+    top: SCREEN_HEIGHT,
+    borderRadius: 25,
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
+  line: {
+    width: 75,
+    height: 4,
+    backgroundColor: "grey",
+    alignSelf: "center",
+    marginVertical: 15,
+    borderRadius: 2,
   },
 });
 
