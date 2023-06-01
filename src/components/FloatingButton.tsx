@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const FloatingButton = ({onPress}:{onPress: () => void}) => {
@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         position: "absolute",
         bottom: 20,
-        right: 20
+        right: 20,
+        zIndex: 999
     },
 });
 
