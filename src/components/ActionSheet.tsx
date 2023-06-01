@@ -1,9 +1,9 @@
-import { Dimensions, StyleSheet, Text, View } from "react-native";
-import React, { useCallback, useEffect, useImperativeHandle } from "react";
+import { Dimensions, TouchableHighlight, StyleSheet, Text, View } from "react-native";
+import { useImperativeHandle, forwardRef } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { FlatList } from "react-native";
 import Animated, {
-  Extrapolate,
-  interpolate,
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
@@ -13,15 +13,15 @@ import Animated, {
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
-const MAX_TRANSLATE_Y = -screenHeight + 50;
-
+export const ACTION_SHEET_SIZE = -500
 interface MenuItem {
+  id: string
   label: string
   function: () => void
 }
 
 interface BottomSheetProps {
-  opt: MenuItem[]
+  options: MenuItem[]
 };
 
 export interface BottomSheetRefProps {
@@ -29,15 +29,16 @@ export interface BottomSheetRefProps {
   isActive: boolean;
 };
 
-const ActionSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
-  ({ opt }, ref) => {
+const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(
+  ({ options }, ref) => {
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
 
+    const tabBarHeight = useBottomTabBarHeight();
+    
     const scrollTo = (destination: number) => {
       "worklet";
       active.value = destination !== 0;
-
       translateY.value = withSpring(destination, { damping: 50 });
     };
 
@@ -54,35 +55,43 @@ const ActionSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
         context.value = { y: translateY.value };
       })
       .onUpdate((event) => {
+
         if (event.translationY < 0) return;
         translateY.value = event.translationY + context.value.y;
-        translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
       })
       .onEnd(() => {
-        if (translateY.value > -450) {
+        if (translateY.value > ACTION_SHEET_SIZE + 50) {
           scrollTo(0);
         } else {
-          scrollTo(-500);
+          scrollTo(ACTION_SHEET_SIZE);
         }
       });
 
-    const rBottomSheetStyle = useAnimatedStyle(() => {
+    const bottomSheetStyle = useAnimatedStyle(() => {
       return {
         transform: [{ translateY: translateY.value }],
       };
     });
 
-    const rBackdropStyle = useAnimatedStyle(() => {
+    const backdropStyle = useAnimatedStyle(() => {
       return {
         opacity: withTiming(active.value ? 1 : 0),
       };
     }, []);
 
-    const rBackdropProps = useAnimatedProps(() => {
+    const backdropProps = useAnimatedProps(() => {
       return {
         pointerEvents: active.value ? "auto" : "none",
       } as any;
     }, []);
+
+    const renderMenuItem = ({ item }: { item: MenuItem }) => {
+      return (
+        <TouchableHighlight onPress={() => item.function()} underlayColor={'gray'}>
+          <Text style={{ textAlign: "center", fontSize: 20, paddingVertical: 10 }}>{item.label}</Text>
+        </TouchableHighlight>
+      );
+    };
 
     return (
       <>
@@ -90,27 +99,25 @@ const ActionSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
           onTouchStart={() => {
             scrollTo(0);
           }}
-          animatedProps={rBackdropProps}
+          animatedProps={backdropProps}
           style={[
             {
               ...StyleSheet.absoluteFillObject,
               backgroundColor: "rgba(0,0,0,0.4)",
             },
-            rBackdropStyle,
+            backdropStyle,
           ]}
         />
         <GestureDetector gesture={gesture}>
           <Animated.View
-            style={[styles.bottomSheetContainer, rBottomSheetStyle]}
+            style={[styles.bottomSheetContainer, bottomSheetStyle, {paddingBottom: tabBarHeight * 2}]}
           >
-            <View
-              style={{ flex: 1, backgroundColor: "orange", borderRadius: 25 }}
-            >
-              {
-                opt.map(item => {
-                  return <Text>{item.label}</Text>
-                })
-              }
+            <View style={styles.innerSheetView}>
+                <FlatList
+                  data={options}
+                  renderItem={renderMenuItem}
+                  keyExtractor={item => item.id}
+                />
             </View>
           </Animated.View>
         </GestureDetector>
@@ -121,21 +128,21 @@ const ActionSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
 const styles = StyleSheet.create({
   bottomSheetContainer: {
-    height: screenHeight,
+    height: -ACTION_SHEET_SIZE,
     width: screenWidth,
     backgroundColor: "white",
     position: "absolute",
     top: screenHeight,
     borderRadius: 25,
+    zIndex: 9999,
+    flex: 1,
   },
-  line: {
-    width: 75,
-    height: 4,
-    backgroundColor: "grey",
-    alignSelf: "center",
-    marginVertical: 15,
-    borderRadius: 2,
-  },
+  innerSheetView: {
+    flex: 1,
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 25,
+  }
 });
 
 export default ActionSheet;
