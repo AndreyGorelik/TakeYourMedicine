@@ -1,11 +1,11 @@
-import Text from "../components/Text";
-import { useTranslation } from "react-i18next";
-import { View, StyleSheet, Alert, FlatList } from "react-native";
-import FloatingButton from "../components/FloatingButton";
-import ActionSheet, {ACTION_SHEET_SIZE} from "../components/ActionSheet";
-import { BottomSheetRefProps } from "../components/ActionSheet";
-import { useRef } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
+import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View, StyleSheet } from 'react-native';
+
+import ActionSheet, { BottomSheetRefProps, ACTION_SHEET_SIZE } from '../components/ActionSheet';
+import FloatingButton from '../components/FloatingButton';
+import Text from '../components/Text';
 
 function HomePage() {
   const { t } = useTranslation();
@@ -19,27 +19,24 @@ function HomePage() {
     } else {
       ref?.current?.scrollTo(ACTION_SHEET_SIZE);
     }
-  }
+  };
 
   const sayHi = () => {
-    navigation.navigate('Settings' as never)
-  }
+    navigation.navigate('Settings' as never);
+  };
 
   const options = [
-    { label: "Option 1", function: sayHi, id: "1" },
-    { label: "Option 2", function: sayHi, id: "2" },
-    { label: "Option 3", function: sayHi, id: "3" },
-    { label: "Option 4", function: sayHi, id: "4" }
-  ]
+    { label: 'Option 1', function: sayHi, id: '1' },
+    { label: 'Option 2', function: sayHi, id: '2' },
+    { label: 'Option 3', function: sayHi, id: '3' },
+    { label: 'Option 4', function: sayHi, id: '4' },
+  ];
 
   return (
     <View style={styles.view}>
-      <Text>{t("greeting")}</Text>
+      <Text>{t('greeting')}</Text>
       <FloatingButton onPress={onPress} />
-      <ActionSheet
-        ref={ref}
-        options={options}
-      />
+      <ActionSheet ref={ref} options={options} />
     </View>
   );
 }

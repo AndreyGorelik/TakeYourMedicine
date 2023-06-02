@@ -1,10 +1,10 @@
-import {Text as RNText} from 'react-native-paper';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
+import { Text as RNText } from 'react-native-paper';
 
-function Text({children}: {children: string}) {
-  const {colors} = useTheme();
+function Text({ children }: { children: string }) {
+  const { colors } = useTheme();
 
-  return <RNText style={{color: colors.text}}>{children}</RNText>;
+  return <RNText style={{ color: colors.text }}>{children}</RNText>;
 }
 
 export default Text;

@@ -1,9 +1,9 @@
 import i18n from 'i18next';
-import {initReactI18next} from 'react-i18next';
+import { initReactI18next } from 'react-i18next';
 
 import enTranslation from './src/locales/en.json';
-import ruTranslation from './src/locales/ru.json';
 import frTranslation from './src/locales/fr.json';
+import ruTranslation from './src/locales/ru.json';
 
 const resources = {
   en: {
@@ -17,13 +17,12 @@ const resources = {
   },
 };
 
-
 const languageDetector: any = {
   type: 'languageDetector',
   async: true,
   detect: (cb: (lang: string) => void) => cb('en'),
-  init: () => {},
-  cacheUserLanguage: () => {},
+  // init: () => {},
+  // cacheUserLanguage: () => {},
 };
 
 i18n

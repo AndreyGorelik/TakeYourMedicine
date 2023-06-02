@@ -1,29 +1,30 @@
-import {View, StyleSheet} from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View, StyleSheet } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
+import { Switch } from 'react-native-paper';
+
 import Text from '../components/Text';
-import {Switch} from 'react-native-paper';
-import {useState} from 'react';
-import {Dropdown} from 'react-native-element-dropdown';
-import {languagesList} from '../constants/languages';
-import {useTranslation} from 'react-i18next';
-import {useTheme} from '@react-navigation/native';
+import { languagesList } from '../constants/languages';
 
 interface LangItem {
   label: string;
   value: string;
 }
 
-function SettingsPage({changeTheme}: {changeTheme: () => void}) {
-  const {dark} = useTheme();
+function SettingsPage({ changeTheme }: { changeTheme: () => void }) {
+  const { dark } = useTheme();
   const [darkThemeSwitch, setDarkThemeSwitch] = useState(dark ? true : false);
   const [value, setValue] = useState('en');
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const switchTheme = () => {
     setDarkThemeSwitch(!darkThemeSwitch);
     changeTheme();
   };
 
-  const changeLanguage = (item: any) => {
+  const changeLanguage = (item: LangItem) => {
     setValue(item.value);
     i18n.changeLanguage(item.value);
   };
@@ -41,15 +42,13 @@ function SettingsPage({changeTheme}: {changeTheme: () => void}) {
           <Dropdown
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={
-              dark ? styles.selectedTextStyleDark : styles.selectedTextStyle
-            }
+            selectedTextStyle={dark ? styles.selectedTextStyleDark : styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
             containerStyle={dark ? styles.container : null}
             itemTextStyle={dark ? styles.itemText : null}
             data={languagesList}
-            activeColor={"gray"}
+            activeColor={'gray'}
             maxHeight={300}
             mode="modal"
             labelField="label"
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   iconContainer: {
-    backgroundColor: "orange"
+    backgroundColor: 'orange',
   },
   itemText: {
     color: 'white',
