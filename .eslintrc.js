@@ -18,6 +18,7 @@ module.exports = {
     'import',
     'eslint-plugin-no-inline-styles',
     'react-hooks',
+    'alias'
   ],
   rules: {
     indent: [0, 2, { SwitchCase: 1 }],
@@ -66,7 +67,10 @@ module.exports = {
       version: 'detect',
     },
     'import/resolver': {
-      typescript: {},
+      alias: {
+        map: [['~', './src']],
+        extensions: ['.ts', '.js', '.tsx'],
+      },
     },
     'import/ignore': ['node_modules(\\\\|/)react-native(\\\\|/)index\\.js$'],
   },

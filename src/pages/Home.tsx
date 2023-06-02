@@ -1,12 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
+import Text from 'components/Text';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, StyleSheet } from 'react-native';
 
 import ActionSheet, { BottomSheetRefProps, ACTION_SHEET_SIZE } from '../components/ActionSheet';
-import FloatingButton from '../components/FloatingButton';
-import Text from '../components/Text';
-
+import FloatingButton from 'components/FloatingButton';
 function HomePage() {
   const { t } = useTranslation();
   const ref = useRef<BottomSheetRefProps>(null);
