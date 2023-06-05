@@ -12,6 +12,8 @@ import SettingsButton from './src/components/SettingsButton';
 import useTheme from './src/hooks/useTheme';
 import HomePage from './src/pages/Home';
 import SettingsPage from './src/pages/Settings';
+import PillsStepOne from './src/pages/PillsStepOne';
+import PillsStepTwo from './src/pages/PillsStepTwo';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -47,6 +49,31 @@ function App() {
     );
   }
 
+  function Form() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="AddMedsStepOne"
+          component={PillsStepOne}
+          options={{
+            headerShown: true,
+            title: 'Добавление лекарства',
+            headerBackTitleVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="AddMedsStepTwo"
+          component={PillsStepTwo}
+          options={{
+            headerShown: true,
+            title: 'Добавление лекарства',
+            headerBackTitleVisible: false,
+          }}
+        />
+      </Stack.Navigator>
+    );
+  }
+
   return (
     <GestureHandlerRootView style={styles.view}>
       <NavigationContainer theme={theme.themeStyle}>
@@ -56,6 +83,7 @@ function App() {
           }}
         >
           <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+          <Stack.Screen name="Form" component={Form} options={{ headerShown: false }} />
           <Stack.Screen
             name="Settings"
             children={() => <SettingsPage changeTheme={theme.changeTheme} />}

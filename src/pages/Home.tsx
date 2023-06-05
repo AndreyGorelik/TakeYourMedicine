@@ -21,11 +21,11 @@ function HomePage() {
   };
 
   const sayHi = () => {
-    navigation.navigate('Settings' as never);
+    navigation.navigate('Form' as never);
   };
 
   const options = [
-    { label: 'Option 1', function: sayHi, id: '1' },
+    { label: 'Add pills', function: sayHi, id: '1' },
     { label: 'Option 2', function: sayHi, id: '2' },
     { label: 'Option 3', function: sayHi, id: '3' },
     { label: 'Option 4', function: sayHi, id: '4' },
