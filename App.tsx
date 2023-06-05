@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import ProgressTabBar from 'components/ProgressTabBar';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
@@ -11,9 +12,9 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import SettingsButton from './src/components/SettingsButton';
 import useTheme from './src/hooks/useTheme';
 import HomePage from './src/pages/Home';
-import SettingsPage from './src/pages/Settings';
 import PillsStepOne from './src/pages/PillsStepOne';
 import PillsStepTwo from './src/pages/PillsStepTwo';
+import SettingsPage from './src/pages/Settings';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -51,26 +52,20 @@ function App() {
 
   function Form() {
     return (
-      <Stack.Navigator>
-        <Stack.Screen
+      <Tab.Navigator tabBar={(props) => <ProgressTabBar {...props} />}>
+        <Tab.Screen
           name="AddMedsStepOne"
           component={PillsStepOne}
-          options={{
-            headerShown: true,
-            title: 'Добавление лекарства',
-            headerBackTitleVisible: false,
-          }}
+          options={{}}
+          initialParams={{ range: 50 }}
         />
-        <Stack.Screen
+        <Tab.Screen
           name="AddMedsStepTwo"
           component={PillsStepTwo}
-          options={{
-            headerShown: true,
-            title: 'Добавление лекарства',
-            headerBackTitleVisible: false,
-          }}
+          options={{}}
+          initialParams={{ range: 100 }}
         />
-      </Stack.Navigator>
+      </Tab.Navigator>
     );
   }
 

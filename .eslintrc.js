@@ -18,7 +18,6 @@ module.exports = {
     'import',
     'eslint-plugin-no-inline-styles',
     'react-hooks',
-    'alias'
   ],
   rules: {
     indent: [0, 2, { SwitchCase: 1 }],
@@ -33,7 +32,7 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'react/display-name': 'off',
-    'no-unused-vars': 'off',
+    'no-unused-vars': 'error',
     'no-empty-function': 'error',
     '@typescript-eslint/no-unused-vars': ['error'],
     'import/export': 'error',

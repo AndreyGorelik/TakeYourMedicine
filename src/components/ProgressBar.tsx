@@ -1,23 +1,42 @@
+import { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
-interface ProgressBar {
+interface ProgressBarInterface {
   range: number;
 }
 
-const ProgressBar = ({ range }: ProgressBar) => {
+const ProgressBar = ({ range }: ProgressBarInterface) => {
+  const progress = useSharedValue(0);
 
-  let progressLength = '0%';
-  if (range < 1) {
-    progressLength = '0%';
-  } else if (range > 100) {
-    progressLength = '100%';
-  } else {
-    progressLength = `${range + '%'}`;
-  }
+  useEffect(() => {
+    if (range < 1) {
+      progress.value = withSpring(1);
+    } else if (range > 100) {
+      progress.value = withSpring(100);
+    } else {
+      progress.value = withSpring(range);
+    }
+  }, []);
+
+  progress.value = withSpring(range);
+
+  const aStyle = useAnimatedStyle(() => {
+    return {
+      width: withTiming(`${progress.value + '%'}`, {
+        duration: 100,
+      }),
+    };
+  });
 
   return (
     <View style={styles.backBar}>
-      <View style={[styles.frontBar, { width: progressLength }]}></View>
+      <Animated.View style={[styles.frontBar, aStyle]} />
     </View>
   );
 };
