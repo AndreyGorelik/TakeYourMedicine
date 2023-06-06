@@ -67,7 +67,11 @@ module.exports = {
     },
     'import/resolver': {
       alias: {
-        map: [['~', './src']],
+        // map: [['~', './src']],
+        map: [
+          ['components', './src/components/'],
+          ['pages', './src/pages/'],
+        ],
         extensions: ['.ts', '.js', '.tsx'],
       },
     },

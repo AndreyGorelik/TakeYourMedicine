@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { StyleSheet, View, Button, TextInput } from 'react-native';
-import Text from 'components/Text';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { StyleSheet, View, Button } from 'react-native';
+
 import CheckboxForm from 'components/CheckboxForm';
+import TextInput from 'components/TextInput';
 
 const mockData = [
   { label: 'Один раз в день', id: '1' },
@@ -25,7 +26,7 @@ function PillsStepOne() {
     return false;
   };
 
-  const isFormChecked = checkFormFilled()
+  const isFormChecked = checkFormFilled();
 
   return (
     <View style={styles.view}>
@@ -47,7 +48,7 @@ function PillsStepOne() {
       <Button
         title="Forward"
         disabled={isFormChecked ? false : true}
-        onPress={() => navigation.navigate('AddMedsStepTwo' as never)}
+        onPress={() => navigation.navigate('AddMedsStepTwo', { names: '123' })}
       />
     </View>
   );
@@ -56,7 +57,6 @@ function PillsStepOne() {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    // justifyContent: 'center',
     alignItems: 'center',
     padding: 15,
   },

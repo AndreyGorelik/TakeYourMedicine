@@ -4,7 +4,7 @@
     "paths": {
       "components/*": ["./src/components/*"],
       "pages/*": ["./src/pages/*"],
-      "~/*": ["./src/*"]
+      // "~/*": ["./src/*"]
     }
   },
   "include": ["src/**/*", "./App.tsx"]
