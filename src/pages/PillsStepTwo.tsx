@@ -3,9 +3,7 @@ import { StyleSheet, View, Button } from 'react-native';
 
 import Text from 'components/Text';
 
-function PillsStepTwo(props) {
-  console.log(props);
-
+function PillsStepTwo() {
   const navigation = useNavigation();
   const { goBack } = navigation;
 

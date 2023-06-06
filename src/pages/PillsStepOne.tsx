@@ -30,25 +30,15 @@ function PillsStepOne() {
 
   return (
     <View style={styles.view}>
-      <TextInput
-        style={styles.input}
-        onChangeText={setMedsName}
-        value={medsName}
-        placeholder="Meds name"
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setMedsDosage}
-        value={medsDosage}
-        placeholder="Meds dosage"
-      />
+      <TextInput onChangeText={setMedsName} value={medsName} placeholder="Meds name" />
+      <TextInput onChangeText={setMedsDosage} value={medsDosage} placeholder="Meds dosage" />
       <CheckboxForm data={mockData} getBack={setMedsRegularity} />
 
       <Button title="Back" onPress={() => goBack()} />
       <Button
         title="Forward"
         disabled={isFormChecked ? false : true}
-        onPress={() => navigation.navigate('AddMedsStepTwo', { names: '123' })}
+        onPress={() => navigation.navigate('AddMedsStepTwo' as never)}
       />
     </View>
   );
@@ -59,15 +49,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 15,
-  },
-  input: {
-    height: 40,
-    margin: 15,
-    borderWidth: 1,
-    padding: 10,
-    width: '100%',
-    borderRadius: 5,
-    borderColor: 'gray',
   },
 });
 

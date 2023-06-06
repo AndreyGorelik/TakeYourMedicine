@@ -35,7 +35,7 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
       <Animated.View style={[styles.placeholder, reanimatedStyle]}>
         <Text>{placeholder}</Text>
       </Animated.View>
@@ -51,11 +51,16 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
   input: {
     height: 40,
     borderWidth: 1,
     padding: 10,
     borderRadius: 5,
+    width: '100%',
+    marginBottom: 10,
   },
   placeholder: {
     color: 'orange',

@@ -1,13 +1,14 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import ProgressTabBar from 'components/ProgressTabBar';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet } from 'react-native';
+import { Keyboard, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import './18n';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
+import ProgressTabBar from 'components/ProgressTabBar';
 
 import SettingsButton from './src/components/SettingsButton';
 import useTheme from './src/hooks/useTheme';
@@ -70,22 +71,24 @@ function App() {
   }
 
   return (
-    <GestureHandlerRootView style={styles.view}>
-      <NavigationContainer theme={theme.themeStyle}>
-        <Stack.Navigator
-          screenOptions={{
-            headerBackTitleVisible: false,
-          }}
-        >
-          <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-          <Stack.Screen name="Form" component={Form} options={{ headerShown: false }} />
-          <Stack.Screen
-            name="Settings"
-            children={() => <SettingsPage changeTheme={theme.changeTheme} />}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </GestureHandlerRootView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <GestureHandlerRootView style={styles.view}>
+        <NavigationContainer theme={theme.themeStyle}>
+          <Stack.Navigator
+            screenOptions={{
+              headerBackTitleVisible: false,
+            }}
+          >
+            <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+            <Stack.Screen name="Form" component={Form} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="Settings"
+              children={() => <SettingsPage changeTheme={theme.changeTheme} />}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </GestureHandlerRootView>
+    </TouchableWithoutFeedback>
   );
 }
 
