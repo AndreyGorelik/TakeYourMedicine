@@ -22,7 +22,7 @@ function HomePage() {
   };
 
   const sayHi = () => {
-    navigation.navigate('Form' as never);
+    navigation.navigate('AddPills' as never);
   };
 
   const options = [
