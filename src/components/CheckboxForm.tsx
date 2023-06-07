@@ -4,11 +4,12 @@ import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native
 interface CheckboxItem {
   label: string;
   id: string;
+  notificationCount: number;
 }
 
 interface CheckboxFormInterface {
   data: CheckboxItem[];
-  getBack?: React.Dispatch<React.SetStateAction<string>>;
+  getBack?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CheckboxForm = ({ data, getBack }: CheckboxFormInterface) => {
@@ -17,7 +18,7 @@ const CheckboxForm = ({ data, getBack }: CheckboxFormInterface) => {
   const chooseItem = (item: CheckboxItem) => {
     setCheckedItem(item.id);
     if (getBack) {
-      getBack(item.id);
+      getBack(item.notificationCount);
     }
   };
 

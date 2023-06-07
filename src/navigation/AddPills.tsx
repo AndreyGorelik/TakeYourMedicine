@@ -4,8 +4,13 @@ import ProgressTabBar from 'components/ProgressTabBar';
 import PillsStepOne from 'pages/PillsStepOne';
 import PillsStepTwo from 'pages/PillsStepTwo';
 
+export type RootStackParamList = {
+  AddMedsStepOne: { range: number };
+  AddMedsStepTwo: { range?: number; medsDosage: string; medsName: string; medsRegularity: number };
+};
+
 function AddPills() {
-  const Tab = createBottomTabNavigator();
+  const Tab = createBottomTabNavigator<RootStackParamList>();
 
   return (
     <Tab.Navigator tabBar={(props) => <ProgressTabBar {...props} />}>
