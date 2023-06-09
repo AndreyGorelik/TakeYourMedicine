@@ -1,47 +1,19 @@
-import { useNavigation } from '@react-navigation/native';
-import { useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { View, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, StyleSheet, Alert, Button } from 'react-native';
 
-import FloatingButton from 'components/FloatingButton';
 import Text from 'components/Text';
 
-import ActionSheet, { BottomSheetRefProps, ACTION_SHEET_SIZE } from '../components/ActionSheet';
-import { useAppSelector } from '../hooks/redux-hooks';
 function HomePage() {
-  const { t } = useTranslation();
-  const ref = useRef<BottomSheetRefProps>(null);
-  const navigation = useNavigation();
-
-  const test = useAppSelector((state) => state.medsScheduleReducer);
-  // eslint-disable-next-line no-console
-  console.log(test);
-
-  const onPress = () => {
-    const isActive = ref?.current?.isActive;
-    if (isActive) {
-      ref?.current?.scrollTo(0);
-    } else {
-      ref?.current?.scrollTo(ACTION_SHEET_SIZE);
-    }
+  const clear = () => {
+    AsyncStorage.getAllKeys()
+      .then((keys) => AsyncStorage.multiRemove(keys))
+      .then(() => Alert.alert('storage cleared'));
   };
-
-  const sayHi = () => {
-    navigation.navigate('AddPills' as never);
-  };
-
-  const options = [
-    { label: 'Add pills', function: sayHi, id: '1' },
-    { label: 'Option 2', function: sayHi, id: '2' },
-    { label: 'Option 3', function: sayHi, id: '3' },
-    { label: 'Option 4', function: sayHi, id: '4' },
-  ];
 
   return (
     <View style={styles.view}>
-      <Text>{t('greeting')}</Text>
-      <FloatingButton onPress={onPress} />
-      <ActionSheet ref={ref} options={options} />
+      <Text>HELLO</Text>
+      <Button title="clear redux storage" onPress={clear} />
     </View>
   );
 }

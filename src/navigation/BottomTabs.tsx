@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import SettingsButton from 'components/SettingsButton';
 import HomePage from 'pages/Home';
+import TreatmentPage from 'pages/TreatmentPage';
 
 function BottomTabsScreen() {
   const Tab = createBottomTabNavigator();
@@ -21,13 +22,13 @@ function BottomTabsScreen() {
         }}
       />
       <Tab.Screen
-        name="Ho2mePage"
-        component={HomePage}
+        name="TreatmentPage"
+        component={TreatmentPage}
         options={{
           tabBarIcon: ({ color, size }) => <Icon name="pills" size={size} color={color} />,
           headerRight: () => <SettingsButton />,
-          tabBarLabel: t('home') as string,
-          title: 'Pills',
+          tabBarLabel: 'Treatment',
+          title: 'Treatment',
         }}
       />
     </Tab.Navigator>

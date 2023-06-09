@@ -10,6 +10,8 @@ interface TextInputCustom {
 
 type focusAndBlur = 'focus' | 'blur';
 
+const ANIMATION_DURATION = 150;
+
 const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
   const inputRef = useRef<NativeTextInput>(null);
   const top = useSharedValue(30);
@@ -17,12 +19,12 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
 
   const movePlaceholder = (status: focusAndBlur) => {
     if (status === 'focus') {
-      top.value = withTiming(0, { duration: 300 });
-      paddingHorizontal.value = withTiming(0, { duration: 300 });
+      top.value = withTiming(0, { duration: ANIMATION_DURATION });
+      paddingHorizontal.value = withTiming(0, { duration: ANIMATION_DURATION });
     } else {
       if (!value) {
-        top.value = withTiming(30, { duration: 300 });
-        paddingHorizontal.value = withTiming(10, { duration: 300 });
+        top.value = withTiming(30, { duration: ANIMATION_DURATION });
+        paddingHorizontal.value = withTiming(10, { duration: ANIMATION_DURATION });
       }
     }
   };

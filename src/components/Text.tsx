@@ -47,7 +47,9 @@ function Text({ children, variant, ...rest }: CustomText) {
 }
 
 const styles = StyleSheet.create({
-  text: {},
+  text: {
+    color: 'black',
+  },
 });
 
 export default Text;
