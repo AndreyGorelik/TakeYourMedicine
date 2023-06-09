@@ -7,10 +7,15 @@ import FloatingButton from 'components/FloatingButton';
 import Text from 'components/Text';
 
 import ActionSheet, { BottomSheetRefProps, ACTION_SHEET_SIZE } from '../components/ActionSheet';
+import { useAppSelector } from '../hooks/redux-hooks';
 function HomePage() {
   const { t } = useTranslation();
   const ref = useRef<BottomSheetRefProps>(null);
   const navigation = useNavigation();
+
+  const test = useAppSelector((state) => state.medsScheduleReducer);
+  // eslint-disable-next-line no-console
+  console.log(test);
 
   const onPress = () => {
     const isActive = ref?.current?.isActive;

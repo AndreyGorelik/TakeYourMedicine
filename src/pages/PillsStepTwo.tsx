@@ -3,14 +3,16 @@ import { useState } from 'react';
 import { StyleSheet, View, Button, FlatList, Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 
+import { useAppDispatch } from '../hooks/redux-hooks';
 import { RootStackParamList } from '../navigation/AddPills';
-
+import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
 function PillsStepTwo(props: Props) {
   const { navigation } = props;
   const { medsRegularity } = props.route.params;
   const { goBack } = navigation;
+  const dispatch = useAppDispatch();
 
   const [dates, setDates] = useState(Array.from({ length: medsRegularity }, () => new Date()));
   const [openIndex, setOpenIndex] = useState<null | number>(null);
@@ -32,6 +34,10 @@ function PillsStepTwo(props: Props) {
     handleClose();
   };
 
+  const saveMedsToSchedule = () => {
+    dispatch(addNewPillsToSchedule(1));
+  };
+
   const renderItem = ({ item, index }: { item: Date; index: number }) => {
     const isOpen = openIndex === index;
     return (
@@ -40,6 +46,7 @@ function PillsStepTwo(props: Props) {
           <Text>{Number(index + 1)} прием</Text>
           {isOpen && (
             <DatePicker
+              modal
               open={true}
               mode="time"
               date={item}
@@ -61,6 +68,7 @@ function PillsStepTwo(props: Props) {
         renderItem={renderItem}
       />
       <Button title="back" onPress={() => goBack()} />
+      <Button title="save" onPress={saveMedsToSchedule} />
     </View>
   );
 }
