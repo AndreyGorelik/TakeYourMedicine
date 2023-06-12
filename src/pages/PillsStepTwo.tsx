@@ -1,13 +1,15 @@
 import type { StackScreenProps } from '@react-navigation/stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View, Button, FlatList, Text, TouchableOpacity, Switch } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import uuid from 'react-native-uuid';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useAppDispatch } from '../hooks/redux-hooks';
 import { RootStackParamList } from '../navigation/AddPills';
 import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
-import TriggerWithTime from '../utils/scheduleNotification';
+
+// import TriggerWithTime from '../utils/scheduleNotification';
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
@@ -28,6 +30,15 @@ function PillsStepTwo(props: Props) {
       time: new Date(),
     }))
   );
+
+  useEffect(() => {
+    setNotificationTime(
+      Array.from({ length: medsRegularity }, () => ({
+        id: uuid.v4().toString(),
+        time: new Date(),
+      }))
+    );
+  }, [medsRegularity]);
 
   const [openIndex, setOpenIndex] = useState<null | number>(null);
   const [notificationsOnOff, setNotificationsOnOff] = useState(false);
@@ -73,11 +84,11 @@ function PillsStepTwo(props: Props) {
     };
 
     dispatch(addNewPillsToSchedule(scheduleItem));
-    if (notificationsOnOff) {
-      notificationTime.forEach((item: Time) => {
-        TriggerWithTime(item);
-      });
-    }
+    // if (notificationsOnOff) {
+    //   notificationTime.forEach((item: Time) => {
+    //     TriggerWithTime(item);
+    //   });
+    // }
     navigation.navigate('Home' as never);
   };
 
@@ -85,10 +96,34 @@ function PillsStepTwo(props: Props) {
     setNotificationsOnOff(!notificationsOnOff);
   };
 
+  const handleAddNewTime = () => {
+    setNotificationTime([
+      ...notificationTime,
+      {
+        id: uuid.v4().toString(),
+        time: new Date(),
+      },
+    ]);
+  };
+
+  const handleDelete = (id: string) => {
+    const timeIndex = notificationTime.findIndex((item) => item.id === id);
+    setNotificationTime([
+      ...notificationTime.slice(0, timeIndex),
+      ...notificationTime.slice(timeIndex + 1),
+    ]);
+  };
+
   const renderItem = ({ item, index }: { item: Time; index: number }) => {
     const isOpen = openIndex === index;
     return (
-      <View>
+      <View style={styles.time}>
+        {medsRegularity > 3 && (
+          <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.reminder}>
+            <Ionicons name="ios-remove-circle-outline" size={24} color={'red'} />
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity style={styles.reminder} onPress={() => handleOpen(index)}>
           <Text>{Number(index + 1)} прием</Text>
           {isOpen && (
@@ -114,6 +149,12 @@ function PillsStepTwo(props: Props) {
         <Switch value={notificationsOnOff} onValueChange={toggleSwitch} />
       </View>
       <FlatList data={notificationTime} keyExtractor={(item) => item.id} renderItem={renderItem} />
+      {medsRegularity > 3 && (
+        <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
+          <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
+          <Text>Добавить напоминание</Text>
+        </TouchableOpacity>
+      )}
       <Button title="back" onPress={() => goBack()} />
       <Button title="save" onPress={saveMedsToSchedule} />
     </View>
@@ -135,6 +176,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
+  },
+  addNotification: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    alignItems: 'center',
+    gap: 10,
+  },
+  time: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

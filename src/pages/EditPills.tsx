@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { FlatList, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Text from 'components/Text';
 
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
-import { changePillsInSchedule } from '../store/slices/medsScheduleSlice';
+import {
+  changePillsInSchedule,
+  switchNotifications,
+  deleteNotificationTime,
+  addNotificationTime,
+} from '../store/slices/medsScheduleSlice';
 
 import { medsInfo } from './TreatmentPage';
 
@@ -22,7 +28,6 @@ function EditPills(props: any) {
 
   const itemToRender: medsInfo = schedule.find((item: medsInfo) => item.id === id);
   const [openIndex, setOpenIndex] = useState<null | number>(null);
-  const [notificationsOnOff, setNotificationsOnOff] = useState(false);
 
   const handleClose = () => {
     setOpenIndex(null);
@@ -40,18 +45,29 @@ function EditPills(props: any) {
   };
 
   const toggleSwitch = () => {
-    setNotificationsOnOff(!notificationsOnOff);
+    dispatch(switchNotifications(id));
   };
 
   const handleOpen = (index: number) => {
     setOpenIndex(index);
   };
 
+  const handleDelete = (notificationId: string) => {
+    dispatch(deleteNotificationTime({ id, notificationId }));
+  };
+
+  const handleAddNewTime = () => {
+    dispatch(addNotificationTime(id));
+  };
+
   const renderItem = ({ item, index }: { item: Time; index: number }) => {
     const date = new Date(item.time);
     const isOpen = openIndex === index;
     return (
-      <View>
+      <View style={styles.time}>
+        <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.reminder}>
+          <Ionicons name="ios-remove-circle-outline" size={24} color={'red'} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => handleOpen(index)} style={styles.reminder}>
           <Text>{Number(index + 1).toString() + ' прием'}</Text>
           {isOpen && (
@@ -75,20 +91,23 @@ function EditPills(props: any) {
       <Text variant="h3">{itemToRender.medsName}</Text>
       <View style={styles.switchContainer}>
         <Text>Включить уведомления</Text>
-        <Switch value={notificationsOnOff} onValueChange={toggleSwitch} />
+        <Switch value={itemToRender.notificationsOnOff} onValueChange={toggleSwitch} />
       </View>
       <FlatList
         data={itemToRender.notificationTime}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
+      <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
+        <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
+        <Text>Добавить напоминание</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   view: {
-    flex: 1,
     padding: 15,
   },
   switchContainer: {
@@ -97,10 +116,21 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   reminder: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
+    flex: 1,
+  },
+  addNotification: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    alignItems: 'center',
+    gap: 10,
+  },
+  time: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

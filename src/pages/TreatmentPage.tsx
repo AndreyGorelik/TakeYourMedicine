@@ -28,9 +28,6 @@ function TreatmentPage() {
 
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
 
-  // eslint-disable-next-line no-console
-  console.log('SCHEDULE', schedule[0]);
-
   const options = [{ label: 'Add pills', function: sayHi, id: '1' }];
 
   const showActionSheet = () => {

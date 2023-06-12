@@ -11,6 +11,7 @@ const mockData = [
   { label: 'Один раз в день', notificationCount: 1, id: '1' },
   { label: 'Два раза в день', notificationCount: 2, id: '2' },
   { label: 'Три раза в день', notificationCount: 3, id: '3' },
+  { label: 'Нужно больше вариантов', notificationCount: 4, id: '4' },
 ];
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepOne'>;

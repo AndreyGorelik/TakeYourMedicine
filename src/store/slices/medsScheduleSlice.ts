@@ -1,7 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
+import uuid from 'react-native-uuid';
 
 import { medsInfo } from 'pages/TreatmentPage';
-const initialState = {
+
+interface State {
+  schedule: medsInfo[];
+}
+
+const initialState: State = {
   schedule: [],
 };
 
@@ -30,13 +36,35 @@ const medsScheduleSlice = createSlice({
 
       state.schedule[index].notificationTime = newNotificationTime;
     },
+    switchNotifications(state, action) {
+      const index = state.schedule.findIndex((item) => item.id === action.payload);
+      state.schedule[index].notificationsOnOff = !state.schedule[index].notificationsOnOff;
+    },
+    deleteNotificationTime(state, action) {
+      const index = state.schedule.findIndex((item) => item.id === action.payload.id);
+
+      const timeIndex = state.schedule[index].notificationTime.findIndex(
+        (item) => item.id === action.payload.notificationId
+      );
+
+      state.schedule[index].notificationTime.splice(timeIndex, 1);
+    },
+    addNotificationTime(state, action) {
+      const index = state.schedule.findIndex((item) => item.id === action.payload);
+      state.schedule[index].notificationTime.push({
+        time: new Date().toString(),
+        id: uuid.v4().toString(),
+      });
+    },
   },
 });
 
-// newDate: date.toString(),
-//       dateId,
-//       medsId: id,
-
-export const { addNewPillsToSchedule, changePillsInSchedule } = medsScheduleSlice.actions;
+export const {
+  addNewPillsToSchedule,
+  changePillsInSchedule,
+  switchNotifications,
+  deleteNotificationTime,
+  addNotificationTime,
+} = medsScheduleSlice.actions;
 
 export default medsScheduleSlice.reducer;
