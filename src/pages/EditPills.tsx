@@ -4,15 +4,23 @@ import DatePicker from 'react-native-date-picker';
 
 import Text from 'components/Text';
 
-import { useAppSelector } from '../hooks/redux-hooks';
+import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
+import { changePillsInSchedule } from '../store/slices/medsScheduleSlice';
 
 import { medsInfo } from './TreatmentPage';
 
-function EditPills(props) {
+interface Time {
+  id: string;
+  time: string;
+}
+
+function EditPills(props: any) {
+  // eslint-disable-next-line react/prop-types
   const { id } = props.route.params;
+  const dispatch = useAppDispatch();
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
 
-  const itemToRender: medsInfo = schedule.find((item: medsInfo) => (item.id = id));
+  const itemToRender: medsInfo = schedule.find((item: medsInfo) => item.id === id);
   const [openIndex, setOpenIndex] = useState<null | number>(null);
   const [notificationsOnOff, setNotificationsOnOff] = useState(false);
 
@@ -20,14 +28,14 @@ function EditPills(props) {
     setOpenIndex(null);
   };
 
-  const handleConfirm = (date: Date) => {
-    //should update store
-    setNotificationTime((prevDates) => {
-      const newDates = [...prevDates];
-      newDates[openIndex!] = date;
-      return newDates;
-    });
+  const handleConfirm = (date: Date, dateId: string) => {
+    const test = {
+      newTime: date.toString(),
+      dateId,
+      medsId: id,
+    };
 
+    dispatch(changePillsInSchedule(test));
     handleClose();
   };
 
@@ -39,20 +47,20 @@ function EditPills(props) {
     setOpenIndex(index);
   };
 
-  const renderItem = ({ item, index }: { item: Date; index: number }) => {
-    const date = new Date(item);
+  const renderItem = ({ item, index }: { item: Time; index: number }) => {
+    const date = new Date(item.time);
     const isOpen = openIndex === index;
     return (
       <View>
         <TouchableOpacity onPress={() => handleOpen(index)} style={styles.reminder}>
-          <Text>{Number(index + 1).toString()} прием</Text>
+          <Text>{Number(index + 1).toString() + ' прием'}</Text>
           {isOpen && (
             <DatePicker
               modal
               open={true}
               mode="time"
               date={date}
-              onConfirm={handleConfirm}
+              onConfirm={(newDate) => handleConfirm(newDate, item.id)}
               onCancel={handleClose}
             />
           )}
@@ -71,7 +79,7 @@ function EditPills(props) {
       </View>
       <FlatList
         data={itemToRender.notificationTime}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
     </View>

@@ -9,10 +9,15 @@ import Text from 'components/Text';
 import ActionSheet, { BottomSheetRefProps, ACTION_SHEET_SIZE } from '../components/ActionSheet';
 import { useAppSelector } from '../hooks/redux-hooks';
 
+interface NotificationTime {
+  id: string;
+  time: string;
+}
+
 export interface medsInfo {
   medsName: string;
   medsRegularity: number;
-  notificationTime: Date[];
+  notificationTime: NotificationTime[];
   notificationsOnOff: boolean;
   id: string;
 }
@@ -22,8 +27,9 @@ function TreatmentPage() {
   const navigation = useNavigation();
 
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
+
   // eslint-disable-next-line no-console
-  console.log('scheduleStore', schedule);
+  console.log('SCHEDULE', schedule[0]);
 
   const options = [{ label: 'Add pills', function: sayHi, id: '1' }];
 

@@ -6,8 +6,13 @@ import notifee, {
   TriggerType,
 } from '@notifee/react-native';
 
-async function TriggerWithTime(time: Date) {
-  const notificationTime = time;
+interface Time {
+  time: Date;
+  id: string | number;
+}
+
+async function TriggerWithTime(time: Time) {
+  const notificationTime = time.time;
 
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,

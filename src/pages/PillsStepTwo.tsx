@@ -11,15 +11,24 @@ import TriggerWithTime from '../utils/scheduleNotification';
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
+interface Time {
+  id: string;
+  time: Date;
+}
+
 function PillsStepTwo(props: Props) {
   const { navigation } = props;
   const { medsName, medsRegularity } = props.route.params;
   const { goBack } = navigation;
   const dispatch = useAppDispatch();
 
-  const [notificationTime, setNotificationTime] = useState(
-    Array.from({ length: medsRegularity }, () => new Date())
+  const [notificationTime, setNotificationTime] = useState<Time[]>(
+    Array.from({ length: medsRegularity }, () => ({
+      id: uuid.v4().toString(),
+      time: new Date(),
+    }))
   );
+
   const [openIndex, setOpenIndex] = useState<null | number>(null);
   const [notificationsOnOff, setNotificationsOnOff] = useState(false);
 
@@ -31,28 +40,41 @@ function PillsStepTwo(props: Props) {
     setOpenIndex(null);
   };
 
-  const handleConfirm = (date: Date) => {
-    setNotificationTime((prevDates) => {
-      const newDates = [...prevDates];
-      newDates[openIndex!] = date;
-      return newDates;
+  const handleConfirm = (date: Date, id: string) => {
+    const newNoti = notificationTime.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          time: date,
+        };
+      } else {
+        return item;
+      }
     });
+    setNotificationTime(newNoti);
 
     handleClose();
   };
 
   const saveMedsToSchedule = () => {
+    const notificationTimeString = notificationTime.map((item) => {
+      return {
+        id: item.id,
+        time: item.time.toString(),
+      };
+    });
+
     const scheduleItem = {
       medsName,
       medsRegularity,
-      notificationTime,
+      notificationTime: notificationTimeString,
       notificationsOnOff,
       id: uuid.v4(),
     };
 
     dispatch(addNewPillsToSchedule(scheduleItem));
     if (notificationsOnOff) {
-      notificationTime.forEach((item: Date) => {
+      notificationTime.forEach((item: Time) => {
         TriggerWithTime(item);
       });
     }
@@ -63,7 +85,7 @@ function PillsStepTwo(props: Props) {
     setNotificationsOnOff(!notificationsOnOff);
   };
 
-  const renderItem = ({ item, index }: { item: Date; index: number }) => {
+  const renderItem = ({ item, index }: { item: Time; index: number }) => {
     const isOpen = openIndex === index;
     return (
       <View>
@@ -74,12 +96,12 @@ function PillsStepTwo(props: Props) {
               modal
               open={true}
               mode="time"
-              date={item}
-              onConfirm={handleConfirm}
+              date={item.time}
+              onConfirm={(date) => handleConfirm(date, item.id)}
               onCancel={handleClose}
             />
           )}
-          <Text>{`${item.getHours()}` + ':' + `${item.getMinutes()}` + '▼'}</Text>
+          <Text>{`${item.time.getHours()}` + ':' + `${item.time.getMinutes()}` + '▼'}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -91,12 +113,7 @@ function PillsStepTwo(props: Props) {
         <Text>Включить уведомления</Text>
         <Switch value={notificationsOnOff} onValueChange={toggleSwitch} />
       </View>
-
-      <FlatList
-        data={notificationTime}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-      />
+      <FlatList data={notificationTime} keyExtractor={(item) => item.id} renderItem={renderItem} />
       <Button title="back" onPress={() => goBack()} />
       <Button title="save" onPress={saveMedsToSchedule} />
     </View>
