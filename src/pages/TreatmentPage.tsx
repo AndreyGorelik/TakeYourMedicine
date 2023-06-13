@@ -17,6 +17,7 @@ interface NotificationTime {
 export interface medsInfo {
   medsName: string;
   medsRegularity: number;
+  medsDosage: string;
   notificationTime: NotificationTime[];
   notificationsOnOff: boolean;
   id: string;

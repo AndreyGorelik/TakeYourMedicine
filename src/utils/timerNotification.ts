@@ -6,23 +6,11 @@ import notifee, {
   TriggerType,
 } from '@notifee/react-native';
 
-import { medsInfo } from 'pages/TreatmentPage';
-
-interface Time {
-  time: string;
-  id: string;
-}
-
-async function notifyOnTime(time: Time, meds: medsInfo) {
-  const { time: notificationTime, id: notificationId } = time;
-
+async function notifyOnTimer() {
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,
-    timestamp:
-      new Date(notificationTime) <= new Date()
-        ? new Date(notificationTime).getTime() + 1000 * 60 * 60 * 24
-        : new Date(notificationTime).getTime(),
-    repeatFrequency: RepeatFrequency.DAILY,
+    timestamp: Date.now() + 5000, // fire in 3 hours
+    repeatFrequency: RepeatFrequency.DAILY, // repeat once a week
     alarmManager: {
       allowWhileIdle: true,
     },
@@ -37,13 +25,13 @@ async function notifyOnTime(time: Time, meds: medsInfo) {
 
   await notifee.createTriggerNotification(
     {
-      id: notificationId,
-      title: 'TAKE YOUR PEEL',
-      body: `${meds.medsName}, ${meds.medsDosage}`,
+      id: 'reminderId',
+      title: 'TAKE MEDS',
+      body: 'DON"T FORGET TO TAKE MEDS',
       android: {
         channelId: channelId,
         pressAction: {
-          id: 'openApp',
+          id: 'opentest',
           launchActivity: 'default',
         },
         actions: [
@@ -62,4 +50,4 @@ async function notifyOnTime(time: Time, meds: medsInfo) {
   );
 }
 
-export default notifyOnTime;
+export default notifyOnTimer;

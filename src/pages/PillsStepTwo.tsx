@@ -9,25 +9,23 @@ import { useAppDispatch } from '../hooks/redux-hooks';
 import { RootStackParamList } from '../navigation/AddPills';
 import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
 
-// import TriggerWithTime from '../utils/scheduleNotification';
-
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
 interface Time {
   id: string;
-  time: Date;
+  time: string;
 }
 
 function PillsStepTwo(props: Props) {
   const { navigation } = props;
-  const { medsName, medsRegularity } = props.route.params;
+  const { medsName, medsRegularity, medsDosage } = props.route.params;
   const { goBack } = navigation;
   const dispatch = useAppDispatch();
 
   const [notificationTime, setNotificationTime] = useState<Time[]>(
     Array.from({ length: medsRegularity }, () => ({
       id: uuid.v4().toString(),
-      time: new Date(),
+      time: new Date().toString(),
     }))
   );
 
@@ -35,7 +33,7 @@ function PillsStepTwo(props: Props) {
     setNotificationTime(
       Array.from({ length: medsRegularity }, () => ({
         id: uuid.v4().toString(),
-        time: new Date(),
+        time: new Date().toString(),
       }))
     );
   }, [medsRegularity]);
@@ -56,7 +54,7 @@ function PillsStepTwo(props: Props) {
       if (item.id === id) {
         return {
           ...item,
-          time: date,
+          time: date.toString(),
         };
       } else {
         return item;
@@ -68,27 +66,17 @@ function PillsStepTwo(props: Props) {
   };
 
   const saveMedsToSchedule = () => {
-    const notificationTimeString = notificationTime.map((item) => {
-      return {
-        id: item.id,
-        time: item.time.toString(),
-      };
-    });
-
     const scheduleItem = {
       medsName,
       medsRegularity,
-      notificationTime: notificationTimeString,
+      medsDosage,
+      notificationTime,
       notificationsOnOff,
       id: uuid.v4(),
     };
 
     dispatch(addNewPillsToSchedule(scheduleItem));
-    // if (notificationsOnOff) {
-    //   notificationTime.forEach((item: Time) => {
-    //     TriggerWithTime(item);
-    //   });
-    // }
+
     navigation.navigate('Home' as never);
   };
 
@@ -101,7 +89,7 @@ function PillsStepTwo(props: Props) {
       ...notificationTime,
       {
         id: uuid.v4().toString(),
-        time: new Date(),
+        time: new Date().toString(),
       },
     ]);
   };
@@ -131,12 +119,17 @@ function PillsStepTwo(props: Props) {
               modal
               open={true}
               mode="time"
-              date={item.time}
+              date={new Date(item.time)}
               onConfirm={(date) => handleConfirm(date, item.id)}
               onCancel={handleClose}
             />
           )}
-          <Text>{`${item.time.getHours()}` + ':' + `${item.time.getMinutes()}` + '▼'}</Text>
+          <Text>
+            {`${new Date(item.time).getHours()}` +
+              ':' +
+              `${new Date(item.time).getMinutes()}` +
+              '▼'}
+          </Text>
         </TouchableOpacity>
       </View>
     );
