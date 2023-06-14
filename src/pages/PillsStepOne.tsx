@@ -1,7 +1,8 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useState } from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
+import Button from 'components/Button';
 import CheckboxForm from 'components/CheckboxForm';
 import TextInput from 'components/TextInput';
 
@@ -40,13 +41,14 @@ function PillsStepOne({ navigation }: Props) {
       <TextInput onChangeText={setMedsName} value={medsName} placeholder="Meds name" />
       <TextInput onChangeText={setMedsDosage} value={medsDosage} placeholder="Meds dosage" />
       <CheckboxForm data={mockData} getBack={setMedsRegularity} />
-
-      <Button title="Back" onPress={() => navigation.goBack()} />
-      <Button
-        title="Forward"
-        disabled={isFormChecked ? false : true}
-        onPress={() => navigation.navigate('AddMedsStepTwo', nextScreenProps)}
-      />
+      <View style={styles.navigationButtons}>
+        <Button title="Cancel" onPress={() => navigation.goBack()} />
+        <Button
+          title="Next"
+          disabled={isFormChecked ? false : true}
+          onPress={() => navigation.navigate('AddMedsStepTwo', nextScreenProps)}
+        />
+      </View>
     </View>
   );
 }
@@ -55,7 +57,17 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     alignItems: 'center',
-    padding: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    width: '100%',
+  },
+  navigationButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    maxWidth: '100%',
+    gap: 10,
   },
 });
 

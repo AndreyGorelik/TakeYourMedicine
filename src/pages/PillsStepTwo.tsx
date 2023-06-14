@@ -157,7 +157,8 @@ function PillsStepTwo(props: Props) {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 25,
   },
   reminder: {
     flex: 1,

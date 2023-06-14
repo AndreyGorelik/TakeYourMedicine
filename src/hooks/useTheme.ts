@@ -1,11 +1,34 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { useState } from 'react';
 import { useColorScheme } from 'react-native';
 
 const useTheme = () => {
   const theme = useColorScheme();
   const [themeColor, setThemeColor] = useState<string>('light');
+
+  const DefaultTheme = {
+    colors: {
+      background: '#F1F5FF',
+      border: '#F1F5FF',
+      card: '#F1F5FF',
+      notification: 'rgb(255, 69, 58)',
+      primary: '#003F5F',
+      text: '#003F5F',
+    },
+    dark: false,
+  };
+
+  const DarkTheme = {
+    colors: {
+      background: 'gray',
+      border: '#F1F5FF',
+      card: 'black',
+      notification: 'white',
+      primary: 'orange',
+      text: 'white',
+    },
+    dark: true,
+  };
 
   const changeTheme = () => {
     if (themeColor === 'light') {

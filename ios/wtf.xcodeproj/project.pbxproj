@@ -12,8 +12,14 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		16CC1D0DBC234DB1A171C86A /* MulishVariableFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 141E38F982C547B39489E484 /* MulishVariableFont.ttf */; };
+		207F5FA5244D4007A0F62E59 /* NunitoSansSemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5BFB9F5BB0A4FA1AB38D7BC /* NunitoSansSemiBold.ttf */; };
+		539F24370E6D4096BD7A9C4F /* NunitoSansRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D4CFDCEDC4A4EE8BE5DF9EE /* NunitoSansRegular.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-wtf-wtfTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-wtf-wtfTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A34DB37C23894346960C473D /* NunitoSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4330CDC462F42B58CECEEF9 /* NunitoSansBold.ttf */; };
+		F5508B9891BA4627AADC54E5 /* NunitoSansLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B51700DF6D5B4CE5898841EB /* NunitoSansLight.ttf */; };
+		FC12916545EC4260B196A770 /* NunitoSansMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A8F1A6C5BAC549E88EBBCD1B /* NunitoSansMedium.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,12 +36,14 @@
 		00E356EE1AD99517003FC87E /* wtfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = wtfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* wtfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = wtfTests.m; sourceTree = "<group>"; };
+		0D4CFDCEDC4A4EE8BE5DF9EE /* NunitoSansRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = NunitoSansRegular.ttf; path = ../src/assets/fonts/NunitoSansRegular.ttf; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* wtf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wtf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = wtf/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = wtf/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = wtf/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = wtf/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = wtf/main.m; sourceTree = "<group>"; };
+		141E38F982C547B39489E484 /* MulishVariableFont.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MulishVariableFont.ttf; path = ../src/assets/fonts/MulishVariableFont.ttf; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-wtf-wtfTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wtf-wtfTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-wtf.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wtf.debug.xcconfig"; path = "Target Support Files/Pods-wtf/Pods-wtf.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-wtf.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wtf.release.xcconfig"; path = "Target Support Files/Pods-wtf/Pods-wtf.release.xcconfig"; sourceTree = "<group>"; };
@@ -43,7 +51,11 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-wtf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wtf.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = wtf/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-wtf-wtfTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wtf-wtfTests.release.xcconfig"; path = "Target Support Files/Pods-wtf-wtfTests/Pods-wtf-wtfTests.release.xcconfig"; sourceTree = "<group>"; };
+		A8F1A6C5BAC549E88EBBCD1B /* NunitoSansMedium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = NunitoSansMedium.ttf; path = ../src/assets/fonts/NunitoSansMedium.ttf; sourceTree = "<group>"; };
+		B51700DF6D5B4CE5898841EB /* NunitoSansLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = NunitoSansLight.ttf; path = ../src/assets/fonts/NunitoSansLight.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F4330CDC462F42B58CECEEF9 /* NunitoSansBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = NunitoSansBold.ttf; path = ../src/assets/fonts/NunitoSansBold.ttf; sourceTree = "<group>"; };
+		F5BFB9F5BB0A4FA1AB38D7BC /* NunitoSansSemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = NunitoSansSemiBold.ttf; path = ../src/assets/fonts/NunitoSansSemiBold.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +134,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				D3480880B4F54C98A9422927 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -146,6 +159,19 @@
 				89C6BE57DB24E9ADA2F236DE /* Pods-wtf-wtfTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		D3480880B4F54C98A9422927 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				141E38F982C547B39489E484 /* MulishVariableFont.ttf */,
+				F4330CDC462F42B58CECEEF9 /* NunitoSansBold.ttf */,
+				B51700DF6D5B4CE5898841EB /* NunitoSansLight.ttf */,
+				A8F1A6C5BAC549E88EBBCD1B /* NunitoSansMedium.ttf */,
+				0D4CFDCEDC4A4EE8BE5DF9EE /* NunitoSansRegular.ttf */,
+				F5BFB9F5BB0A4FA1AB38D7BC /* NunitoSansSemiBold.ttf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,7 +226,8 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1210;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -244,6 +271,12 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				16CC1D0DBC234DB1A171C86A /* MulishVariableFont.ttf in Resources */,
+				A34DB37C23894346960C473D /* NunitoSansBold.ttf in Resources */,
+				F5508B9891BA4627AADC54E5 /* NunitoSansLight.ttf in Resources */,
+				FC12916545EC4260B196A770 /* NunitoSansMedium.ttf in Resources */,
+				539F24370E6D4096BD7A9C4F /* NunitoSansRegular.ttf in Resources */,
+				207F5FA5244D4007A0F62E59 /* NunitoSansSemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,6 +465,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-wtf-wtfTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -459,6 +493,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-wtf-wtfTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = wtfTests/Info.plist;
@@ -580,7 +615,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -645,7 +680,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",

@@ -4,34 +4,37 @@ interface CustomButton {
   title: string;
   onPress: () => void;
   width?: number | string;
+  backgroundColor?: string;
+  disabled?: boolean;
 }
 
-function Button({ title, width, onPress, ...rest }: CustomButton) {
+function Button({ title, width, onPress, backgroundColor, disabled = false }: CustomButton) {
   return (
     <TouchableOpacity
+      disabled={disabled}
       accessible
       accessibilityRole="button"
-      style={[{ width: width ? width : 150 }, styles.button]}
+      style={[
+        {
+          width: width ? width : 150,
+          backgroundColor: disabled ? 'gray' : backgroundColor || '#0099FF',
+        },
+        styles.button,
+      ]}
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <Text style={styles.text} {...rest}>
-        {title}
-      </Text>
+      <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    elevation: 3,
-    backgroundColor: 'black',
-    marginVertical: 5,
+    alignItems: 'center',
+    borderRadius: 13,
+    flex: 1,
   },
   text: {
     fontSize: 16,
@@ -39,6 +42,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white',
+    paddingVertical: 10,
   },
 });
 

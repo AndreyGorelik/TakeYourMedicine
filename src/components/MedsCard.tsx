@@ -18,7 +18,7 @@ const MedsCard = ({ data }: { data: medsInfo }) => {
     <TouchableOpacity style={styles.container} onPress={navigateToEdit}>
       <View style={styles.header}>
         <MaterialCommunityIcons name="pill" size={24} color={'red'} />
-        <Text variant="h4">{data.medsName}</Text>
+        <Text variant="h3">{data.medsName}</Text>
       </View>
       <Text>{data.medsRegularity.toString() + ' в день'}</Text>
     </TouchableOpacity>
@@ -28,9 +28,9 @@ const MedsCard = ({ data }: { data: medsInfo }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    borderRadius: 10,
+    borderRadius: 15,
     marginVertical: 10,
-    padding: 10,
+    padding: 15,
   },
   header: {
     flexDirection: 'row',

@@ -13,14 +13,19 @@ const styles = StyleSheet.create({
   createButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red',
+    backgroundColor: '#0099FF',
     width: 50,
     height: 50,
-    borderRadius: 50,
+    borderRadius: 13,
     position: 'absolute',
-    bottom: 20,
+    bottom: 79,
     right: 20,
     zIndex: 999,
+    shadowColor: '#171717',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
   },
 });
 

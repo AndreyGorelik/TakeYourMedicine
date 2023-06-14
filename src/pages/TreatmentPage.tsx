@@ -52,13 +52,14 @@ function TreatmentPage() {
     <View style={styles.view}>
       <ActionSheet ref={ref} options={options} />
       {schedule.length === 0 ? <Text>Пока ничего нет</Text> : null}
-      <FloatingButton onPress={showActionSheet} />
+
       <FlatList
         data={schedule}
         renderItem={renderMedsCard}
         keyExtractor={(item: medsInfo) => item.id}
         style={styles.flatList}
       />
+      <FloatingButton onPress={showActionSheet} />
     </View>
   );
 }
@@ -66,7 +67,8 @@ function TreatmentPage() {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    padding: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 25,
   },
   flatList: {
     zIndex: -1,

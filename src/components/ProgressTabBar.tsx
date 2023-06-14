@@ -26,8 +26,9 @@ const ProgressTabBar = ({ state }: ProgressTabBarProps) => {
 
 const styles = StyleSheet.create({
   progressTabBar: {
-    paddingVertical: 40,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    backgroundColor: 'white',
   },
 });
 

@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: screenHeight,
     borderRadius: 25,
-    zIndex: 999,
+    zIndex: 99999,
     flex: 1,
   },
   innerSheetView: {

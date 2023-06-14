@@ -44,13 +44,13 @@ const ProgressBar = ({ range }: ProgressBarInterface) => {
 const styles = StyleSheet.create({
   backBar: {
     width: '100%',
-    height: 7,
-    backgroundColor: 'gray',
+    height: 10,
+    backgroundColor: '#e8e8e8',
     borderRadius: 25,
   },
   frontBar: {
-    height: 7,
-    backgroundColor: 'orange',
+    height: 10,
+    backgroundColor: '#003F5F',
     borderRadius: 25,
   },
 });

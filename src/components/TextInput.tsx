@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { StyleSheet, TextInput as NativeTextInput, Text, View } from 'react-native';
+import { StyleSheet, TextInput as NativeTextInput, View } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 interface TextInputCustom {
@@ -14,17 +14,17 @@ const ANIMATION_DURATION = 150;
 
 const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
   const inputRef = useRef<NativeTextInput>(null);
-  const top = useSharedValue(30);
-  const paddingHorizontal = useSharedValue(10);
+  const top = useSharedValue(36);
+  const labelFontSize = useSharedValue(16);
 
   const movePlaceholder = (status: focusAndBlur) => {
     if (status === 'focus') {
-      top.value = withTiming(0, { duration: ANIMATION_DURATION });
-      paddingHorizontal.value = withTiming(0, { duration: ANIMATION_DURATION });
+      top.value = withTiming(16, { duration: ANIMATION_DURATION });
+      labelFontSize.value = withTiming(12, { duration: ANIMATION_DURATION });
     } else {
       if (!value) {
-        top.value = withTiming(30, { duration: ANIMATION_DURATION });
-        paddingHorizontal.value = withTiming(10, { duration: ANIMATION_DURATION });
+        top.value = withTiming(36, { duration: ANIMATION_DURATION });
+        labelFontSize.value = withTiming(16, { duration: ANIMATION_DURATION });
       }
     }
   };
@@ -32,14 +32,19 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
   const reanimatedStyle = useAnimatedStyle(() => {
     return {
       top: top.value,
-      paddingHorizontal: paddingHorizontal.value,
+    };
+  }, []);
+
+  const textReanimatedStyle = useAnimatedStyle(() => {
+    return {
+      fontSize: labelFontSize.value,
     };
   }, []);
 
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.placeholder, reanimatedStyle]}>
-        <Text>{placeholder}</Text>
+        <Animated.Text style={[styles.text, textReanimatedStyle]}>{placeholder}</Animated.Text>
       </Animated.View>
       <NativeTextInput
         onFocus={() => movePlaceholder('focus')}
@@ -57,16 +62,19 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   input: {
-    height: 40,
-    borderWidth: 1,
-    padding: 10,
+    height: 50,
+    borderWidth: 0.5,
+    // backgroundColor: 'gray',
+    paddingTop: 10,
+    paddingHorizontal: 10,
     borderRadius: 5,
     width: '100%',
-    marginBottom: 10,
   },
   placeholder: {
-    color: 'orange',
     position: 'relative',
+  },
+  text: {
+    paddingHorizontal: 10,
   },
 });
 
