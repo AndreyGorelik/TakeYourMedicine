@@ -1,5 +1,7 @@
 import { Text as NativeText, StyleSheet, TextStyle } from 'react-native';
 
+import useTheme from '../hooks/useTheme';
+
 type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
 
 interface CustomText {
@@ -8,10 +10,12 @@ interface CustomText {
 }
 
 function Text({ children, variant, ...rest }: CustomText) {
+  const { themeStyle } = useTheme();
   const settings: TextStyle = {
     fontSize: 16,
     marginVertical: 5,
     fontWeight: '400',
+    color: themeStyle.colors.text,
   };
 
   switch (variant) {
@@ -54,7 +58,6 @@ function Text({ children, variant, ...rest }: CustomText) {
 
 const styles = StyleSheet.create({
   text: {
-    color: '#003F5F',
     fontFamily: 'NunitoSans10pt-Regular',
     fontWeight: '400',
   },

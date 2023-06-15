@@ -2,9 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { useColorScheme } from 'react-native';
 
+import { useAppSelector } from './redux-hooks';
+
 const useTheme = () => {
   const theme = useColorScheme();
   const [themeColor, setThemeColor] = useState<string>('light');
+
+  const storeTheme = useAppSelector((state) => state.themeSlice);
 
   const DefaultTheme = {
     colors: {
@@ -14,20 +18,22 @@ const useTheme = () => {
       notification: 'rgb(255, 69, 58)',
       primary: '#003F5F',
       text: '#003F5F',
+      back: '#FFF',
     },
-    dark: false,
+    dark: storeTheme.darkMode,
   };
 
   const DarkTheme = {
     colors: {
-      background: 'gray',
-      border: '#F1F5FF',
-      card: 'black',
+      background: '#003F5F',
+      border: '#002d44',
+      card: '#003F5F',
       notification: 'white',
-      primary: 'orange',
+      primary: '#FFF',
       text: 'white',
+      back: '#002d44',
     },
-    dark: true,
+    dark: storeTheme.darkMode,
   };
 
   const changeTheme = () => {

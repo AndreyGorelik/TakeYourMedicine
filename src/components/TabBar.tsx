@@ -1,15 +1,35 @@
 import { View, Pressable, StyleSheet } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withRepeat,
+  withSequence,
+} from 'react-native-reanimated';
+
+import useTheme from '../hooks/useTheme';
+
+const ROTATE_DURATION = 150;
 
 const TabBar = ({ state, descriptors, navigation }: any) => {
+  const { darkMode } = useTheme();
+  const angle = useSharedValue(0);
+
+  const reanimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${angle.value + 'deg'}` }],
+    };
+  }, [angle]);
+
   return (
-    <View style={styles.mainContainer}>
+    <View style={[{ backgroundColor: darkMode ? '#4B454D' : '#fff' }, styles.mainContainer]}>
       {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
 
         const isFocused = state.index === index;
 
         const tabIcon = options.tabBarIcon({
-          color: isFocused ? '#003F5F' : 'gray',
+          color: isFocused ? (darkMode ? '#FFF' : '#003F5F') : darkMode ? '#0099FF' : 'gray',
           size: 30,
         });
 
@@ -22,11 +42,20 @@ const TabBar = ({ state, descriptors, navigation }: any) => {
           if (!isFocused && !event.defaultPrevented) {
             navigation.navigate(route.name);
           }
+
+          angle.value = withSequence(
+            withTiming(-20, { duration: ROTATE_DURATION }),
+            withRepeat(withTiming(20, { duration: ROTATE_DURATION }), 2, true, () => {
+              angle.value = withTiming(0, { duration: ROTATE_DURATION });
+            })
+          );
         };
 
         return (
           <View key={index} style={styles.mainItemContainer}>
-            <Pressable onPress={onPress}>{tabIcon}</Pressable>
+            <Animated.View style={isFocused ? reanimatedStyle : null}>
+              <Pressable onPress={onPress}>{tabIcon}</Pressable>
+            </Animated.View>
           </View>
         );
       })}
@@ -40,7 +69,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 15,
     paddingVertical: 5,
-    backgroundColor: '#fff',
     borderRadius: 15,
     marginHorizontal: 100,
     shadowColor: '#171717',

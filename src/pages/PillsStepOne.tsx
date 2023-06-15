@@ -7,6 +7,7 @@ import CheckboxForm from 'components/CheckboxForm';
 import TextInput from 'components/TextInput';
 
 import { RootStackParamList } from '../navigation/AddPills';
+import useTheme from '../hooks/useTheme';
 
 const mockData = [
   { label: 'Один раз в день', notificationCount: 1, id: '1' },
@@ -21,6 +22,8 @@ function PillsStepOne({ navigation }: Props) {
   const [medsName, setMedsName] = useState('');
   const [medsDosage, setMedsDosage] = useState('');
   const [medsRegularity, setMedsRegularity] = useState(0);
+
+  const { themeStyle } = useTheme();
 
   const checkFormFilled = () => {
     if (medsName && medsDosage && !!medsRegularity) {
@@ -37,7 +40,7 @@ function PillsStepOne({ navigation }: Props) {
   };
 
   return (
-    <View style={styles.view}>
+    <View style={[{ backgroundColor: themeStyle.colors.back }, styles.view]}>
       <TextInput onChangeText={setMedsName} value={medsName} placeholder="Meds name" />
       <TextInput onChangeText={setMedsDosage} value={medsDosage} placeholder="Meds dosage" />
       <CheckboxForm data={mockData} getBack={setMedsRegularity} />
@@ -56,10 +59,8 @@ function PillsStepOne({ navigation }: Props) {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 25,
-    backgroundColor: 'white',
     borderRadius: 25,
     width: '100%',
   },

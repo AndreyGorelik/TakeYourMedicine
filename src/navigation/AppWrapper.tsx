@@ -16,6 +16,7 @@ import notifyOnTimer from '../utils/timerNotification';
 import AddPills from './AddPills';
 import BottomTabsScreen from './BottomTabs';
 const Stack = createStackNavigator();
+
 function AppWrapper() {
   const theme = useTheme();
   const medsScheduleReducer = useAppSelector((state) => state.medsScheduleReducer);
@@ -60,7 +61,21 @@ function AppWrapper() {
             name="Settings"
             children={() => <SettingsPage changeTheme={theme.changeTheme} />}
           />
-          <Stack.Screen name="EditPills" component={EditPills} options={{ headerShown: false }} />
+          <Stack.Screen
+            name="EditPills"
+            component={EditPills}
+            options={{
+              title: 'Edit',
+              headerStyle: {
+                height: 60,
+              },
+              headerTitleStyle: {
+                fontWeight: '600',
+                fontSize: 28,
+                paddingVertical: 10,
+              },
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
@@ -70,7 +85,6 @@ function AppWrapper() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 30,
   },
 });
 

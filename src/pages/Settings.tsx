@@ -7,6 +7,8 @@ import { Switch } from 'react-native-paper';
 
 import Text from '../components/Text';
 import { languagesList } from '../constants/languages';
+import { useAppDispatch } from '../hooks/redux-hooks';
+import { changeTheme as changeTheme2 } from '../store/slices/themeSlice';
 
 interface LangItem {
   label: string;
@@ -19,9 +21,12 @@ function SettingsPage({ changeTheme }: { changeTheme: () => void }) {
   const [value, setValue] = useState('en');
   const { t, i18n } = useTranslation();
 
+  const dispatch = useAppDispatch();
+
   const switchTheme = () => {
     setDarkThemeSwitch(!darkThemeSwitch);
     changeTheme();
+    dispatch(changeTheme2());
   };
 
   const changeLanguage = (item: LangItem) => {

@@ -1,6 +1,6 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useImperativeHandle, forwardRef, useCallback } from 'react';
-import { Dimensions, TouchableHighlight, StyleSheet, Text, View, FlatList } from 'react-native';
+import { Dimensions, TouchableHighlight, StyleSheet, View, FlatList } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedProps,
@@ -9,6 +9,10 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+
+import useTheme from '../hooks/useTheme';
+
+import Text from './Text';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -33,6 +37,7 @@ export interface BottomSheetRefProps {
 const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options }, ref) => {
   const translateY = useSharedValue(0);
   const active = useSharedValue(false);
+  const { darkMode } = useTheme();
 
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -87,7 +92,9 @@ const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options
   const renderMenuItem = ({ item }: { item: MenuItem }) => {
     return (
       <TouchableHighlight onPress={() => item.function()} underlayColor={'gray'}>
-        <Text style={styles.menuText}>{item.label}</Text>
+        <View style={styles.menuText}>
+          <Text variant="h3">{item.label}</Text>
+        </View>
       </TouchableHighlight>
     );
   };
@@ -115,7 +122,9 @@ const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options
             { paddingBottom: tabBarHeight * 2 },
           ]}
         >
-          <View style={styles.innerSheetView}>
+          <View
+            style={[{ backgroundColor: darkMode ? '#003F5F' : 'white' }, styles.innerSheetView]}
+          >
             <FlatList data={options} renderItem={renderMenuItem} keyExtractor={(item) => item.id} />
           </View>
         </Animated.View>
@@ -137,14 +146,12 @@ const styles = StyleSheet.create({
   },
   innerSheetView: {
     flex: 1,
-    backgroundColor: 'white',
     padding: 20,
-    borderRadius: 25,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
   },
   menuText: {
-    textAlign: 'center',
-    fontSize: 20,
-    paddingVertical: 10,
+    alignItems: 'center',
   },
 });
 

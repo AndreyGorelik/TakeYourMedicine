@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import { StyleSheet, TextInput as NativeTextInput, View } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
+import useTheme from '../hooks/useTheme';
+
 interface TextInputCustom {
   placeholder: string;
   value: string;
@@ -16,6 +18,7 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
   const inputRef = useRef<NativeTextInput>(null);
   const top = useSharedValue(36);
   const labelFontSize = useSharedValue(16);
+  const { themeStyle } = useTheme();
 
   const movePlaceholder = (status: focusAndBlur) => {
     if (status === 'focus') {
@@ -44,13 +47,21 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.placeholder, reanimatedStyle]}>
-        <Animated.Text style={[styles.text, textReanimatedStyle]}>{placeholder}</Animated.Text>
+        <Animated.Text
+          style={[{ color: themeStyle.colors.text }, styles.text, textReanimatedStyle]}
+        >
+          {placeholder}
+        </Animated.Text>
       </Animated.View>
       <NativeTextInput
         onFocus={() => movePlaceholder('focus')}
         onBlur={() => movePlaceholder('blur')}
         ref={inputRef}
-        style={styles.input}
+        style={[
+          { color: themeStyle.colors.text, borderColor: themeStyle.colors.text },
+          styles.input,
+        ]}
+        placeholderTextColor={'white'}
         {...rest}
       />
     </View>
@@ -64,7 +75,6 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     borderWidth: 0.5,
-    // backgroundColor: 'gray',
     paddingTop: 10,
     paddingHorizontal: 10,
     borderRadius: 5,

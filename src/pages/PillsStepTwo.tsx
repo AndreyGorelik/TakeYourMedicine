@@ -1,13 +1,17 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, FlatList, Text, TouchableOpacity, Switch } from 'react-native';
+import { StyleSheet, View, FlatList, TouchableOpacity, Switch } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import uuid from 'react-native-uuid';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import Button from 'components/Button';
+import Text from 'components/Text';
+
 import { useAppDispatch } from '../hooks/redux-hooks';
 import { RootStackParamList } from '../navigation/AddPills';
 import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
+import useTheme from '../hooks/useTheme';
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
@@ -17,9 +21,9 @@ interface Time {
 }
 
 function PillsStepTwo(props: Props) {
+  const { themeStyle } = useTheme();
   const { navigation } = props;
   const { medsName, medsRegularity, medsDosage } = props.route.params;
-  const { goBack } = navigation;
   const dispatch = useAppDispatch();
 
   const [notificationTime, setNotificationTime] = useState<Time[]>(
@@ -113,7 +117,7 @@ function PillsStepTwo(props: Props) {
         )}
 
         <TouchableOpacity style={styles.reminder} onPress={() => handleOpen(index)}>
-          <Text>{Number(index + 1)} прием</Text>
+          <Text>{Number(index + 1) + ' прием'}</Text>
           {isOpen && (
             <DatePicker
               modal
@@ -136,7 +140,7 @@ function PillsStepTwo(props: Props) {
   };
 
   return (
-    <View style={styles.view}>
+    <View style={[{ backgroundColor: themeStyle.colors.back }, styles.view]}>
       <View style={styles.switchContainer}>
         <Text>Включить уведомления</Text>
         <Switch value={notificationsOnOff} onValueChange={toggleSwitch} />
@@ -148,8 +152,11 @@ function PillsStepTwo(props: Props) {
           <Text>Добавить напоминание</Text>
         </TouchableOpacity>
       )}
-      <Button title="back" onPress={() => goBack()} />
-      <Button title="save" onPress={saveMedsToSchedule} />
+
+      <View style={styles.navigationButtons}>
+        <Button title="Back" onPress={() => navigation.goBack()} />
+        <Button title="Save" onPress={saveMedsToSchedule} />
+      </View>
     </View>
   );
 }
@@ -159,6 +166,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 25,
+    borderRadius: 25,
+    width: '100%',
   },
   reminder: {
     flex: 1,
@@ -181,6 +190,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  navigationButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    maxWidth: '100%',
+    gap: 10,
   },
 });
 

@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Text from 'components/Text';
 
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
+import useTheme from '../hooks/useTheme';
 import {
   changePillsInSchedule,
   switchNotifications,
@@ -21,10 +22,11 @@ interface Time {
 }
 
 function EditPills(props: any) {
-  // eslint-disable-next-line react/prop-types
   const { id } = props.route.params;
   const dispatch = useAppDispatch();
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
+
+  const { themeStyle } = useTheme();
 
   const itemToRender: medsInfo = schedule.find((item: medsInfo) => item.id === id);
   const [openIndex, setOpenIndex] = useState<null | number>(null);
@@ -87,7 +89,7 @@ function EditPills(props: any) {
     );
   };
   return (
-    <View style={styles.view}>
+    <View style={[styles.view, { backgroundColor: themeStyle.colors.back }]}>
       <Text variant="h3">{itemToRender.medsName}</Text>
       <View style={styles.switchContainer}>
         <Text>Включить уведомления</Text>
@@ -108,7 +110,12 @@ function EditPills(props: any) {
 
 const styles = StyleSheet.create({
   view: {
-    padding: 15,
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    width: '100%',
   },
   switchContainer: {
     flexDirection: 'row',

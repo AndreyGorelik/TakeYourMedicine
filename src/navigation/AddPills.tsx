@@ -11,7 +11,6 @@ export type RootStackParamList = {
 
 function AddPills() {
   const Tab = createBottomTabNavigator<RootStackParamList>();
-
   return (
     <Tab.Navigator tabBar={(props) => <ProgressTabBar {...props} />}>
       <Tab.Screen
@@ -35,9 +34,13 @@ function AddPills() {
         component={PillsStepTwo}
         options={{
           title: 'Step 2',
+          headerStyle: {
+            height: 60,
+          },
           headerTitleStyle: {
             fontWeight: '600',
             fontSize: 28,
+            paddingVertical: 10,
           },
         }}
         initialParams={{ range: 100 }}

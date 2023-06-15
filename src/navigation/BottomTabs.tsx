@@ -23,6 +23,14 @@ function BottomTabsScreen() {
           headerRight: () => <SettingsButton />,
           tabBarLabel: t('home') as string,
           title: t('home') as string,
+          headerStyle: {
+            height: 60,
+          },
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 28,
+            paddingVertical: 10,
+          },
         }}
       />
       <Tab.Screen
@@ -33,6 +41,14 @@ function BottomTabsScreen() {
           headerRight: () => <SettingsButton />,
           tabBarLabel: 'Treatment',
           title: 'Treatment',
+          headerStyle: {
+            height: 60,
+          },
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 28,
+            paddingVertical: 10,
+          },
         }}
       />
     </Tab.Navigator>

@@ -13,6 +13,7 @@ import {
 } from 'redux-persist';
 
 import medsScheduleReducer from './slices/medsScheduleSlice';
+import themeSlice from './slices/themeSlice';
 
 const persistConfig = {
   key: 'root',
@@ -21,6 +22,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   medsScheduleReducer,
+  themeSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
