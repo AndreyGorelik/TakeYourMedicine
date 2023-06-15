@@ -1,6 +1,6 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useImperativeHandle, forwardRef, useCallback } from 'react';
-import { Dimensions, TouchableHighlight, StyleSheet, View, FlatList } from 'react-native';
+import { Dimensions, StyleSheet, View, FlatList, TouchableOpacity } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedProps,
@@ -91,11 +91,11 @@ const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options
 
   const renderMenuItem = ({ item }: { item: MenuItem }) => {
     return (
-      <TouchableHighlight onPress={() => item.function()} underlayColor={'gray'}>
+      <TouchableOpacity onPress={() => item.function()}>
         <View style={styles.menuText}>
           <Text variant="h3">{item.label}</Text>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   };
 

@@ -11,8 +11,9 @@ interface CustomText {
 
 function Text({ children, variant, ...rest }: CustomText) {
   const { themeStyle } = useTheme();
+
   const settings: TextStyle = {
-    fontSize: 16,
+    fontSize: 17,
     marginVertical: 5,
     fontWeight: '400',
     color: themeStyle.colors.text,

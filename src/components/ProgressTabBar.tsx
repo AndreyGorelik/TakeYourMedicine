@@ -3,6 +3,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import ProgressBar from './ProgressBar';
+import useTheme from '../hooks/useTheme';
 
 interface RouteParams {
   range: number;
@@ -14,11 +15,11 @@ interface ProgressTabBarProps {
 
 const ProgressTabBar = ({ state }: ProgressTabBarProps) => {
   const route = state.routes[state.index] as Route<string, RouteParams>;
-
+  const { themeStyle } = useTheme();
   const { range } = route.params;
 
   return (
-    <View style={styles.progressTabBar}>
+    <View style={[{ backgroundColor: themeStyle.colors.back }, styles.progressTabBar]}>
       <ProgressBar range={range} />
     </View>
   );
@@ -28,7 +29,6 @@ const styles = StyleSheet.create({
   progressTabBar: {
     paddingVertical: 10,
     paddingHorizontal: 25,
-    backgroundColor: 'white',
   },
 });
 

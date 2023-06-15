@@ -70,21 +70,23 @@ function EditPills(props: any) {
         <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.reminder}>
           <Ionicons name="ios-remove-circle-outline" size={24} color={'red'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleOpen(index)} style={styles.reminder}>
-          <Text>{Number(index + 1).toString() + ' прием'}</Text>
-          {isOpen && (
-            <DatePicker
-              modal
-              open={true}
-              mode="time"
-              date={date}
-              onConfirm={(newDate) => handleConfirm(newDate, item.id)}
-              onCancel={handleClose}
-            />
-          )}
+        <View style={styles.timePicker}>
+          <TouchableOpacity onPress={() => handleOpen(index)} style={styles.reminder}>
+            <Text>{Number(index + 1).toString() + ' прием'}</Text>
+            {isOpen && (
+              <DatePicker
+                modal
+                open={true}
+                mode="time"
+                date={date}
+                onConfirm={(newDate) => handleConfirm(newDate, item.id)}
+                onCancel={handleClose}
+              />
+            )}
 
-          <Text>{`${date.getHours()}` + ':' + `${date.getMinutes()}` + '▼'}</Text>
-        </TouchableOpacity>
+            <Text>{`${date.getHours()}` + ':' + `${date.getMinutes()}` + '▼'}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -126,7 +128,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
-    flex: 1,
   },
   addNotification: {
     flexDirection: 'row',
@@ -138,6 +139,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
+  },
+  timePicker: {
+    flex: 1,
+    justifyContent: 'space-between',
   },
 });
 
