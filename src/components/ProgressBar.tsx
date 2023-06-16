@@ -13,7 +13,8 @@ interface ProgressBarInterface {
 
 const ProgressBar = ({ range }: ProgressBarInterface) => {
   const progress = useSharedValue(0);
-
+  console.log('range', range);
+  
   useEffect(() => {
     if (range < 1) {
       progress.value = withSpring(1);

@@ -2,15 +2,18 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import ProgressTabBar from 'components/ProgressTabBar';
 import PillsStepOne from 'pages/PillsStepOne';
+import PillsStepThree from 'pages/PillsStepThree';
 import PillsStepTwo from 'pages/PillsStepTwo';
 
 export type RootStackParamList = {
   AddMedsStepOne: { range: number };
   AddMedsStepTwo: { range?: number; medsDosage: string; medsName: string; medsRegularity: number };
+  AddMedsStepThree: any;
 };
 
+const Tab = createBottomTabNavigator<RootStackParamList>();
+
 function AddPills() {
-  const Tab = createBottomTabNavigator<RootStackParamList>();
   return (
     <Tab.Navigator tabBar={(props) => <ProgressTabBar {...props} />}>
       <Tab.Screen
@@ -27,13 +30,29 @@ function AddPills() {
             paddingVertical: 10,
           },
         }}
-        initialParams={{ range: 50 }}
+        initialParams={{ range: 33 }}
       />
       <Tab.Screen
         name="AddMedsStepTwo"
         component={PillsStepTwo}
         options={{
           title: 'Step 2',
+          headerStyle: {
+            height: 60,
+          },
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 28,
+            paddingVertical: 10,
+          },
+        }}
+        initialParams={{ range: 60 }}
+      />
+      <Tab.Screen
+        name="AddMedsStepThree"
+        component={PillsStepThree}
+        options={{
+          title: 'Step 3',
           headerStyle: {
             height: 60,
           },

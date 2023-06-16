@@ -4,11 +4,11 @@ import { StyleSheet, View } from 'react-native';
 
 import Button from 'components/Button';
 import CheckboxForm from 'components/CheckboxForm';
+import Text from 'components/Text';
 import TextInput from 'components/TextInput';
 
 import useTheme from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AddPills';
-
 const mockData = [
   { label: 'Один раз в день', notificationCount: 1, id: '1' },
   { label: 'Два раза в день', notificationCount: 2, id: '2' },
@@ -41,8 +41,10 @@ function PillsStepOne({ navigation }: Props) {
 
   return (
     <View style={[{ backgroundColor: themeStyle.colors.back }, styles.view]}>
+      <Text variant="h3">Basic</Text>
       <TextInput onChangeText={setMedsName} value={medsName} placeholder="Meds name" />
       <TextInput onChangeText={setMedsDosage} value={medsDosage} placeholder="Meds dosage" />
+      <Text variant="h3">Schedule</Text>
       <CheckboxForm data={mockData} getBack={setMedsRegularity} />
       <View style={styles.navigationButtons}>
         <Button title="Cancel" onPress={() => navigation.goBack()} />

@@ -8,10 +8,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from 'components/Button';
 import Text from 'components/Text';
 
-import { useAppDispatch } from '../hooks/redux-hooks';
+// import { useAppDispatch } from '../hooks/redux-hooks';
 import useTheme from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AddPills';
-import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
+// import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
@@ -24,7 +24,7 @@ function PillsStepTwo(props: Props) {
   const { themeStyle } = useTheme();
   const { navigation } = props;
   const { medsName, medsRegularity, medsDosage } = props.route.params;
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const [notificationTime, setNotificationTime] = useState<Time[]>(
     Array.from({ length: medsRegularity }, () => ({
@@ -69,20 +69,20 @@ function PillsStepTwo(props: Props) {
     handleClose();
   };
 
-  const saveMedsToSchedule = () => {
-    const scheduleItem = {
-      medsName,
-      medsRegularity,
-      medsDosage,
-      notificationTime,
-      notificationsOnOff,
-      id: uuid.v4(),
-    };
+  // const saveMedsToSchedule = () => {
+  //   const scheduleItem = {
+  //     medsName,
+  //     medsRegularity,
+  //     medsDosage,
+  //     notificationTime,
+  //     notificationsOnOff,
+  //     id: uuid.v4(),
+  //   };
 
-    dispatch(addNewPillsToSchedule(scheduleItem));
+  //   dispatch(addNewPillsToSchedule(scheduleItem));
 
-    navigation.navigate('Home' as never);
-  };
+  //   navigation.navigate('Home' as never);
+  // };
 
   const toggleSwitch = () => {
     setNotificationsOnOff(!notificationsOnOff);
@@ -104,6 +104,15 @@ function PillsStepTwo(props: Props) {
       ...notificationTime.slice(0, timeIndex),
       ...notificationTime.slice(timeIndex + 1),
     ]);
+  };
+
+  const nextScreenProps = {
+    medsName,
+    medsRegularity,
+    medsDosage,
+    notificationTime,
+    notificationsOnOff,
+    id: uuid.v4(),
   };
 
   const renderItem = ({ item, index }: { item: Time; index: number }) => {
@@ -155,7 +164,10 @@ function PillsStepTwo(props: Props) {
 
       <View style={styles.navigationButtons}>
         <Button title="Back" onPress={() => navigation.goBack()} />
-        <Button title="Save" onPress={saveMedsToSchedule} />
+        <Button
+          title="Next"
+          onPress={() => navigation.navigate('AddMedsStepThree', nextScreenProps)}
+        />
       </View>
     </View>
   );
