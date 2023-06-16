@@ -6,8 +6,8 @@ import Button from 'components/Button';
 import CheckboxForm from 'components/CheckboxForm';
 import TextInput from 'components/TextInput';
 
-import { RootStackParamList } from '../navigation/AddPills';
 import useTheme from '../hooks/useTheme';
+import { RootStackParamList } from '../navigation/AddPills';
 
 const mockData = [
   { label: 'Один раз в день', notificationCount: 1, id: '1' },

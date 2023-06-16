@@ -14,6 +14,24 @@ function BottomTabsScreen() {
   return (
     <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
       <Tab.Screen
+        name="TreatmentPage"
+        component={TreatmentPage}
+        options={{
+          tabBarIcon: ({ color, size }) => <Icon name="pills" size={size} color={color} />,
+          headerRight: () => <SettingsButton />,
+          tabBarLabel: 'Treatment',
+          title: 'Treatment',
+          headerStyle: {
+            height: 60,
+          },
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 28,
+            paddingVertical: 10,
+          },
+        }}
+      />
+      <Tab.Screen
         name="HomePage"
         component={HomePage}
         options={{
@@ -34,10 +52,10 @@ function BottomTabsScreen() {
         }}
       />
       <Tab.Screen
-        name="TreatmentPage"
+        name="Maps"
         component={TreatmentPage}
         options={{
-          tabBarIcon: ({ color, size }) => <Icon name="pills" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Icon name="map-marked-alt" size={size} color={color} />,
           headerRight: () => <SettingsButton />,
           tabBarLabel: 'Treatment',
           title: 'Treatment',

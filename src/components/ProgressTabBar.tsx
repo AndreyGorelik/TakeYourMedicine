@@ -2,8 +2,9 @@ import { Route, NavigationState } from '@react-navigation/native';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import ProgressBar from './ProgressBar';
 import useTheme from '../hooks/useTheme';
+
+import ProgressBar from './ProgressBar';
 
 interface RouteParams {
   range: number;

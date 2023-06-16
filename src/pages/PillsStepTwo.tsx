@@ -9,9 +9,9 @@ import Button from 'components/Button';
 import Text from 'components/Text';
 
 import { useAppDispatch } from '../hooks/redux-hooks';
+import useTheme from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AddPills';
 import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
-import useTheme from '../hooks/useTheme';
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 

@@ -22,6 +22,7 @@ const ProgressBar = ({ range }: ProgressBarInterface) => {
     } else {
       progress.value = withSpring(range);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   progress.value = withSpring(range);

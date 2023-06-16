@@ -33,6 +33,7 @@ function TreatmentPage() {
 
   const showActionSheet = () => {
     const isActive = ref?.current?.isActive;
+
     if (isActive) {
       ref?.current?.scrollTo(0);
     } else {
@@ -41,6 +42,7 @@ function TreatmentPage() {
   };
 
   function sayHi() {
+    ref?.current?.scrollTo(0);
     navigation.navigate('AddPills' as never);
   }
 

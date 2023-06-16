@@ -1,8 +1,6 @@
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, StyleSheet, Alert, Button } from 'react-native';
-
-import Text from 'components/Text';
+import { StyleSheet, Alert, Button, ScrollView } from 'react-native';
 
 function HomePage() {
   const clear = () => {
@@ -23,12 +21,11 @@ function HomePage() {
   };
 
   return (
-    <View style={styles.view}>
-      <Text>HELLO</Text>
+    <ScrollView style={styles.view}>
       <Button title="clear redux storage" onPress={clear} />
       <Button title="show notifications id" onPress={show} />
       <Button title="deleete notifications" onPress={del} />
-    </View>
+    </ScrollView>
   );
 }
 
