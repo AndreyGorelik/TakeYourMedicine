@@ -21,6 +21,7 @@ export interface medsInfo {
   notificationTime: NotificationTime[];
   notificationsOnOff: boolean;
   id: string;
+  photo: string;
 }
 
 function TreatmentPage() {

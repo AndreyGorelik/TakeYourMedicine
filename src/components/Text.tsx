@@ -2,7 +2,7 @@ import { Text as NativeText, StyleSheet, TextStyle } from 'react-native';
 
 import useTheme from '../hooks/useTheme';
 
-type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
+type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 interface CustomText {
   children: string;
@@ -43,6 +43,11 @@ function Text({ children, variant, ...rest }: CustomText) {
     case 'h5':
       settings.fontSize = 18;
       settings.marginVertical = 8;
+      settings.fontWeight = '800';
+      break;
+    case 'h6':
+      settings.fontSize = 15;
+      settings.marginVertical = 6;
       settings.fontWeight = '800';
       break;
 

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import uuid from 'react-native-uuid';
 
 import { medsInfo } from 'pages/TreatmentPage';
-
+import { noPhoto } from '../../assets/images';
 interface State {
   schedule: medsInfo[];
 }
@@ -56,6 +56,14 @@ const medsScheduleSlice = createSlice({
         id: uuid.v4().toString(),
       });
     },
+    deletePhoto(state, action) {
+      const index = state.schedule.findIndex((item) => item.id === action.payload);
+      state.schedule[index].photo = noPhoto;
+    },
+    updatePhoto(state, action) {
+      const index = state.schedule.findIndex((item) => item.id === action.payload.id);
+      state.schedule[index].photo = action.payload.photo;
+    },
   },
 });
 
@@ -65,6 +73,8 @@ export const {
   switchNotifications,
   deleteNotificationTime,
   addNotificationTime,
+  deletePhoto,
+  updatePhoto,
 } = medsScheduleSlice.actions;
 
 export default medsScheduleSlice.reducer;

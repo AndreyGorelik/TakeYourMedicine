@@ -8,10 +8,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from 'components/Button';
 import Text from 'components/Text';
 
-// import { useAppDispatch } from '../hooks/redux-hooks';
 import useTheme from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AddPills';
-// import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
+import convertTime from '../utils/Time';
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
@@ -24,7 +23,6 @@ function PillsStepTwo(props: Props) {
   const { themeStyle } = useTheme();
   const { navigation } = props;
   const { medsName, medsRegularity, medsDosage } = props.route.params;
-  // const dispatch = useAppDispatch();
 
   const [notificationTime, setNotificationTime] = useState<Time[]>(
     Array.from({ length: medsRegularity }, () => ({
@@ -69,21 +67,6 @@ function PillsStepTwo(props: Props) {
     handleClose();
   };
 
-  // const saveMedsToSchedule = () => {
-  //   const scheduleItem = {
-  //     medsName,
-  //     medsRegularity,
-  //     medsDosage,
-  //     notificationTime,
-  //     notificationsOnOff,
-  //     id: uuid.v4(),
-  //   };
-
-  //   dispatch(addNewPillsToSchedule(scheduleItem));
-
-  //   navigation.navigate('Home' as never);
-  // };
-
   const toggleSwitch = () => {
     setNotificationsOnOff(!notificationsOnOff);
   };
@@ -112,7 +95,6 @@ function PillsStepTwo(props: Props) {
     medsDosage,
     notificationTime,
     notificationsOnOff,
-    id: uuid.v4(),
   };
 
   const renderItem = ({ item, index }: { item: Time; index: number }) => {
@@ -137,12 +119,7 @@ function PillsStepTwo(props: Props) {
               onCancel={handleClose}
             />
           )}
-          <Text>
-            {`${new Date(item.time).getHours()}` +
-              ':' +
-              `${new Date(item.time).getMinutes()}` +
-              '▼'}
-          </Text>
+          <Text>{convertTime(item.time) + '▼'}</Text>
         </TouchableOpacity>
       </View>
     );

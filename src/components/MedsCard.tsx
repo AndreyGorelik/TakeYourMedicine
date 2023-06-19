@@ -1,14 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import { medsInfo } from 'pages/TreatmentPage';
 
 import useTheme from '../hooks/useTheme';
+import convertTime from '../utils/Time';
 
 import Text from './Text';
-
 const MedsCard = ({ data }: { data: medsInfo }) => {
   const navigation = useNavigation();
 
@@ -22,12 +22,39 @@ const MedsCard = ({ data }: { data: medsInfo }) => {
     <TouchableOpacity
       style={[{ backgroundColor: themeStyle.colors.back }, styles.container]}
       onPress={navigateToEdit}
+      activeOpacity={0.6}
     >
       <View style={styles.header}>
-        <MaterialCommunityIcons name="pill" size={24} color={'red'} />
-        <Text variant="h3">{data.medsName}</Text>
+        <View style={styles.leftColumn}>
+          <Text variant="h3">{data.medsName}</Text>
+          <Text>{data.medsDosage}</Text>
+          <Text variant="h6">{data.medsRegularity.toString() + ' в день'}</Text>
+        </View>
+        <View>
+          <Image
+            style={styles.medsImage}
+            source={{
+              uri: data.photo,
+            }}
+          />
+        </View>
       </View>
-      <Text>{data.medsRegularity.toString() + ' в день'}</Text>
+      <View>
+        <View style={styles.reminderHeader}>
+          <Entypo name="bell" size={18} color={themeStyle.colors.primary} />
+          <Text variant="h5">Reminders</Text>
+        </View>
+        <View style={styles.reminderText}>
+          {data.notificationTime.map((item, index, array) => {
+            const isLastElement = index === array.length - 1;
+            return (
+              <View key={item.id}>
+                <Text>{isLastElement ? convertTime(item.time) : convertTime(item.time) + ','}</Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -40,7 +67,24 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  medsImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 25,
+  },
+  leftColumn: {
+    flexDirection: 'column',
+  },
+  reminderHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 5,
+  },
+  reminderText: {
+    flexDirection: 'row',
+    gap: 5,
   },
 });
 

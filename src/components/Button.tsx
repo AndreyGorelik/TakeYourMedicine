@@ -16,7 +16,7 @@ function Button({ title, width, onPress, backgroundColor, disabled = false }: Cu
       accessibilityRole="button"
       style={[
         {
-          width: width ? width : 150,
+          width: width ? width : 180,
           backgroundColor: disabled ? 'gray' : backgroundColor || '#0099FF',
         },
         styles.button,
@@ -35,6 +35,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 13,
     flex: 1,
+    maxHeight: 40,
+    paddingHorizontal: 10,
   },
   text: {
     fontSize: 16,

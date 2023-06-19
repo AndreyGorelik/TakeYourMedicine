@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Switch, TouchableOpacity, View } from 'react-nati
 import DatePicker from 'react-native-date-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import PhotoWithModal from 'components/PhotoWithModal';
 import Text from 'components/Text';
 
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
@@ -13,6 +14,7 @@ import {
   deleteNotificationTime,
   addNotificationTime,
 } from '../store/slices/medsScheduleSlice';
+import convertTime from '../utils/Time';
 
 import { medsInfo } from './TreatmentPage';
 
@@ -24,18 +26,20 @@ interface Time {
 function EditPills(props: any) {
   const { id } = props.route.params;
   const dispatch = useAppDispatch();
-  const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
+
+  const itemToRender: medsInfo = useAppSelector((state) =>
+    state.medsScheduleReducer.schedule.find((item: medsInfo) => item.id === id)
+  );
 
   const { themeStyle } = useTheme();
 
-  const itemToRender: medsInfo = schedule.find((item: medsInfo) => item.id === id);
   const [openIndex, setOpenIndex] = useState<null | number>(null);
 
-  const handleClose = () => {
+  const closeDatePicker = () => {
     setOpenIndex(null);
   };
 
-  const handleConfirm = (date: Date, dateId: string) => {
+  const confirmDate = (date: Date, dateId: string) => {
     const test = {
       newTime: date.toString(),
       dateId,
@@ -43,18 +47,18 @@ function EditPills(props: any) {
     };
 
     dispatch(changePillsInSchedule(test));
-    handleClose();
+    closeDatePicker();
   };
 
-  const toggleSwitch = () => {
+  const togglePush = () => {
     dispatch(switchNotifications(id));
   };
 
-  const handleOpen = (index: number) => {
+  const openDatePicker = (index: number) => {
     setOpenIndex(index);
   };
 
-  const handleDelete = (notificationId: string) => {
+  const deleteTime = (notificationId: string) => {
     dispatch(deleteNotificationTime({ id, notificationId }));
   };
 
@@ -67,11 +71,11 @@ function EditPills(props: any) {
     const isOpen = openIndex === index;
     return (
       <View style={styles.time}>
-        <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.reminder}>
+        <TouchableOpacity onPress={() => deleteTime(item.id)} style={styles.reminder}>
           <Ionicons name="ios-remove-circle-outline" size={24} color={'red'} />
         </TouchableOpacity>
         <View style={styles.timePicker}>
-          <TouchableOpacity onPress={() => handleOpen(index)} style={styles.reminder}>
+          <TouchableOpacity onPress={() => openDatePicker(index)} style={styles.reminder}>
             <Text>{Number(index + 1).toString() + ' прием'}</Text>
             {isOpen && (
               <DatePicker
@@ -79,23 +83,24 @@ function EditPills(props: any) {
                 open={true}
                 mode="time"
                 date={date}
-                onConfirm={(newDate) => handleConfirm(newDate, item.id)}
-                onCancel={handleClose}
+                onConfirm={(newDate) => confirmDate(newDate, item.id)}
+                onCancel={closeDatePicker}
               />
             )}
-
-            <Text>{`${date.getHours()}` + ':' + `${date.getMinutes()}` + '▼'}</Text>
+            <Text>{convertTime(item.time) + '▼'}</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
   };
+
   return (
     <View style={[styles.view, { backgroundColor: themeStyle.colors.back }]}>
       <Text variant="h3">{itemToRender.medsName}</Text>
+      <PhotoWithModal id={id} />
       <View style={styles.switchContainer}>
         <Text>Включить уведомления</Text>
-        <Switch value={itemToRender.notificationsOnOff} onValueChange={toggleSwitch} />
+        <Switch value={itemToRender.notificationsOnOff} onValueChange={togglePush} />
       </View>
       <FlatList
         data={itemToRender.notificationTime}
@@ -117,7 +122,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    width: '100%',
   },
   switchContainer: {
     flexDirection: 'row',
@@ -144,6 +148,10 @@ const styles = StyleSheet.create({
   timePicker: {
     flex: 1,
     justifyContent: 'space-between',
+  },
+  medsImage: {
+    width: 100,
+    height: 100,
   },
 });
 
