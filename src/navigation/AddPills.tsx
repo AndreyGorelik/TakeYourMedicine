@@ -7,7 +7,14 @@ import PillsStepTwo from 'pages/PillsStepTwo';
 
 export type RootStackParamList = {
   AddMedsStepOne: { range: number };
-  AddMedsStepTwo: { range?: number; medsDosage: string; medsName: string; medsRegularity: number };
+  AddMedsStepTwo: {
+    range?: number;
+    medsDescription: string;
+    medsName: string;
+    medsRegularity: number;
+    medsSupply: string;
+    medsForm: { label: string; id: string };
+  };
   AddMedsStepThree: any;
 };
 

@@ -19,7 +19,6 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
   const top = useSharedValue(36);
   const labelFontSize = useSharedValue(16);
   const { themeStyle } = useTheme();
-
   const movePlaceholder = (status: focusAndBlur) => {
     if (status === 'focus') {
       top.value = withTiming(16, { duration: ANIMATION_DURATION });
@@ -57,6 +56,7 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
         onFocus={() => movePlaceholder('focus')}
         onBlur={() => movePlaceholder('blur')}
         ref={inputRef}
+        value={value}
         style={[
           { color: themeStyle.colors.text, borderColor: themeStyle.colors.text },
           styles.input,

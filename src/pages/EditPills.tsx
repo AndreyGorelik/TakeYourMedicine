@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Switch, TouchableOpacity, View } from 'react-nati
 import DatePicker from 'react-native-date-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import ModalWithInput from 'components/ModalWithInput';
 import PhotoWithModal from 'components/PhotoWithModal';
 import Text from 'components/Text';
 
@@ -13,6 +14,8 @@ import {
   switchNotifications,
   deleteNotificationTime,
   addNotificationTime,
+  changeMedsSupply,
+  changeMedsRest,
 } from '../store/slices/medsScheduleSlice';
 import convertTime from '../utils/Time';
 
@@ -40,13 +43,12 @@ function EditPills(props: any) {
   };
 
   const confirmDate = (date: Date, dateId: string) => {
-    const test = {
+    const newDate = {
       newTime: date.toString(),
       dateId,
       medsId: id,
     };
-
-    dispatch(changePillsInSchedule(test));
+    dispatch(changePillsInSchedule(newDate));
     closeDatePicker();
   };
 
@@ -69,10 +71,19 @@ function EditPills(props: any) {
   const renderItem = ({ item, index }: { item: Time; index: number }) => {
     const date = new Date(item.time);
     const isOpen = openIndex === index;
+    const isLastElement = itemToRender.notificationTime.length === 1;
     return (
       <View style={styles.time}>
-        <TouchableOpacity onPress={() => deleteTime(item.id)} style={styles.reminder}>
-          <Ionicons name="ios-remove-circle-outline" size={24} color={'red'} />
+        <TouchableOpacity
+          onPress={() => deleteTime(item.id)}
+          style={styles.reminder}
+          disabled={isLastElement}
+        >
+          <Ionicons
+            name="ios-remove-circle-outline"
+            size={24}
+            color={isLastElement ? 'gray' : 'red'}
+          />
         </TouchableOpacity>
         <View style={styles.timePicker}>
           <TouchableOpacity onPress={() => openDatePicker(index)} style={styles.reminder}>
@@ -94,23 +105,64 @@ function EditPills(props: any) {
     );
   };
 
+  const changeMedsSupplyCount = (count: string) => {
+    dispatch(changeMedsSupply({ count, id }));
+  };
+
+  const changeMedsRestCount = (count: string) => {
+    dispatch(changeMedsRest({ count, id }));
+  };
+
   return (
     <View style={[styles.view, { backgroundColor: themeStyle.colors.back }]}>
-      <Text variant="h3">{itemToRender.medsName}</Text>
-      <PhotoWithModal id={id} />
-      <View style={styles.switchContainer}>
-        <Text>Включить уведомления</Text>
-        <Switch value={itemToRender.notificationsOnOff} onValueChange={togglePush} />
+      <View style={styles.header}>
+        <View>
+          <Text variant="h3">{itemToRender.medsName}</Text>
+          <Text>{itemToRender.medsDescription}</Text>
+        </View>
+
+        <View>
+          <PhotoWithModal id={id} />
+        </View>
       </View>
-      <FlatList
-        data={itemToRender.notificationTime}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
-      <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
-        <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
-        <Text>Добавить напоминание</Text>
-      </TouchableOpacity>
+
+      <View>
+        <Text variant="h3">Расписание приема</Text>
+
+        <View style={styles.switchContainer}>
+          <Text>Напоминать о приеме</Text>
+          <Switch value={itemToRender.notificationsOnOff} onValueChange={togglePush} />
+        </View>
+
+        <FlatList
+          data={itemToRender.notificationTime}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+        />
+        <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
+          <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
+          <Text>Добавить напоминание</Text>
+        </TouchableOpacity>
+
+        <Text variant="h3">Запасы</Text>
+
+        <View style={styles.switchContainer}>
+          <Text>Напоминать об остатке</Text>
+          <Switch value={itemToRender.supplyNotification} onValueChange={togglePush} />
+        </View>
+
+        <ModalWithInput
+          label="Запас"
+          value={itemToRender.medsSupply}
+          onChangeText={changeMedsSupplyCount}
+        />
+
+        <ModalWithInput
+          label="Осталось лекарства"
+          value={itemToRender.medsRest}
+          onChangeText={changeMedsRestCount}
+        />
+      </View>
     </View>
   );
 }
@@ -122,6 +174,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    gap: 10,
   },
   switchContainer: {
     flexDirection: 'row',
@@ -152,6 +205,11 @@ const styles = StyleSheet.create({
   medsImage: {
     width: 100,
     height: 100,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
 });
 

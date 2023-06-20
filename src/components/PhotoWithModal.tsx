@@ -79,8 +79,9 @@ function PhotoWithModal({ id }: { id: string }) {
 
 const styles = StyleSheet.create({
   medsImage: {
-    width: 150,
-    height: 150,
+    width: 130,
+    height: 130,
+    borderRadius: 25,
   },
   modalBackground: {
     flex: 1,

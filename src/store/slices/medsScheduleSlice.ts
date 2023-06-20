@@ -64,6 +64,14 @@ const medsScheduleSlice = createSlice({
       const index = state.schedule.findIndex((item) => item.id === action.payload.id);
       state.schedule[index].photo = action.payload.photo;
     },
+    changeMedsSupply(state, action) {
+      const index = state.schedule.findIndex((item) => item.id === action.payload.id);
+      state.schedule[index].medsSupply = action.payload.count;
+    },
+    changeMedsRest(state, action) {
+      const index = state.schedule.findIndex((item) => item.id === action.payload.id);
+      state.schedule[index].medsRest = action.payload.count;
+    },
   },
 });
 
@@ -75,6 +83,8 @@ export const {
   addNotificationTime,
   deletePhoto,
   updatePhoto,
+  changeMedsSupply,
+  changeMedsRest,
 } = medsScheduleSlice.actions;
 
 export default medsScheduleSlice.reducer;

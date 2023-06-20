@@ -27,7 +27,7 @@ const MedsCard = ({ data }: { data: medsInfo }) => {
       <View style={styles.header}>
         <View style={styles.leftColumn}>
           <Text variant="h3">{data.medsName}</Text>
-          <Text>{data.medsDosage}</Text>
+          {data.medsDescription ? <Text>{data.medsDescription}</Text> : null}
           <Text variant="h6">{data.medsRegularity.toString() + ' в день'}</Text>
         </View>
         <View>

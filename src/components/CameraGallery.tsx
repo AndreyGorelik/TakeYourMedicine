@@ -4,6 +4,8 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+import useTheme from '../hooks/useTheme';
+
 import Text from './Text';
 
 interface CameraPhoto {
@@ -17,6 +19,7 @@ enum PhotoSource {
 }
 
 function CameraGallery({ photo, setPhoto }: CameraPhoto) {
+  const { themeStyle } = useTheme();
   const takePhoto = async (photoSource: PhotoSource) => {
     const result =
       photoSource === PhotoSource.Camera
@@ -29,20 +32,30 @@ function CameraGallery({ photo, setPhoto }: CameraPhoto) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => takePhoto(PhotoSource.Camera)}>
-        <FontAwesome name="photo" size={54} color={'#4B454D'} />
-        <Text>Take photo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => takePhoto(PhotoSource.Gallery)}>
-        <Entypo name="camera" size={54} color={'#4B454D'} />
-        <Text>Upload from phone</Text>
-      </TouchableOpacity>
-      <Image
-        style={styles.medsImage}
-        source={{
-          uri: photo,
-        }}
-      />
+      <View style={styles.photoPreview}>
+        <Image
+          style={styles.medsImage}
+          source={{
+            uri: photo,
+          }}
+        />
+      </View>
+      <View style={styles.photoControl}>
+        <TouchableOpacity
+          onPress={() => takePhoto(PhotoSource.Camera)}
+          style={styles.photoControlItem}
+        >
+          <Entypo name="camera" size={54} color={themeStyle.colors.primary} />
+          <Text>Take photo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => takePhoto(PhotoSource.Gallery)}
+          style={styles.photoControlItem}
+        >
+          <FontAwesome name="photo" size={54} color={themeStyle.colors.primary} />
+          <Text>Upload from phone</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -50,13 +63,24 @@ function CameraGallery({ photo, setPhoto }: CameraPhoto) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginVertical: 10,
-    gap: 10,
+    gap: 50,
   },
   medsImage: {
-    width: 150,
-    height: 150,
+    width: 250,
+    height: 250,
+    borderRadius: 25,
+  },
+  photoPreview: {
+    alignItems: 'center',
+  },
+  photoControl: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  photoControlItem: {
+    alignItems: 'center',
   },
 });
 

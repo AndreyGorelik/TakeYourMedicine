@@ -29,7 +29,7 @@ const TabBar = ({ state, descriptors, navigation }: any) => {
         const isFocused = state.index === index;
 
         const tabIcon = options.tabBarIcon({
-          color: isFocused ? (darkMode ? '#FFF' : '#003F5F') : darkMode ? '#0099FF' : 'gray',
+          color: isFocused ? (darkMode ? '#FFF' : '#0099FF') : darkMode ? '#0099FF' : 'gray',
           size: 30,
         });
 

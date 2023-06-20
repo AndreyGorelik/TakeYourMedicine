@@ -39,7 +39,7 @@ async function notifyOnTime(time: Time, meds: medsInfo) {
     {
       id: notificationId,
       title: 'TAKE YOUR PEEL',
-      body: `${meds.medsName}, ${meds.medsDosage}`,
+      body: `${meds.medsName}, ${meds.medsDescription}`,
       android: {
         channelId: channelId,
         pressAction: {

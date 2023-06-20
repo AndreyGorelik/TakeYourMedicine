@@ -6,6 +6,7 @@ import uuid from 'react-native-uuid';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Button from 'components/Button';
+import ModalWithInput from 'components/ModalWithInput';
 import Text from 'components/Text';
 
 import useTheme from '../hooks/useTheme';
@@ -22,7 +23,7 @@ interface Time {
 function PillsStepTwo(props: Props) {
   const { themeStyle } = useTheme();
   const { navigation } = props;
-  const { medsName, medsRegularity, medsDosage } = props.route.params;
+  const { medsName, medsRegularity, medsDescription, medsSupply, medsForm } = props.route.params;
 
   const [notificationTime, setNotificationTime] = useState<Time[]>(
     Array.from({ length: medsRegularity }, () => ({
@@ -42,6 +43,8 @@ function PillsStepTwo(props: Props) {
 
   const [openIndex, setOpenIndex] = useState<null | number>(null);
   const [notificationsOnOff, setNotificationsOnOff] = useState(false);
+  const [supplyNotification, setSupplyNotification] = useState(false);
+  const [medsRest, setMedsRest] = useState(10);
 
   const handleOpen = (index: number) => {
     setOpenIndex(index);
@@ -92,9 +95,13 @@ function PillsStepTwo(props: Props) {
   const nextScreenProps = {
     medsName,
     medsRegularity,
-    medsDosage,
+    medsDescription,
     notificationTime,
     notificationsOnOff,
+    medsSupply,
+    medsForm,
+    medsRest,
+    supplyNotification,
   };
 
   const renderItem = ({ item, index }: { item: Time; index: number }) => {
@@ -127,17 +134,36 @@ function PillsStepTwo(props: Props) {
 
   return (
     <View style={[{ backgroundColor: themeStyle.colors.back }, styles.view]}>
-      <View style={styles.switchContainer}>
-        <Text>Включить уведомления</Text>
-        <Switch value={notificationsOnOff} onValueChange={toggleSwitch} />
+      <View>
+        <View style={styles.switchContainer}>
+          <Text>Напоминания о приеме</Text>
+          <Switch value={notificationsOnOff} onValueChange={toggleSwitch} />
+        </View>
+
+        <View>
+          <FlatList
+            data={notificationTime}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+          />
+        </View>
+
+        {medsRegularity > 3 && (
+          <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
+            <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
+            <Text>Добавить напоминание</Text>
+          </TouchableOpacity>
+        )}
+        <View style={styles.switchContainer}>
+          <Text>Напоминания об остатке</Text>
+          <Switch value={supplyNotification} onValueChange={setSupplyNotification} />
+        </View>
+        <ModalWithInput
+          label="Остаток"
+          value={medsRest > +medsSupply ? medsSupply.toString() : medsRest.toString()}
+          onChangeText={setMedsRest}
+        />
       </View>
-      <FlatList data={notificationTime} keyExtractor={(item) => item.id} renderItem={renderItem} />
-      {medsRegularity > 3 && (
-        <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
-          <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
-          <Text>Добавить напоминание</Text>
-        </TouchableOpacity>
-      )}
 
       <View style={styles.navigationButtons}>
         <Button title="Back" onPress={() => navigation.goBack()} />
@@ -157,7 +183,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    width: '100%',
+    // width: '100%',
   },
   reminder: {
     flex: 1,
@@ -169,6 +195,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
+    // flex: 1,
   },
   addNotification: {
     flexDirection: 'row',
@@ -182,9 +209,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   navigationButtons: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    maxWidth: '100%',
+    // maxWidth: '100%',
+    alignItems: 'flex-end',
     gap: 10,
   },
 });

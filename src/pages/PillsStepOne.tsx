@@ -4,6 +4,8 @@ import { StyleSheet, View } from 'react-native';
 
 import Button from 'components/Button';
 import CheckboxForm from 'components/CheckboxForm';
+import ModalWithCheckbox from 'components/ModalWithCheckbox';
+import ModalWithInput from 'components/ModalWithInput';
 import Text from 'components/Text';
 import TextInput from 'components/TextInput';
 
@@ -18,15 +20,24 @@ const mockData = [
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepOne'>;
 
+const mockDataForm = [
+  { label: 'Таблетки', id: '1' },
+  { label: 'Спрей', id: '2' },
+  { label: 'Единицы', id: '3' },
+  { label: 'Ингаляции', id: '4' },
+  { label: 'Капли', id: '5' },
+];
+
 function PillsStepOne({ navigation }: Props) {
   const [medsName, setMedsName] = useState('');
-  const [medsDosage, setMedsDosage] = useState('');
+  const [medsDescription, setMedsDescription] = useState('');
   const [medsRegularity, setMedsRegularity] = useState(0);
-
+  const [medsForm, setMedsForm] = useState(mockDataForm[0]);
+  const [medsSupply, setMedsSupply] = useState(20);
   const { themeStyle } = useTheme();
 
   const checkFormFilled = () => {
-    if (medsName && medsDosage && !!medsRegularity) {
+    if (medsName && !!medsRegularity) {
       return true;
     }
     return false;
@@ -35,15 +46,28 @@ function PillsStepOne({ navigation }: Props) {
   const isFormChecked = checkFormFilled();
   const nextScreenProps = {
     medsName,
-    medsDosage,
+    medsDescription,
     medsRegularity,
+    medsForm,
+    medsSupply: medsSupply.toString(),
   };
 
   return (
     <View style={[{ backgroundColor: themeStyle.colors.back }, styles.view]}>
       <Text variant="h3">Basic</Text>
       <TextInput onChangeText={setMedsName} value={medsName} placeholder="Meds name" />
-      <TextInput onChangeText={setMedsDosage} value={medsDosage} placeholder="Meds dosage" />
+      <TextInput
+        onChangeText={setMedsDescription}
+        value={medsDescription}
+        placeholder="Meds description"
+      />
+      <ModalWithCheckbox
+        data={mockDataForm}
+        checkedItem={medsForm}
+        getBack={setMedsForm}
+        title={'Форма лекарства'}
+      />
+      <ModalWithInput label="Запас" value={medsSupply.toString()} onChangeText={setMedsSupply} />
       <Text variant="h3">Schedule</Text>
       <CheckboxForm data={mockData} getBack={setMedsRegularity} />
       <View style={styles.navigationButtons}>
@@ -65,12 +89,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-    width: '100%',
+    gap: 5,
   },
   navigationButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    maxWidth: '100%',
     gap: 10,
   },
 });

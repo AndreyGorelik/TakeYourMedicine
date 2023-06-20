@@ -17,11 +17,14 @@ interface NotificationTime {
 export interface medsInfo {
   medsName: string;
   medsRegularity: number;
-  medsDosage: string;
+  medsDescription: string;
   notificationTime: NotificationTime[];
   notificationsOnOff: boolean;
   id: string;
   photo: string;
+  medsSupply: string;
+  medsRest: string;
+  supplyNotification: boolean;
 }
 
 function TreatmentPage() {
