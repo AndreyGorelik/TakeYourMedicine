@@ -12,6 +12,9 @@ import { useAppDispatch } from '../hooks/redux-hooks';
 import useTheme from '../hooks/useTheme';
 // import { RootStackParamList } from '../navigation/AddPills';
 import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
+import notifyOnTime from '../utils/scheduleNotification';
+
+import { medsInfo } from './TreatmentPage';
 
 // type Props = StackScreenProps<RootStackParamList, 'AddMedsStepThree'>;
 
@@ -24,7 +27,7 @@ function PillsStepThree(props: any) {
   const [photo, setPhoto] = useState(noPhoto);
 
   const saveMedsToSchedule = () => {
-    const scheduleItem = {
+    const scheduleItem: medsInfo = {
       ...medsInfoForSaving,
       photo: photo,
       id: uuid.v4(),
@@ -32,6 +35,11 @@ function PillsStepThree(props: any) {
 
     dispatch(addNewPillsToSchedule(scheduleItem));
 
+    if (scheduleItem.notificationsOnOff) {
+      scheduleItem.notificationTime.forEach((item) => {
+        notifyOnTime(item, scheduleItem);
+      });
+    }
     navigation.navigate('Home' as never);
   };
 

@@ -11,7 +11,8 @@ import Text from 'components/Text';
 
 import useTheme from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AddPills';
-import convertTime from '../utils/Time';
+import checkPermissions from '../utils/checkPermissions';
+import convertTime from '../utils/convertTime';
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
@@ -70,8 +71,24 @@ function PillsStepTwo(props: Props) {
     handleClose();
   };
 
+  const toggleSwitchSupplyNotifications = () => {
+    checkPermissions().then((data) => {
+      if (data) {
+        setSupplyNotification(!supplyNotification);
+      } else {
+        setSupplyNotification(false);
+      }
+    });
+  };
+
   const toggleSwitch = () => {
-    setNotificationsOnOff(!notificationsOnOff);
+    checkPermissions().then((data) => {
+      if (data) {
+        setNotificationsOnOff(!notificationsOnOff);
+      } else {
+        setNotificationsOnOff(false);
+      }
+    });
   };
 
   const handleAddNewTime = () => {
@@ -156,7 +173,7 @@ function PillsStepTwo(props: Props) {
         )}
         <View style={styles.switchContainer}>
           <Text>Напоминания об остатке</Text>
-          <Switch value={supplyNotification} onValueChange={setSupplyNotification} />
+          <Switch value={supplyNotification} onValueChange={toggleSwitchSupplyNotifications} />
         </View>
         <ModalWithInput
           label="Остаток"

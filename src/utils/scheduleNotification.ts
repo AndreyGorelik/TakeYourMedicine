@@ -20,7 +20,15 @@ async function notifyOnTime(time: Time, meds: medsInfo) {
     type: TriggerType.TIMESTAMP,
     timestamp:
       new Date(notificationTime) <= new Date()
-        ? new Date(notificationTime).getTime() + 1000 * 60 * 60 * 24
+        ? (() => {
+            const newHours = new Date(notificationTime).getHours();
+            const newMinutes = new Date(notificationTime).getMinutes();
+            const newD = new Date();
+            newD.setHours(newHours);
+            newD.setMinutes(newMinutes);
+            newD.setDate(newD.getDate() + 1);
+            return newD.getTime();
+          })()
         : new Date(notificationTime).getTime(),
     repeatFrequency: RepeatFrequency.DAILY,
     alarmManager: {

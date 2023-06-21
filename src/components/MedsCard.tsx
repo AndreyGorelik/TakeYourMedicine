@@ -6,7 +6,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { medsInfo } from 'pages/TreatmentPage';
 
 import useTheme from '../hooks/useTheme';
-import convertTime from '../utils/Time';
+import convertTime from '../utils/convertTime';
 
 import Text from './Text';
 const MedsCard = ({ data }: { data: medsInfo }) => {

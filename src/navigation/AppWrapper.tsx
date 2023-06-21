@@ -1,16 +1,16 @@
 import notifee, { EventType } from '@notifee/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useEffect } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
 import EditPills from 'pages/EditPills';
 import SettingsPage from 'pages/Settings';
-import { medsInfo } from 'pages/TreatmentPage';
 
-import { useAppSelector } from '../hooks/redux-hooks';
+import { useAppDispatch } from '../hooks/redux-hooks';
 import useTheme from '../hooks/useTheme';
-import cancelNotification from '../utils/cancelNotification';
-import notifyOnTime from '../utils/scheduleNotification';
+import { cancelAllNotifications } from '../store/slices/medsScheduleSlice';
+import checkPermissions from '../utils/checkPermissions';
 import notifyOnTimer from '../utils/timerNotification';
 
 import AddPills from './AddPills';
@@ -19,23 +19,15 @@ const Stack = createStackNavigator();
 
 function AppWrapper() {
   const theme = useTheme();
-  const medsScheduleReducer = useAppSelector((state) => state.medsScheduleReducer);
-  const updateNotificationsStatus = () => {
-    medsScheduleReducer.schedule.forEach((meds: medsInfo) => {
-      if (meds.notificationsOnOff === true) {
-        meds.notificationTime.forEach((item) => {
-          cancelNotification(item.id);
-          notifyOnTime(item, meds);
-        });
-      } else {
-        meds.notificationTime.forEach((item) => {
-          cancelNotification(item.id);
-        });
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    checkPermissions().then((permissionStatus) => {
+      if (!permissionStatus) {
+        dispatch(cancelAllNotifications());
       }
     });
-  };
-
-  updateNotificationsStatus();
+  }, [dispatch]);
 
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;

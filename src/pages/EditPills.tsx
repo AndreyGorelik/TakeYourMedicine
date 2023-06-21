@@ -16,8 +16,12 @@ import {
   addNotificationTime,
   changeMedsSupply,
   changeMedsRest,
+  switchSupplyNotifications,
 } from '../store/slices/medsScheduleSlice';
-import convertTime from '../utils/Time';
+import cancelNotification from '../utils/cancelNotification';
+import checkPermissions from '../utils/checkPermissions';
+import convertTime from '../utils/convertTime';
+import notifyOnTime from '../utils/scheduleNotification';
 
 import { medsInfo } from './TreatmentPage';
 
@@ -34,6 +38,16 @@ function EditPills(props: any) {
     state.medsScheduleReducer.schedule.find((item: medsInfo) => item.id === id)
   );
 
+  if (itemToRender.notificationsOnOff) {
+    itemToRender.notificationTime.forEach((item) => {
+      notifyOnTime(item, itemToRender);
+    });
+  } else {
+    itemToRender.notificationTime.forEach((item) => {
+      cancelNotification(item.id);
+    });
+  }
+
   const { themeStyle } = useTheme();
 
   const [openIndex, setOpenIndex] = useState<null | number>(null);
@@ -49,11 +63,12 @@ function EditPills(props: any) {
       medsId: id,
     };
     dispatch(changePillsInSchedule(newDate));
-    closeDatePicker();
-  };
 
-  const togglePush = () => {
-    dispatch(switchNotifications(id));
+    if (itemToRender.notificationsOnOff) {
+      notifyOnTime({ time: date.toString(), id: dateId }, itemToRender);
+    }
+
+    closeDatePicker();
   };
 
   const openDatePicker = (index: number) => {
@@ -113,6 +128,22 @@ function EditPills(props: any) {
     dispatch(changeMedsRest({ count, id }));
   };
 
+  const toggleSupplyNotifications = () => {
+    checkPermissions().then((data) => {
+      if (data) {
+        dispatch(switchSupplyNotifications(id));
+      }
+    });
+  };
+
+  const togglePush = () => {
+    checkPermissions().then((data) => {
+      if (data) {
+        dispatch(switchNotifications(id));
+      }
+    });
+  };
+
   return (
     <View style={[styles.view, { backgroundColor: themeStyle.colors.back }]}>
       <View style={styles.header}>
@@ -148,7 +179,10 @@ function EditPills(props: any) {
 
         <View style={styles.switchContainer}>
           <Text>Напоминать об остатке</Text>
-          <Switch value={itemToRender.supplyNotification} onValueChange={togglePush} />
+          <Switch
+            value={itemToRender.supplyNotification}
+            onValueChange={toggleSupplyNotifications}
+          />
         </View>
 
         <ModalWithInput

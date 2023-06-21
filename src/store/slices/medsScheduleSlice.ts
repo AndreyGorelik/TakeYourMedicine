@@ -2,7 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import uuid from 'react-native-uuid';
 
 import { medsInfo } from 'pages/TreatmentPage';
+
 import { noPhoto } from '../../assets/images';
+import cancelNotification from '../../utils/cancelNotification';
 interface State {
   schedule: medsInfo[];
 }
@@ -40,6 +42,12 @@ const medsScheduleSlice = createSlice({
       const index = state.schedule.findIndex((item) => item.id === action.payload);
       state.schedule[index].notificationsOnOff = !state.schedule[index].notificationsOnOff;
     },
+    cancelAllNotifications(state) {
+      state.schedule.forEach((item) => {
+        cancelNotification(item.id);
+        item.notificationsOnOff = false;
+      });
+    },
     deleteNotificationTime(state, action) {
       const index = state.schedule.findIndex((item) => item.id === action.payload.id);
 
@@ -72,6 +80,10 @@ const medsScheduleSlice = createSlice({
       const index = state.schedule.findIndex((item) => item.id === action.payload.id);
       state.schedule[index].medsRest = action.payload.count;
     },
+    switchSupplyNotifications(state, action) {
+      const index = state.schedule.findIndex((item) => item.id === action.payload);
+      state.schedule[index].supplyNotification = !state.schedule[index].supplyNotification;
+    },
   },
 });
 
@@ -85,6 +97,8 @@ export const {
   updatePhoto,
   changeMedsSupply,
   changeMedsRest,
+  switchSupplyNotifications,
+  cancelAllNotifications,
 } = medsScheduleSlice.actions;
 
 export default medsScheduleSlice.reducer;
