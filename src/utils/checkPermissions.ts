@@ -16,7 +16,6 @@ async function checkPermissions() {
         { text: 'OK', onPress: async () => await notifee.openNotificationSettings() },
       ]
     );
-    // await notifee.openNotificationSettings();
   }
 
   if (

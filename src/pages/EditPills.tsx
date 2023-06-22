@@ -192,7 +192,7 @@ function EditPills(props: any) {
         />
 
         <ModalWithInput
-          label="Осталось лекарства"
+          label="Уведомлять при остатке"
           value={itemToRender.medsRest}
           onChangeText={changeMedsRestCount}
         />

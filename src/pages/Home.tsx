@@ -1,6 +1,6 @@
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, Alert, Button, ScrollView } from 'react-native';
+import { StyleSheet, Alert, Button, ScrollView, Linking } from 'react-native';
 
 function HomePage() {
   const clear = () => {
@@ -25,6 +25,7 @@ function HomePage() {
       <Button title="clear redux storage" onPress={clear} />
       <Button title="show notifications id" onPress={show} />
       <Button title="deleete notifications" onPress={del} />
+      <Button title="deep link" onPress={() => Linking.openURL('demoapp://Settings')} />
     </ScrollView>
   );
 }

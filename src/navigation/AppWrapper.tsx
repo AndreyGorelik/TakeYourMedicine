@@ -2,19 +2,20 @@ import notifee, { EventType } from '@notifee/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useEffect } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { Linking, SafeAreaView, StyleSheet } from 'react-native';
 
 import EditPills from 'pages/EditPills';
 import SettingsPage from 'pages/Settings';
 
 import { useAppDispatch } from '../hooks/redux-hooks';
 import useTheme from '../hooks/useTheme';
-import { cancelAllNotifications } from '../store/slices/medsScheduleSlice';
+import { cancelAllNotifications, decrementMedsSupply } from '../store/slices/medsScheduleSlice';
 import checkPermissions from '../utils/checkPermissions';
 import notifyOnTimer from '../utils/timerNotification';
 
 import AddPills from './AddPills';
 import BottomTabsScreen from './BottomTabs';
+
 const Stack = createStackNavigator();
 
 function AppWrapper() {
@@ -22,26 +23,49 @@ function AppWrapper() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    checkPermissions().then((permissionStatus) => {
+    checkPermissions().then((permissionStatus: boolean) => {
       if (!permissionStatus) {
         dispatch(cancelAllNotifications());
       }
     });
   }, [dispatch]);
 
+  useEffect(() => {
+    const navigateToInitialUrl = async () => {
+      const initialUrl = await Linking.getInitialURL();
+      if (initialUrl) {
+        await Linking.openURL(initialUrl);
+      }
+    };
+    navigateToInitialUrl();
+  }, []);
+
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;
-    if (pressAction?.id === 'openApp') {
-      await notifee.cancelNotification(notification!.id!);
+    if (type === EventType.PRESS) {
+      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
     }
     if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsLater') {
       notifyOnTimer();
     }
+    if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsTaken') {
+      dispatch(decrementMedsSupply(notification!.data!.medsId));
+      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
+    }
   });
+
+  const linking = {
+    prefixes: ['takeyourmeds://'],
+    config: {
+      screens: {
+        EditPills: 'EditPills/:id',
+      },
+    },
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <NavigationContainer theme={theme.themeStyle}>
+      <NavigationContainer theme={theme.themeStyle} linking={linking}>
         <Stack.Navigator
           screenOptions={{
             headerBackTitleVisible: false,
