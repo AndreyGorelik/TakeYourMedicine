@@ -50,7 +50,7 @@ function PillsStepThree(props: any) {
       <View style={styles.navigationButtons}>
         <Button
           title="Back"
-          onPress={() => navigation.navigate('AddMedsStepTwo', medsInfoForSaving)}
+          onPress={() => navigation.navigate('AddMedsStepTwo', { medsInfoForSaving })}
         />
         <Button title="Save" disabled={false} onPress={saveMedsToSchedule} />
       </View>

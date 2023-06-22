@@ -16,6 +16,7 @@ interface ProgressTabBarProps {
 
 const ProgressTabBar = ({ state }: ProgressTabBarProps) => {
   const route = state.routes[state.index] as Route<string, RouteParams>;
+
   const { themeStyle } = useTheme();
   const { range } = route.params;
 

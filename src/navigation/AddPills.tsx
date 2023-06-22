@@ -53,7 +53,7 @@ function AddPills() {
             paddingVertical: 10,
           },
         }}
-        initialParams={{ range: 60 }}
+        initialParams={{ range: 80 }}
       />
       <Tab.Screen
         name="AddMedsStepThree"
