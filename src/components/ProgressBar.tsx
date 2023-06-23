@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -14,18 +13,13 @@ interface ProgressBarInterface {
 const ProgressBar = ({ range }: ProgressBarInterface) => {
   const progress = useSharedValue(0);
 
-  useEffect(() => {
-    if (range < 1) {
-      progress.value = withSpring(1);
-    } else if (range > 100) {
-      progress.value = withSpring(100);
-    } else {
-      progress.value = withSpring(range);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  progress.value = withSpring(range);
+  if (range < 1) {
+    progress.value = withSpring(1);
+  } else if (range > 100) {
+    progress.value = withSpring(100);
+  } else {
+    progress.value = withSpring(range);
+  }
 
   const aStyle = useAnimatedStyle(() => {
     return {

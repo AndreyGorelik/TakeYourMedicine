@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import { Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -9,9 +8,7 @@ import useTheme from '../hooks/useTheme';
 import convertTime from '../utils/convertTime';
 
 import Text from './Text';
-const MedsCard = ({ data }: { data: medsInfo }) => {
-  const navigation = useNavigation();
-
+const MedsCard = ({ data, navigation }: { data: medsInfo }) => {
   const { themeStyle } = useTheme();
 
   const navigateToEdit = () => {

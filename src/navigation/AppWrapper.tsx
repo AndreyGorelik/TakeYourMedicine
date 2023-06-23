@@ -1,13 +1,13 @@
 import notifee, { EventType } from '@notifee/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useEffect } from 'react';
 import { Linking, SafeAreaView, StyleSheet } from 'react-native';
 
 import EditPills from 'pages/EditPills';
 import SettingsPage from 'pages/Settings';
 
 import { useAppDispatch } from '../hooks/redux-hooks';
+import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
 import { cancelAllNotifications, decrementMedsSupply } from '../store/slices/medsScheduleSlice';
 import checkPermissions from '../utils/checkPermissions';
@@ -22,15 +22,13 @@ function AppWrapper() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  useMount(() => {
     checkPermissions().then((permissionStatus: boolean) => {
       if (!permissionStatus) {
         dispatch(cancelAllNotifications());
       }
     });
-  }, [dispatch]);
 
-  useEffect(() => {
     const navigateToInitialUrl = async () => {
       const initialUrl = await Linking.getInitialURL();
       if (initialUrl) {
@@ -38,7 +36,7 @@ function AppWrapper() {
       }
     };
     navigateToInitialUrl();
-  }, []);
+  });
 
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;

@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import { useRef } from 'react';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useEffect, useRef } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 
 import FloatingButton from 'components/FloatingButton';
@@ -23,13 +23,13 @@ export interface medsInfo {
   id: string;
   photo: string;
   medsSupply: string;
-  medsRest: string;
+  medsRest: number;
   supplyNotification: boolean;
 }
 
-function TreatmentPage() {
+function TreatmentPage({ navigation }: { navigation: any }) {
   const ref = useRef<BottomSheetRefProps>(null);
-  const navigation = useNavigation();
+  const tabBarHeight = useBottomTabBarHeight();
 
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
 
@@ -47,11 +47,11 @@ function TreatmentPage() {
 
   function sayHi() {
     ref?.current?.scrollTo(0);
-    navigation.navigate('AddPills' as never);
+    navigation.navigate('AddPills');
   }
 
   const renderMedsCard = ({ item }: { item: medsInfo }) => {
-    return <MedsCard data={item} />;
+    return <MedsCard data={item} navigation={navigation} />;
   };
 
   return (
@@ -64,6 +64,7 @@ function TreatmentPage() {
         renderItem={renderMedsCard}
         keyExtractor={(item: medsInfo) => item.id}
         style={styles.flatList}
+        contentContainerStyle={{ paddingBottom: tabBarHeight }}
       />
       <FloatingButton onPress={showActionSheet} />
     </View>
@@ -73,7 +74,7 @@ function TreatmentPage() {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    paddingVertical: 10,
+    // paddingVertical: 10,
     paddingHorizontal: 25,
   },
   flatList: {

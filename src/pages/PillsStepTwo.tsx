@@ -1,6 +1,6 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, FlatList, TouchableOpacity, Switch } from 'react-native';
+import { StyleSheet, View, FlatList, TouchableOpacity, Switch, Platform } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import uuid from 'react-native-uuid';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -26,37 +26,31 @@ function PillsStepTwo(props: Props) {
   const { navigation } = props;
   const { medsName, medsRegularity, medsDescription, medsSupply, medsForm } = props.route.params;
 
-  const [notificationTime, setNotificationTime] = useState<Time[]>(
-    Array.from({ length: medsRegularity }, () => ({
-      id: uuid.v4().toString(),
-      time: new Date().toString(),
-    }))
-  );
-
-  useEffect(() => {
-    setNotificationTime(
-      Array.from({ length: medsRegularity }, () => ({
-        id: uuid.v4().toString(),
-        time: new Date().toString(),
-      }))
-    );
-  }, [medsRegularity]);
-
+  const [notificationTime, setNotificationTime] = useState<Time[]>([]);
   const [openIndex, setOpenIndex] = useState<null | number>(null);
   const [notificationsOnOff, setNotificationsOnOff] = useState(false);
   const [supplyNotification, setSupplyNotification] = useState(false);
   const [medsRest, setMedsRest] = useState(10);
 
-  const handleOpen = (index: number) => {
+  useEffect(() => {
+    const notificationTimers = Array.from({ length: medsRegularity }, () => ({
+      id: uuid.v4().toString(),
+      time: new Date().toString(),
+    }));
+
+    setNotificationTime(notificationTimers);
+  }, [medsRegularity]);
+
+  const openDatePicker = (index: number) => {
     setOpenIndex(index);
   };
 
-  const handleClose = () => {
+  const closeDatePicker = () => {
     setOpenIndex(null);
   };
 
-  const handleConfirm = (date: Date, id: string) => {
-    const newNoti = notificationTime.map((item) => {
+  const confirmTime = (date: Date, id: string) => {
+    const newTime = notificationTime.map((item) => {
       if (item.id === id) {
         return {
           ...item,
@@ -66,29 +60,36 @@ function PillsStepTwo(props: Props) {
         return item;
       }
     });
-    setNotificationTime(newNoti);
-
-    handleClose();
+    setNotificationTime(newTime);
+    closeDatePicker();
   };
 
-  const toggleSwitchSupplyNotifications = () => {
-    checkPermissions().then((data) => {
-      if (data) {
-        setSupplyNotification(!supplyNotification);
-      } else {
-        setSupplyNotification(false);
-      }
-    });
+  const toggleSupplyNotifications = () => {
+    if (Platform.OS === 'android') {
+      checkPermissions().then((status) => {
+        if (status) {
+          setSupplyNotification(!supplyNotification);
+        } else {
+          setSupplyNotification(false);
+        }
+      });
+    }
+
+    setSupplyNotification(!supplyNotification);
   };
 
-  const toggleSwitch = () => {
-    checkPermissions().then((data) => {
-      if (data) {
-        setNotificationsOnOff(!notificationsOnOff);
-      } else {
-        setNotificationsOnOff(false);
-      }
-    });
+  const toggleTakingMedsNotifications = () => {
+    if (Platform.OS === 'android') {
+      checkPermissions().then((data) => {
+        if (data) {
+          setNotificationsOnOff(!notificationsOnOff);
+        } else {
+          setNotificationsOnOff(false);
+        }
+      });
+    }
+
+    setNotificationsOnOff(!notificationsOnOff);
   };
 
   const handleAddNewTime = () => {
@@ -101,7 +102,7 @@ function PillsStepTwo(props: Props) {
     ]);
   };
 
-  const handleDelete = (id: string) => {
+  const deleteTime = (id: string) => {
     const timeIndex = notificationTime.findIndex((item) => item.id === id);
     setNotificationTime([
       ...notificationTime.slice(0, timeIndex),
@@ -109,29 +110,17 @@ function PillsStepTwo(props: Props) {
     ]);
   };
 
-  const nextScreenProps = {
-    medsName,
-    medsRegularity,
-    medsDescription,
-    notificationTime,
-    notificationsOnOff,
-    medsSupply,
-    medsForm,
-    medsRest,
-    supplyNotification,
-  };
-
   const renderItem = ({ item, index }: { item: Time; index: number }) => {
     const isOpen = openIndex === index;
     return (
       <View style={styles.time}>
         {medsRegularity > 3 && (
-          <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.reminder}>
+          <TouchableOpacity onPress={() => deleteTime(item.id)} style={styles.reminder}>
             <Ionicons name="ios-remove-circle-outline" size={24} color={'red'} />
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity style={styles.reminder} onPress={() => handleOpen(index)}>
+        <TouchableOpacity style={styles.reminder} onPress={() => openDatePicker(index)}>
           <Text>{Number(index + 1) + ' прием'}</Text>
           {isOpen && (
             <DatePicker
@@ -139,8 +128,8 @@ function PillsStepTwo(props: Props) {
               open={true}
               mode="time"
               date={new Date(item.time)}
-              onConfirm={(date) => handleConfirm(date, item.id)}
-              onCancel={handleClose}
+              onConfirm={(date) => confirmTime(date, item.id)}
+              onCancel={closeDatePicker}
             />
           )}
           <Text>{convertTime(item.time) + '▼'}</Text>
@@ -154,7 +143,7 @@ function PillsStepTwo(props: Props) {
       <View>
         <View style={styles.switchContainer}>
           <Text>Напоминания о приеме</Text>
-          <Switch value={notificationsOnOff} onValueChange={toggleSwitch} />
+          <Switch value={notificationsOnOff} onValueChange={toggleTakingMedsNotifications} />
         </View>
 
         <View>
@@ -171,10 +160,12 @@ function PillsStepTwo(props: Props) {
             <Text>Добавить напоминание</Text>
           </TouchableOpacity>
         )}
+
         <View style={styles.switchContainer}>
           <Text>Напоминания об остатке</Text>
-          <Switch value={supplyNotification} onValueChange={toggleSwitchSupplyNotifications} />
+          <Switch value={supplyNotification} onValueChange={toggleSupplyNotifications} />
         </View>
+
         <ModalWithInput
           label="Остаток"
           value={medsRest > +medsSupply ? medsSupply.toString() : medsRest.toString()}
@@ -186,7 +177,19 @@ function PillsStepTwo(props: Props) {
         <Button title="Back" onPress={() => navigation.goBack()} />
         <Button
           title="Next"
-          onPress={() => navigation.navigate('AddMedsStepThree', nextScreenProps)}
+          onPress={() =>
+            navigation.navigate('AddMedsStepThree', {
+              medsName,
+              medsRegularity,
+              medsDescription,
+              medsSupply,
+              medsForm,
+              notificationTime,
+              notificationsOnOff,
+              medsRest,
+              supplyNotification,
+            })
+          }
         />
       </View>
     </View>
@@ -200,7 +203,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    // width: '100%',
   },
   reminder: {
     flex: 1,
@@ -229,7 +231,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // maxWidth: '100%',
     alignItems: 'flex-end',
     gap: 10,
   },

@@ -15,7 +15,18 @@ export type RootStackParamList = {
     medsSupply: string;
     medsForm: { label: string; id: string };
   };
-  AddMedsStepThree: any;
+  AddMedsStepThree: {
+    range?: number;
+    medsDescription: string;
+    medsName: string;
+    medsRegularity: number;
+    medsSupply: string;
+    medsForm: { label: string; id: string };
+    notificationTime: { id: string; time: string }[];
+    notificationsOnOff: boolean;
+    medsRest: number;
+    supplyNotification: boolean;
+  };
 };
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
@@ -53,7 +64,7 @@ function AddPills() {
             paddingVertical: 10,
           },
         }}
-        initialParams={{ range: 80 }}
+        initialParams={{ range: 70 }}
       />
       <Tab.Screen
         name="AddMedsStepThree"

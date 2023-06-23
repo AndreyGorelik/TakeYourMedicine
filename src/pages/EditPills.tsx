@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlatList, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, Switch, TouchableOpacity, View, Platform } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -79,7 +79,7 @@ function EditPills(props: any) {
     dispatch(deleteNotificationTime({ id, notificationId }));
   };
 
-  const handleAddNewTime = () => {
+  const addNewTime = () => {
     dispatch(addNotificationTime(id));
   };
 
@@ -129,19 +129,27 @@ function EditPills(props: any) {
   };
 
   const toggleSupplyNotifications = () => {
-    checkPermissions().then((data) => {
-      if (data) {
-        dispatch(switchSupplyNotifications(id));
-      }
-    });
+    if (Platform.OS === 'android') {
+      checkPermissions().then((status) => {
+        if (status) {
+          dispatch(switchSupplyNotifications(id));
+        }
+      });
+    }
+
+    dispatch(switchSupplyNotifications(id));
   };
 
-  const togglePush = () => {
-    checkPermissions().then((data) => {
-      if (data) {
-        dispatch(switchNotifications(id));
-      }
-    });
+  const toggleTakingMedsNotifications = () => {
+    if (Platform.OS === 'android') {
+      checkPermissions().then((status) => {
+        if (status) {
+          dispatch(switchNotifications(id));
+        }
+      });
+    }
+
+    dispatch(switchNotifications(id));
   };
 
   return (
@@ -162,7 +170,10 @@ function EditPills(props: any) {
 
         <View style={styles.switchContainer}>
           <Text>Напоминать о приеме</Text>
-          <Switch value={itemToRender.notificationsOnOff} onValueChange={togglePush} />
+          <Switch
+            value={itemToRender.notificationsOnOff}
+            onValueChange={toggleTakingMedsNotifications}
+          />
         </View>
 
         <FlatList
@@ -170,7 +181,7 @@ function EditPills(props: any) {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
         />
-        <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
+        <TouchableOpacity style={styles.addNotification} onPress={addNewTime}>
           <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
           <Text>Добавить напоминание</Text>
         </TouchableOpacity>
@@ -193,7 +204,7 @@ function EditPills(props: any) {
 
         <ModalWithInput
           label="Уведомлять при остатке"
-          value={itemToRender.medsRest}
+          value={itemToRender.medsRest.toString()}
           onChangeText={changeMedsRestCount}
         />
       </View>
