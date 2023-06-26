@@ -88,6 +88,9 @@ const medsScheduleSlice = createSlice({
       const index = state.schedule.findIndex((item) => item.id === action.payload);
       state.schedule[index].medsSupply = (+state.schedule[index].medsSupply - 1).toString();
     },
+    deleteSomeMeds(state, action) {
+      state.schedule = state.schedule.filter((item) => !action.payload.includes(item.id));
+    },
   },
 });
 
@@ -104,6 +107,7 @@ export const {
   switchSupplyNotifications,
   cancelAllNotifications,
   decrementMedsSupply,
+  deleteSomeMeds,
 } = medsScheduleSlice.actions;
 
 export default medsScheduleSlice.reducer;

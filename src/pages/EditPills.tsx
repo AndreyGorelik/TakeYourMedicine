@@ -3,11 +3,13 @@ import { FlatList, StyleSheet, Switch, TouchableOpacity, View, Platform } from '
 import DatePicker from 'react-native-date-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import DeleteButton from 'components/DeleteButton';
 import ModalWithInput from 'components/ModalWithInput';
 import PhotoWithModal from 'components/PhotoWithModal';
 import Text from 'components/Text';
 
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
+import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
 import {
   changePillsInSchedule,
@@ -17,6 +19,7 @@ import {
   changeMedsSupply,
   changeMedsRest,
   switchSupplyNotifications,
+  deleteSomeMeds,
 } from '../store/slices/medsScheduleSlice';
 import cancelNotification from '../utils/cancelNotification';
 import checkPermissions from '../utils/checkPermissions';
@@ -34,9 +37,21 @@ function EditPills(props: any) {
   const { id } = props.route.params;
   const dispatch = useAppDispatch();
 
+  useMount(() => {
+    props.navigation.setOptions({
+      headerRight: () => <DeleteButton deleteItem={() => deleteMeds(id)} />,
+    });
+  });
+
+  const { themeStyle } = useTheme();
+
+  const [openIndex, setOpenIndex] = useState<null | number>(null);
+
   const itemToRender: medsInfo = useAppSelector((state) =>
     state.medsScheduleReducer.schedule.find((item: medsInfo) => item.id === id)
   );
+
+  if (!itemToRender) return null;
 
   if (itemToRender.notificationsOnOff) {
     itemToRender.notificationTime.forEach((item) => {
@@ -48,9 +63,13 @@ function EditPills(props: any) {
     });
   }
 
-  const { themeStyle } = useTheme();
-
-  const [openIndex, setOpenIndex] = useState<null | number>(null);
+  function deleteMeds(id: string) {
+    props.navigation.navigate('TreatmentPage');
+    itemToRender.notificationTime.forEach((item) => {
+      cancelNotification(item.id);
+    });
+    dispatch(deleteSomeMeds(id));
+  }
 
   const closeDatePicker = () => {
     setOpenIndex(null);
@@ -159,15 +178,12 @@ function EditPills(props: any) {
           <Text variant="h3">{itemToRender.medsName}</Text>
           <Text>{itemToRender.medsDescription}</Text>
         </View>
-
         <View>
           <PhotoWithModal id={id} />
         </View>
       </View>
-
       <View>
         <Text variant="h3">Расписание приема</Text>
-
         <View style={styles.switchContainer}>
           <Text>Напоминать о приеме</Text>
           <Switch
@@ -175,7 +191,6 @@ function EditPills(props: any) {
             onValueChange={toggleTakingMedsNotifications}
           />
         </View>
-
         <FlatList
           data={itemToRender.notificationTime}
           keyExtractor={(item) => item.id}
@@ -185,9 +200,7 @@ function EditPills(props: any) {
           <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
           <Text>Добавить напоминание</Text>
         </TouchableOpacity>
-
         <Text variant="h3">Запасы</Text>
-
         <View style={styles.switchContainer}>
           <Text>Напоминать об остатке</Text>
           <Switch
@@ -195,13 +208,11 @@ function EditPills(props: any) {
             onValueChange={toggleSupplyNotifications}
           />
         </View>
-
         <ModalWithInput
           label="Запас"
           value={itemToRender.medsSupply}
           onChangeText={changeMedsSupplyCount}
         />
-
         <ModalWithInput
           label="Уведомлять при остатке"
           value={itemToRender.medsRest.toString()}

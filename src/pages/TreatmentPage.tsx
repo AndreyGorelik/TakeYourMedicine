@@ -1,14 +1,17 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 import Checkbox from 'components/Checkbox';
+import DeleteButton from 'components/DeleteButton';
 import FloatingButton from 'components/FloatingButton';
 import MedsCard from 'components/MedsCard';
+import SettingsButton from 'components/SettingsButton';
 import Text from 'components/Text';
 
 import ActionSheet, { BottomSheetRefProps, ACTION_SHEET_SIZE } from '../components/ActionSheet';
-import { useAppSelector } from '../hooks/redux-hooks';
+import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
+import { deleteSomeMeds } from '../store/slices/medsScheduleSlice';
 
 interface NotificationTime {
   id: string;
@@ -33,10 +36,25 @@ function TreatmentPage({ navigation }: { navigation: any }) {
   const tabBarHeight = useBottomTabBarHeight();
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
   const [selectedList, setSelectedList] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+
+  const deleteItems = useCallback(() => {
+    dispatch(deleteSomeMeds(selectedList));
+    setSelectedList([]);
+  }, [dispatch, selectedList]);
+
+  useEffect(() => {
+    if (selectedList.length > 0) {
+      navigation.setOptions({
+        headerRight: () => <DeleteButton deleteItem={deleteItems} />,
+      });
+    } else {
+      navigation.setOptions({ headerRight: () => <SettingsButton /> });
+    }
+  }, [deleteItems, navigation, selectedList]);
 
   const showActionSheet = () => {
     const isActive = ref?.current?.isActive;
-
     if (isActive) {
       ref?.current?.scrollTo(0);
     } else {
