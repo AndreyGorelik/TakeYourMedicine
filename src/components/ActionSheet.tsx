@@ -1,10 +1,11 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useImperativeHandle, forwardRef, useCallback } from 'react';
-import { Dimensions, StyleSheet, View, FlatList, TouchableOpacity } from 'react-native';
+import { useImperativeHandle, forwardRef, useCallback, useState } from 'react';
+import { Dimensions, StyleSheet, View, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
-  useAnimatedProps,
+  runOnJS,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withSpring,
   withTiming,
@@ -17,6 +18,7 @@ import Text from './Text';
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 export const ACTION_SHEET_SIZE = -500;
+const DELAY_TIME = 300;
 
 interface MenuItem {
   id: string;
@@ -37,8 +39,8 @@ export interface BottomSheetRefProps {
 const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options }, ref) => {
   const translateY = useSharedValue(0);
   const active = useSharedValue(false);
+  const [visible, setVisible] = useState(false);
   const { darkMode } = useTheme();
-
   const tabBarHeight = useBottomTabBarHeight();
 
   const scrollTo = useCallback(
@@ -79,14 +81,10 @@ const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options
 
   const backdropStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(active.value ? 1 : 0),
+      opacity: withTiming(active.value ? 1 : 0, {
+        duration: DELAY_TIME,
+      }),
     };
-  }, []);
-
-  const backdropProps = useAnimatedProps(() => {
-    return {
-      pointerEvents: active.value ? 'auto' : 'none',
-    } as any;
   }, []);
 
   const renderMenuItem = ({ item }: { item: MenuItem }) => {
@@ -99,21 +97,34 @@ const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options
     );
   };
 
+  function changeVis(showStatus: boolean) {
+    if (showStatus) {
+      setVisible(showStatus);
+    } else {
+      setTimeout(() => {
+        setVisible(showStatus);
+      }, DELAY_TIME);
+    }
+  }
+
+  useDerivedValue(() => {
+    runOnJS(changeVis)(active.value);
+  }, [active]);
+
   return (
-    <>
-      <Animated.View
-        onTouchStart={() => {
-          scrollTo(0);
-        }}
-        animatedProps={backdropProps}
-        style={[
-          {
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: 'rgba(0,0,0,0.4)',
-          },
-          backdropStyle,
-        ]}
-      />
+    <Modal visible={visible} transparent={true}>
+      <TouchableOpacity activeOpacity={1} style={styles.backdrop} onPress={() => scrollTo(0)}>
+        <Animated.View
+          style={[
+            {
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              flex: 1,
+            },
+            backdropStyle,
+          ]}
+        />
+      </TouchableOpacity>
+
       <GestureDetector gesture={gesture}>
         <Animated.View
           style={[
@@ -129,7 +140,7 @@ const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options
           </View>
         </Animated.View>
       </GestureDetector>
-    </>
+    </Modal>
   );
 });
 
@@ -141,7 +152,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: screenHeight,
     borderRadius: 25,
-    zIndex: 99999,
+    zIndex: 9999,
     flex: 1,
   },
   innerSheetView: {
@@ -152,6 +163,9 @@ const styles = StyleSheet.create({
   },
   menuText: {
     alignItems: 'center',
+  },
+  backdrop: {
+    flex: 1,
   },
 });
 
