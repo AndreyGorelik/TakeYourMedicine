@@ -8,17 +8,34 @@ import useTheme from '../hooks/useTheme';
 import convertTime from '../utils/convertTime';
 
 import Text from './Text';
-const MedsCard = ({ data, navigation }: { data: medsInfo }) => {
+
+interface MedsCardProps {
+  data: medsInfo;
+  navigation: any;
+  selectedList: string[];
+  // eslint-disable-next-line no-unused-vars
+  setSelectedList: (arg: string[]) => void;
+}
+const MedsCard = ({ data, navigation, selectedList, setSelectedList }: MedsCardProps) => {
   const { themeStyle } = useTheme();
 
   const navigateToEdit = () => {
     navigation.navigate('EditPills', { id: data.id });
   };
 
+  const selectItem = (id: string) => {
+    if (selectedList.includes(id)) {
+      setSelectedList(selectedList.filter((item: string) => item !== id));
+    } else {
+      setSelectedList([...selectedList, id]);
+    }
+  };
+
   return (
     <TouchableOpacity
       style={[{ backgroundColor: themeStyle.colors.back }, styles.container]}
       onPress={navigateToEdit}
+      onLongPress={() => selectItem(data.id)}
       activeOpacity={0.6}
     >
       <View style={styles.header}>

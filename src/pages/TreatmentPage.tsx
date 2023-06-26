@@ -1,7 +1,8 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useEffect, useRef } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { useRef, useState } from 'react';
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
+import Checkbox from 'components/Checkbox';
 import FloatingButton from 'components/FloatingButton';
 import MedsCard from 'components/MedsCard';
 import Text from 'components/Text';
@@ -30,10 +31,8 @@ export interface medsInfo {
 function TreatmentPage({ navigation }: { navigation: any }) {
   const ref = useRef<BottomSheetRefProps>(null);
   const tabBarHeight = useBottomTabBarHeight();
-
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
-
-  const options = [{ label: 'Add pills', function: sayHi, id: '1' }];
+  const [selectedList, setSelectedList] = useState<string[]>([]);
 
   const showActionSheet = () => {
     const isActive = ref?.current?.isActive;
@@ -50,8 +49,43 @@ function TreatmentPage({ navigation }: { navigation: any }) {
     navigation.navigate('AddPills');
   }
 
+  const selectItem = (id: string) => {
+    if (selectedList.includes(id)) {
+      setSelectedList(selectedList.filter((item: string) => item !== id));
+    } else {
+      setSelectedList([...selectedList, id]);
+    }
+  };
+
+  const options = [{ label: 'Add pills', function: sayHi, id: '1' }];
+
   const renderMedsCard = ({ item }: { item: medsInfo }) => {
-    return <MedsCard data={item} navigation={navigation} />;
+    return (
+      <View style={styles.cardContainer}>
+        {selectedList.length > 0 ? (
+          <View style={styles.cardContainerCheckbox}>
+            {selectedList.includes(item.id) ? (
+              <TouchableOpacity onPress={() => selectItem(item.id)}>
+                <Checkbox checked={true} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => selectItem(item.id)}>
+                <Checkbox checked={false} />
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : null}
+
+        <View style={styles.cardContainerMedsCard}>
+          <MedsCard
+            data={item}
+            navigation={navigation}
+            selectedList={selectedList}
+            setSelectedList={setSelectedList}
+          />
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -74,11 +108,21 @@ function TreatmentPage({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    // paddingVertical: 10,
     paddingHorizontal: 25,
   },
   flatList: {
     zIndex: -1,
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  cardContainerCheckbox: {
+    alignSelf: 'center',
+    marginRight: 10,
+  },
+  cardContainerMedsCard: {
+    flex: 1,
   },
 });
 
