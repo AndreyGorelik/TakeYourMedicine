@@ -9,8 +9,8 @@ import notifee, {
 async function notifyOnTimer() {
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,
-    timestamp: Date.now() + 5000, // fire in 3 hours
-    repeatFrequency: RepeatFrequency.DAILY, // repeat once a week
+    timestamp: Date.now() + 5000,
+    repeatFrequency: RepeatFrequency.DAILY,
     alarmManager: {
       allowWhileIdle: true,
     },

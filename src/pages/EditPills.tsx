@@ -156,7 +156,9 @@ function EditPills(props: any) {
       });
     }
 
-    dispatch(switchSupplyNotifications(id));
+    if (Platform.OS === 'ios') {
+      dispatch(switchSupplyNotifications(id));
+    }
   };
 
   const toggleTakingMedsNotifications = () => {
@@ -167,8 +169,9 @@ function EditPills(props: any) {
         }
       });
     }
-
-    dispatch(switchNotifications(id));
+    if (Platform.OS === 'ios') {
+      dispatch(switchNotifications(id));
+    }
   };
 
   return (

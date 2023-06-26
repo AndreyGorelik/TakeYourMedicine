@@ -24,10 +24,11 @@ function CameraGallery({ photo, setPhoto }: CameraPhoto) {
   const takePhoto = async (photoSource: PhotoSource) => {
     const result =
       photoSource === PhotoSource.Camera
-        ? await launchCamera({ mediaType: 'photo', includeBase64: true })
-        : await launchImageLibrary({ mediaType: 'photo', includeBase64: true });
+        ? await launchCamera({ mediaType: 'photo', saveToPhotos: true })
+        : await launchImageLibrary({ mediaType: 'photo' });
+
     if (result.assets) {
-      setPhoto('data:image/png;base64,' + result.assets[0].base64);
+      setPhoto(result.assets[0].uri!);
     }
   };
 
