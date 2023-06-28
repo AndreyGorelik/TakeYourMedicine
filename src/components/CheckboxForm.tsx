@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Keyboard } from 'react-native';
 
 import Text from './Text';
 
@@ -26,7 +26,13 @@ const CheckboxForm = ({ data, getBack }: CheckboxFormInterface) => {
 
   const renderItem = ({ item }: { item: CheckboxItem }) => {
     return (
-      <TouchableOpacity onPress={() => chooseItem(item)} style={styles.container}>
+      <TouchableOpacity
+        onPress={() => {
+          Keyboard.dismiss();
+          chooseItem(item);
+        }}
+        style={styles.container}
+      >
         <Text>{item.label}</Text>
         <View style={styles.radioButton}>
           <View

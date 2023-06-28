@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Keyboard, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface CustomButton {
   title: string;
@@ -9,6 +9,10 @@ interface CustomButton {
 }
 
 function Button({ title, width, onPress, backgroundColor, disabled = false }: CustomButton) {
+  const handlePress = () => {
+    Keyboard.dismiss();
+    onPress();
+  };
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -16,12 +20,12 @@ function Button({ title, width, onPress, backgroundColor, disabled = false }: Cu
       accessibilityRole="button"
       style={[
         {
-          width: width ? width : 180,
+          width: width ? width : '100%',
           backgroundColor: disabled ? 'gray' : backgroundColor || '#0099FF',
         },
         styles.button,
       ]}
-      onPress={onPress}
+      onPress={handlePress}
       activeOpacity={0.8}
     >
       <Text style={styles.text}>{title}</Text>

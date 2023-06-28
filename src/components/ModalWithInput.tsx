@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Modal, Keyboard } from 'react-native';
 
 import Text from './Text';
 import TextInput from './TextInput';
@@ -15,7 +15,13 @@ const ModalWithInput = ({ value, onChangeText, label }: ModalInput) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => setVisible(true)} style={styles.outerView}>
+      <TouchableOpacity
+        onPress={() => {
+          Keyboard.dismiss();
+          setVisible(true);
+        }}
+        style={styles.outerView}
+      >
         <Text>{label}</Text>
         <Text>{value}</Text>
       </TouchableOpacity>

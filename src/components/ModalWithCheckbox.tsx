@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, TouchableOpacity, Modal, View, FlatList } from 'react-native';
+import { StyleSheet, TouchableOpacity, Modal, View, FlatList, Keyboard } from 'react-native';
 
 import Text from './Text';
 
@@ -43,7 +43,13 @@ function ModalWithCheckbox({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => setVisible(true)} style={styles.outerView}>
+      <TouchableOpacity
+        onPress={() => {
+          Keyboard.dismiss();
+          setVisible(true);
+        }}
+        style={styles.outerView}
+      >
         <Text>{title}</Text>
         <Text>{checkedItem.label + '▼'}</Text>
       </TouchableOpacity>

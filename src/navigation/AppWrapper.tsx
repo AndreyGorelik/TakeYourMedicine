@@ -1,8 +1,15 @@
 import notifee, { EventType } from '@notifee/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Linking, SafeAreaView, StyleSheet } from 'react-native';
+import {
+  Keyboard,
+  Linking,
+  SafeAreaView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
+import DoctorAppointment from 'pages/DoctorAppointment';
 import EditPills from 'pages/EditPills';
 import SettingsPage from 'pages/Settings';
 
@@ -64,33 +71,54 @@ function AppWrapper() {
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer theme={theme.themeStyle} linking={linking}>
-        <Stack.Navigator
-          screenOptions={{
-            headerBackTitleVisible: false,
-          }}
-        >
-          <Stack.Screen name="Home" component={BottomTabsScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="AddPills" component={AddPills} options={{ headerShown: false }} />
-          <Stack.Screen
-            name="Settings"
-            children={() => <SettingsPage changeTheme={theme.changeTheme} />}
-          />
-          <Stack.Screen
-            name="EditPills"
-            component={EditPills}
-            options={{
-              title: 'Edit',
-              headerStyle: {
-                height: 60,
-              },
-              headerTitleStyle: {
-                fontWeight: '600',
-                fontSize: 28,
-                paddingVertical: 10,
-              },
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} style={{ flex: 1 }}>
+          <Stack.Navigator
+            screenOptions={{
+              headerBackTitleVisible: false,
             }}
-          />
-        </Stack.Navigator>
+          >
+            <Stack.Screen
+              name="Home"
+              component={BottomTabsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="AddPills" component={AddPills} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="DoctorAppointment"
+              component={DoctorAppointment}
+              options={{
+                title: 'New appointment',
+                headerStyle: {
+                  height: 60,
+                },
+                headerTitleStyle: {
+                  fontWeight: '600',
+                  fontSize: 26,
+                  paddingVertical: 10,
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Settings"
+              children={() => <SettingsPage changeTheme={theme.changeTheme} />}
+            />
+            <Stack.Screen
+              name="EditPills"
+              component={EditPills}
+              options={{
+                title: 'Edit',
+                headerStyle: {
+                  height: 60,
+                },
+                headerTitleStyle: {
+                  fontWeight: '600',
+                  fontSize: 26,
+                  paddingVertical: 10,
+                },
+              }}
+            />
+          </Stack.Navigator>
+        </TouchableWithoutFeedback>
       </NavigationContainer>
     </SafeAreaView>
   );

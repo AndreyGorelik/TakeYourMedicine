@@ -12,6 +12,7 @@ import {
   REHYDRATE,
 } from 'redux-persist';
 
+import doctorsSlice from './slices/doctorsSlice';
 import medsScheduleReducer from './slices/medsScheduleSlice';
 import themeSlice from './slices/themeSlice';
 
@@ -23,6 +24,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   medsScheduleReducer,
   themeSlice,
+  doctorsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,7 +1,11 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useImperativeHandle, forwardRef, useCallback, useState } from 'react';
-import { Dimensions, StyleSheet, View, FlatList, TouchableOpacity, Modal } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { Dimensions, StyleSheet, View, TouchableOpacity, Modal } from 'react-native';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+  FlatList,
+} from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -41,7 +45,6 @@ const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options
   const active = useSharedValue(false);
   const [visible, setVisible] = useState(false);
   const { darkMode } = useTheme();
-  const tabBarHeight = useBottomTabBarHeight();
 
   const scrollTo = useCallback(
     (destination: number) => {
@@ -113,33 +116,33 @@ const ActionSheet = forwardRef<BottomSheetRefProps, BottomSheetProps>(({ options
 
   return (
     <Modal visible={visible} transparent={true}>
-      <TouchableOpacity activeOpacity={1} style={styles.backdrop} onPress={() => scrollTo(0)}>
-        <Animated.View
-          style={[
-            {
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              flex: 1,
-            },
-            backdropStyle,
-          ]}
-        />
-      </TouchableOpacity>
+      <GestureHandlerRootView style={styles.backdrop}>
+        <TouchableOpacity activeOpacity={1} style={styles.backdrop} onPress={() => scrollTo(0)}>
+          <Animated.View
+            style={[
+              {
+                backgroundColor: 'rgba(0,0,0,0.4)',
+                flex: 1,
+              },
+              backdropStyle,
+            ]}
+          />
+        </TouchableOpacity>
 
-      <GestureDetector gesture={gesture}>
-        <Animated.View
-          style={[
-            styles.bottomSheetContainer,
-            bottomSheetStyle,
-            { paddingBottom: tabBarHeight * 2 },
-          ]}
-        >
-          <View
-            style={[{ backgroundColor: darkMode ? '#003F5F' : 'white' }, styles.innerSheetView]}
-          >
-            <FlatList data={options} renderItem={renderMenuItem} keyExtractor={(item) => item.id} />
-          </View>
-        </Animated.View>
-      </GestureDetector>
+        <GestureDetector gesture={gesture}>
+          <Animated.View style={[styles.bottomSheetContainer, bottomSheetStyle]}>
+            <View
+              style={[{ backgroundColor: darkMode ? '#003F5F' : 'white' }, styles.innerSheetView]}
+            >
+              <FlatList
+                data={options}
+                renderItem={renderMenuItem}
+                keyExtractor={(item) => item.id}
+              />
+            </View>
+          </Animated.View>
+        </GestureDetector>
+      </GestureHandlerRootView>
     </Modal>
   );
 });

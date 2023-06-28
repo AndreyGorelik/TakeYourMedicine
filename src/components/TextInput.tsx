@@ -15,18 +15,18 @@ type focusAndBlur = 'focus' | 'blur';
 const ANIMATION_DURATION = 150;
 
 const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
-  const inputRef = useRef<NativeTextInput>(null);
-  const top = useSharedValue(36);
-  const labelFontSize = useSharedValue(16);
   const { themeStyle } = useTheme();
+  const inputRef = useRef<NativeTextInput>(null);
+  const top = useSharedValue(15);
+  const labelFontSize = useSharedValue(17);
   const movePlaceholder = (status: focusAndBlur) => {
     if (status === 'focus') {
-      top.value = withTiming(16, { duration: ANIMATION_DURATION });
+      top.value = withTiming(-10, { duration: ANIMATION_DURATION });
       labelFontSize.value = withTiming(12, { duration: ANIMATION_DURATION });
     } else {
       if (!value) {
-        top.value = withTiming(36, { duration: ANIMATION_DURATION });
-        labelFontSize.value = withTiming(16, { duration: ANIMATION_DURATION });
+        top.value = withTiming(15, { duration: ANIMATION_DURATION });
+        labelFontSize.value = withTiming(17, { duration: ANIMATION_DURATION });
       }
     }
   };
@@ -71,20 +71,23 @@ const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    position: 'relative',
+    marginVertical: 10,
   },
   input: {
-    height: 50,
-    borderWidth: 0.5,
-    paddingTop: 10,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    width: '100%',
+    borderBottomWidth: 0.5,
+    paddingVertical: 10,
+    fontSize: 17,
+    paddingHorizontal: 0,
+    fontFamily: 'NunitoSans10pt-Regular',
   },
   placeholder: {
-    position: 'relative',
+    position: 'absolute',
+    fontFamily: 'NunitoSans10pt-Regular',
   },
   text: {
-    paddingHorizontal: 10,
+    padding: 0,
+    margin: 0,
   },
 });
 

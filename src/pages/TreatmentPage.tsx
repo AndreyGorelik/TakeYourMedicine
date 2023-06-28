@@ -1,6 +1,6 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
 import Checkbox from 'components/Checkbox';
 import DeleteButton from 'components/DeleteButton';
@@ -12,6 +12,7 @@ import Text from 'components/Text';
 import ActionSheet, { BottomSheetRefProps, ACTION_SHEET_SIZE } from '../components/ActionSheet';
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
 import { deleteSomeMeds } from '../store/slices/medsScheduleSlice';
+// import { FlatList } from 'react-native-gesture-handler';
 
 interface NotificationTime {
   id: string;
@@ -75,7 +76,19 @@ function TreatmentPage({ navigation }: { navigation: any }) {
     }
   };
 
-  const options = [{ label: 'Add pills', function: sayHi, id: '1' }];
+  const options = [
+    { label: 'Add pills', function: sayHi, id: '1' },
+    { label: 'Add pills', function: sayHi, id: '2' },
+    { label: 'Add pills', function: sayHi, id: '22' },
+    { label: 'Add pills', function: sayHi, id: '222' },
+    { label: 'Add pills', function: sayHi, id: '2222' },
+    { label: 'Add pills', function: sayHi, id: '222222' },
+    { label: 'Add pills', function: sayHi, id: '2222222' },
+    { label: 'Add pills', function: sayHi, id: '2212322222' },
+    { label: 'Add pills', function: sayHi, id: '222212313123222' },
+    { label: 'Add pills', function: sayHi, id: '2221231231232222' },
+    { label: 'Add pills', function: sayHi, id: '2221231231231232222' },
+  ];
 
   const renderMedsCard = ({ item }: { item: medsInfo }) => {
     return (
@@ -115,7 +128,6 @@ function TreatmentPage({ navigation }: { navigation: any }) {
         data={schedule}
         renderItem={renderMedsCard}
         keyExtractor={(item: medsInfo) => item.id}
-        style={styles.flatList}
         contentContainerStyle={{ paddingBottom: tabBarHeight }}
       />
       <FloatingButton onPress={showActionSheet} />
@@ -127,9 +139,6 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     paddingHorizontal: 25,
-  },
-  flatList: {
-    zIndex: -1,
   },
   cardContainer: {
     flexDirection: 'row',

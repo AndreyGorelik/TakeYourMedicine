@@ -5,6 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import SettingsButton from 'components/SettingsButton';
 import TabBar from 'components/TabBar';
+import DoctorsPage from 'pages/DoctorsPage';
 import HomePage from 'pages/Home';
 import TreatmentPage from 'pages/TreatmentPage';
 
@@ -26,7 +27,7 @@ function BottomTabsScreen() {
           },
           headerTitleStyle: {
             fontWeight: '600',
-            fontSize: 28,
+            fontSize: 26,
             paddingVertical: 10,
           },
         }}
@@ -36,7 +37,7 @@ function BottomTabsScreen() {
         component={HomePage}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="doctor" size={size} color={color} />
+            <MaterialCommunityIcons name="shield-home" size={size} color={color} />
           ),
           headerRight: () => <SettingsButton />,
           tabBarLabel: t('home') as string,
@@ -46,16 +47,18 @@ function BottomTabsScreen() {
           },
           headerTitleStyle: {
             fontWeight: '600',
-            fontSize: 28,
+            fontSize: 26,
             paddingVertical: 10,
           },
         }}
       />
       <Tab.Screen
-        name="Maps"
-        component={TreatmentPage}
+        name="DoctorsPage"
+        component={DoctorsPage}
         options={{
-          tabBarIcon: ({ color, size }) => <Icon name="map-marked-alt" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="doctor" size={size} color={color} />
+          ),
           headerRight: () => <SettingsButton />,
           tabBarLabel: 'Treatment',
           title: 'Treatment',
@@ -64,7 +67,7 @@ function BottomTabsScreen() {
           },
           headerTitleStyle: {
             fontWeight: '600',
-            fontSize: 28,
+            fontSize: 26,
             paddingVertical: 10,
           },
         }}

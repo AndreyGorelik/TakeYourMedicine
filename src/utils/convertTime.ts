@@ -1,4 +1,4 @@
-function convertTime(time: string) {
+function convertTime(time: string | Date) {
   const object = new Date(time);
   const hours =
     object.getHours() < 10 ? '0' + object.getHours().toString() : object.getHours().toString();

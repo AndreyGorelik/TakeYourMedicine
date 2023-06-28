@@ -1,8 +1,12 @@
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, Alert, Button, ScrollView, Linking } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Alert, ScrollView, Linking, TextInput } from 'react-native';
+
+import Button from 'components/Button';
 
 function HomePage() {
+  const [test, setTest] = useState('');
   const clear = () => {
     AsyncStorage.getAllKeys()
       .then((keys) => AsyncStorage.multiRemove(keys))
@@ -26,6 +30,7 @@ function HomePage() {
       <Button title="show notifications id" onPress={show} />
       <Button title="deleete notifications" onPress={del} />
       <Button title="deep link" onPress={() => Linking.openURL('demoapp://Settings')} />
+      <TextInput value={test} onChangeText={setTest} style={styles.input} />
     </ScrollView>
   );
 }
@@ -34,6 +39,13 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     padding: 15,
+    gap: 10,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
 
