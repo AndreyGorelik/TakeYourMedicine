@@ -1,6 +1,15 @@
-import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { StyleSheet, TouchableOpacity, ScrollView, View, Modal, Switch } from 'react-native';
+import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
+import { ChangeEvent, useState } from 'react';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  View,
+  Modal,
+  Switch,
+  Platform,
+} from 'react-native';
 import { CalendarUtils } from 'react-native-calendars';
 import DatePicker from 'react-native-date-picker';
 import uuid from 'react-native-uuid';
@@ -11,11 +20,16 @@ import Text from 'components/Text';
 import TextInput from 'components/TextInput';
 
 import { useAppDispatch } from '../hooks/redux-hooks';
+import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
-import { saveAppointment } from '../store/slices/doctorsSlice';
+import { saveNewAppointment, saveEditedAppointment } from '../store/slices/doctorsSlice';
+import cancelNotification from '../utils/cancelNotification';
+import checkPermissions from '../utils/checkPermissions';
 import convertTime from '../utils/convertTime';
+import notifyOnTime from '../utils/notifyOnTime';
 
 export interface DoctorVisit {
+  id: string;
   name: string;
   specialization: string;
   email: string;
@@ -23,11 +37,27 @@ export interface DoctorVisit {
   address: string;
   appointmentTime: string;
   appointmentDate: string;
-  id: string;
+  notificationTime: string;
+  notificationStatus: boolean;
+  notificationTimeAndDate?: string;
 }
 
-function DoctorAppointment({ navigation }) {
+interface DoctorAppointmentProps {
+  navigation: NavigationProp<ParamListBase>;
+  route: RouteProp<ParamListBase, 'DoctorAppointment'> & {
+    params?: {
+      visitInfo?: DoctorVisit;
+    };
+  };
+}
+
+function DoctorAppointment({ navigation, route }: DoctorAppointmentProps) {
   const { themeStyle } = useTheme();
+  const visitInfo = route.params?.visitInfo;
+
+  useMount(() => {
+    if (visitInfo) navigation.setOptions({ title: 'Edit appointment' });
+  });
 
   const [timePickerVisibility, setTimePickerVisibility] = useState(false);
   const [reminderTimePickerVisibility, setReminderTimePickerVisibility] = useState(false);
@@ -35,29 +65,40 @@ function DoctorAppointment({ navigation }) {
 
   const dispatch = useAppDispatch();
 
+  const defaultFormValues = visitInfo || {
+    name: '',
+    specialization: '',
+    email: '',
+    phone: '',
+    address: '',
+    appointmentTime: new Date().toString(),
+    appointmentDate: CalendarUtils.getCalendarDateString(new Date()),
+    notificationTime: new Date(new Date().getTime() - 1000 * 60 * 60).toString(),
+    notificationStatus: false,
+    id: uuid.v4().toString(),
+  };
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    watch,
+    formState: { errors },
   } = useForm({
-    defaultValues: {
-      name: '',
-      specialization: '',
-      email: '',
-      phone: '',
-      address: '',
-      appointmentTime: new Date().toString(),
-      appointmentDate: CalendarUtils.getCalendarDateString(new Date()),
-      notificationTime: new Date(new Date().getTime() - 1000 * 60 * 60).toString(),
-      notificationStatus: true,
-      id: uuid.v4().toString(),
-    },
+    defaultValues: defaultFormValues,
   });
 
   const isValidEmail = (email: string) => {
     if (!email) return true;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const isValidNotificationTime = (nTime: string) => {
+    const watchAppointmentTime = watch('appointmentTime');
+    if (new Date(nTime) > new Date(watchAppointmentTime)) {
+      return false;
+    }
+    return true;
   };
 
   const openTimePicker = () => {
@@ -84,35 +125,48 @@ function DoctorAppointment({ navigation }) {
     setDatePickerVisibility(false);
   };
 
-  // const chooseDate = (date: string) => {
-  //   setAppointmentDate(date);
-  //   setDatePickerVisibility(false);
-  // };
+  const switchNotification = (
+    newValue: boolean,
+    onChange: (event: boolean | ChangeEvent<Element>) => void
+  ) => {
+    if (Platform.OS === 'android') {
+      checkPermissions().then((status) => {
+        if (status) {
+          onChange(newValue);
+        } else {
+          onChange(false);
+        }
+      });
+    }
 
-  // const saveData = () => {
-  //   const appointmentTimeAndDate = new Date(appointmentDate);
-  //   appointmentTimeAndDate.setHours(appointmentTime.getHours());
-  //   appointmentTimeAndDate.setMinutes(appointmentTime.getMinutes());
+    onChange(newValue);
+  };
 
-  //   const doctorVisit: DoctorVisit = {
-  //     address,
-  //     appointmentTimeAndDate: appointmentTimeAndDate.toString(),
-  //     email,
-  //     name,
-  //     phone,
-  //     specialization,
-  //     id: uuid.v4().toString(),
-  //   };
+  const onSubmit: SubmitHandler<DoctorVisit> = (data) => {
+    const notificationTimeAndDate = new Date(data.appointmentDate);
+    notificationTimeAndDate.setHours(new Date(data.notificationTime).getHours());
+    notificationTimeAndDate.setMinutes(new Date(data.notificationTime).getMinutes());
 
-  //   dispatch(saveAppointment(doctorVisit));
-  //   navigation.navigate('DoctorsPage');
-  // };
+    if (visitInfo) {
+      dispatch(
+        saveEditedAppointment({
+          ...data,
+          notificationTimeAndDate: notificationTimeAndDate.toString(),
+        })
+      );
+    } else {
+      dispatch(
+        saveNewAppointment({ ...data, notificationTimeAndDate: notificationTimeAndDate.toString() })
+      );
+    }
 
-  const onSubmit = (data: DoctorVisit) => {
-    console.log(data);
+    if (data.notificationStatus) {
+      notifyOnTime({ ...data, notificationTimeAndDate: notificationTimeAndDate.toString() });
+    } else {
+      cancelNotification(data.id);
+    }
 
-    // dispatch(saveAppointment(doctorVisit));
-    // navigation.navigate('DoctorsPage');
+    navigation.navigate('DoctorsPage');
   };
 
   return (
@@ -141,31 +195,7 @@ function DoctorAppointment({ navigation }) {
         )}
         name="specialization"
       />
-
       {errors.specialization && <Text variant="warning">This is required.</Text>}
-      <Controller
-        control={control}
-        rules={{
-          maxLength: 100,
-          validate: isValidEmail,
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput placeholder="E-mail" onChangeText={onChange} value={value} />
-        )}
-        name="email"
-      />
-      {errors.email && <Text variant="warning">Incorrect e-mail</Text>}
-
-      <Controller
-        control={control}
-        rules={{
-          maxLength: 100,
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput placeholder="Phone" onChangeText={onChange} value={value} />
-        )}
-        name="phone"
-      />
 
       <Controller
         control={control}
@@ -177,6 +207,35 @@ function DoctorAppointment({ navigation }) {
         )}
         name="address"
       />
+
+      <Controller
+        control={control}
+        rules={{
+          maxLength: 100,
+        }}
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            placeholder="Phone"
+            onChangeText={onChange}
+            value={value}
+            keyboardType="phone-pad"
+          />
+        )}
+        name="phone"
+      />
+
+      <Controller
+        control={control}
+        rules={{
+          maxLength: 50,
+          validate: isValidEmail,
+        }}
+        render={({ field: { onChange, value } }) => (
+          <TextInput placeholder="E-mail" onChangeText={onChange} value={value} />
+        )}
+        name="email"
+      />
+      {errors.email && <Text variant="warning">Incorrect e-mail</Text>}
 
       <Controller
         control={control}
@@ -222,7 +281,7 @@ function DoctorAppointment({ navigation }) {
                     <CalendarWithSelectableDate
                       date={value}
                       setDate={(date) => {
-                        onChange(date);
+                        onChange(date as string);
                         closeDatePicker();
                       }}
                     />
@@ -239,6 +298,9 @@ function DoctorAppointment({ navigation }) {
 
       <Controller
         control={control}
+        rules={{
+          validate: isValidNotificationTime,
+        }}
         render={({ field: { onChange, value } }) => (
           <TouchableOpacity style={styles.reminder} onPress={openReminderTimePicker}>
             <Text>Notification time</Text>
@@ -260,19 +322,25 @@ function DoctorAppointment({ navigation }) {
         )}
         name="notificationTime"
       />
+      {errors.notificationTime && (
+        <Text variant="warning">Notification time should be before visit time.</Text>
+      )}
 
       <Controller
         control={control}
         render={({ field: { onChange, value } }) => (
           <View style={styles.switchContainer}>
             <Text>Notification</Text>
-            <Switch value={value} onValueChange={onChange} />
+            <Switch
+              value={value}
+              onValueChange={(newValue) => switchNotification(newValue, onChange)}
+            />
           </View>
         )}
         name="notificationStatus"
       />
 
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} disabled={!isValid} />
+      <Button title="Save" onPress={handleSubmit(onSubmit)} />
     </ScrollView>
   );
 }

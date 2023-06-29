@@ -214,7 +214,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
-    // flex: 1,
   },
   addNotification: {
     flexDirection: 'row',

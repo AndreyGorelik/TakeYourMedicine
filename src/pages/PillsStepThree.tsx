@@ -12,7 +12,7 @@ import { useAppDispatch } from '../hooks/redux-hooks';
 import useTheme from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AddPills';
 import { addNewPillsToSchedule } from '../store/slices/medsScheduleSlice';
-import notifyOnTime from '../utils/scheduleNotification';
+import notifyOnTimeSchedule from '../utils/notifyOnTimeSchedule';
 
 import { medsInfo } from './TreatmentPage';
 
@@ -38,7 +38,7 @@ function PillsStepThree(props: Props) {
 
     if (scheduleItem.notificationsOnOff) {
       scheduleItem.notificationTime.forEach((item) => {
-        notifyOnTime(item, scheduleItem);
+        notifyOnTimeSchedule(item, scheduleItem);
       });
     }
     navigation.navigate('Home' as never);

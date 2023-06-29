@@ -19,6 +19,7 @@ const useTheme = () => {
       primary: '#003F5F',
       text: '#003F5F',
       back: '#FFF',
+      buttons: '#0099FF',
     },
     dark: storeTheme.darkMode,
   };
@@ -32,6 +33,7 @@ const useTheme = () => {
       primary: '#FFF',
       text: 'white',
       back: '#002d44',
+      buttons: '#0099FF',
     },
     dark: storeTheme.darkMode,
   };

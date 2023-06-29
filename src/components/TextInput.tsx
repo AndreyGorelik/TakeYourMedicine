@@ -17,8 +17,8 @@ const ANIMATION_DURATION = 150;
 const TextInput = ({ placeholder, value, ...rest }: TextInputCustom) => {
   const { themeStyle } = useTheme();
   const inputRef = useRef<NativeTextInput>(null);
-  const top = useSharedValue(15);
-  const labelFontSize = useSharedValue(17);
+  const top = useSharedValue(value ? -10 : 15);
+  const labelFontSize = useSharedValue(value ? 12 : 17);
   const movePlaceholder = (status: focusAndBlur) => {
     if (status === 'focus') {
       top.value = withTiming(-10, { duration: ANIMATION_DURATION });

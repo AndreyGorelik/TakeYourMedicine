@@ -1,23 +1,26 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import DoctorCard from 'components/DoctorCard';
 import FloatingButton from 'components/FloatingButton';
-import Text from 'components/Text';
 
 import { useAppSelector } from '../hooks/redux-hooks';
 
 import { DoctorVisit } from './DoctorAppointment';
 
-function DoctorsPage({ navigation }) {
+type DoctorsPageProps = {
+  navigation: NavigationProp<ParamListBase>;
+};
+
+function DoctorsPage({ navigation }: DoctorsPageProps) {
   const tabBarHeight = useBottomTabBarHeight();
   const { doctorVisits } = useAppSelector((state) => state.doctorsSlice);
-  // console.log(doctorVisits);
 
   const renderDoctorCard = ({ item }: { item: DoctorVisit }) => {
     return (
       <View>
-        <DoctorCard data={item} />
+        <DoctorCard visitInfo={item} />
       </View>
     );
   };
@@ -29,7 +32,7 @@ function DoctorsPage({ navigation }) {
         renderItem={renderDoctorCard}
         keyExtractor={(item: DoctorVisit) => item.id}
         style={styles.flatList}
-        contentContainerStyle={{ paddingBottom: tabBarHeight }}
+        contentContainerStyle={{ paddingBottom: tabBarHeight * 1.5 }}
       />
       <FloatingButton onPress={() => navigation.navigate('DoctorAppointment')} />
     </View>

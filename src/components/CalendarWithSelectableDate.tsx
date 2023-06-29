@@ -4,7 +4,7 @@ import { Calendar, CalendarUtils, DateData } from 'react-native-calendars';
 
 interface CalendarInt {
   date: string;
-  setDate: (arg: string) => void;
+  setDate: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function CalendarWithSelectableDate({ date, setDate }: CalendarInt) {

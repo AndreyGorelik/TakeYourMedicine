@@ -13,12 +13,16 @@ const doctorsSlice = createSlice({
   name: 'medsScheduleSlice',
   initialState,
   reducers: {
-    saveAppointment(state, action) {
-      state.doctorVisits.push(action.payload);
+    saveNewAppointment(state, { payload }: { payload: DoctorVisit }) {
+      state.doctorVisits.push(payload);
+    },
+    saveEditedAppointment(state, { payload }: { payload: DoctorVisit }) {
+      const index = state.doctorVisits.findIndex((item) => item.id === payload.id);
+      state.doctorVisits[index] = payload;
     },
   },
 });
 
-export const { saveAppointment } = doctorsSlice.actions;
+export const { saveNewAppointment, saveEditedAppointment } = doctorsSlice.actions;
 
 export default doctorsSlice.reducer;

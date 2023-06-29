@@ -33,15 +33,15 @@ function BottomTabsScreen() {
         }}
       />
       <Tab.Screen
-        name="HomePage"
-        component={HomePage}
+        name="DoctorsPage"
+        component={DoctorsPage}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="shield-home" size={size} color={color} />
+            <MaterialCommunityIcons name="doctor" size={size} color={color} />
           ),
           headerRight: () => <SettingsButton />,
-          tabBarLabel: t('home') as string,
-          title: t('home') as string,
+          tabBarLabel: 'Appointments',
+          title: 'Appointments',
           headerStyle: {
             height: 60,
           },
@@ -53,15 +53,15 @@ function BottomTabsScreen() {
         }}
       />
       <Tab.Screen
-        name="DoctorsPage"
-        component={DoctorsPage}
+        name="HomePage"
+        component={HomePage}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="doctor" size={size} color={color} />
+            <MaterialCommunityIcons name="shield-home" size={size} color={color} />
           ),
           headerRight: () => <SettingsButton />,
-          tabBarLabel: 'Treatment',
-          title: 'Treatment',
+          tabBarLabel: t('home') as string,
+          title: t('home') as string,
           headerStyle: {
             height: 60,
           },

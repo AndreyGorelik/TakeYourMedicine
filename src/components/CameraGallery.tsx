@@ -10,8 +10,7 @@ import Text from './Text';
 
 interface CameraPhoto {
   photo: string;
-  // eslint-disable-next-line no-unused-vars
-  setPhoto: (photo: string) => void;
+  setPhoto: React.Dispatch<React.SetStateAction<string>>;
 }
 
 enum PhotoSource {

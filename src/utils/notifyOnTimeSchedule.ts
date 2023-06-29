@@ -13,7 +13,7 @@ interface Time {
   id: string;
 }
 
-async function notifyOnTime(time: Time, meds: medsInfo) {
+async function notifyOnTimeSchedule(time: Time, meds: medsInfo) {
   const { time: notificationTime, id: notificationId } = time;
 
   const trigger: TimestampTrigger = {
@@ -71,4 +71,4 @@ async function notifyOnTime(time: Time, meds: medsInfo) {
   );
 }
 
-export default notifyOnTime;
+export default notifyOnTimeSchedule;

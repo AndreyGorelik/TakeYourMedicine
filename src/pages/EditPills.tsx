@@ -24,7 +24,7 @@ import {
 import cancelNotification from '../utils/cancelNotification';
 import checkPermissions from '../utils/checkPermissions';
 import convertTime from '../utils/convertTime';
-import notifyOnTime from '../utils/scheduleNotification';
+import notifyOnTimeSchedule from '../utils/notifyOnTimeSchedule';
 
 import { medsInfo } from './TreatmentPage';
 
@@ -44,7 +44,6 @@ function EditPills(props: any) {
   });
 
   const { themeStyle } = useTheme();
-
   const [openIndex, setOpenIndex] = useState<null | number>(null);
 
   const itemToRender: medsInfo = useAppSelector((state) =>
@@ -55,7 +54,7 @@ function EditPills(props: any) {
 
   if (itemToRender.notificationsOnOff) {
     itemToRender.notificationTime.forEach((item) => {
-      notifyOnTime(item, itemToRender);
+      notifyOnTimeSchedule(item, itemToRender);
     });
   } else {
     itemToRender.notificationTime.forEach((item) => {
@@ -84,7 +83,7 @@ function EditPills(props: any) {
     dispatch(changePillsInSchedule(newDate));
 
     if (itemToRender.notificationsOnOff) {
-      notifyOnTime({ time: date.toString(), id: dateId }, itemToRender);
+      notifyOnTimeSchedule({ time: date.toString(), id: dateId }, itemToRender);
     }
 
     closeDatePicker();
