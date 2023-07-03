@@ -55,24 +55,38 @@ function DoctorCard({ visitInfo }: { visitInfo: DoctorVisit }) {
           <Text variant="h5">{convertTime(visitInfo.appointmentTime)}</Text>
         </View>
       </View>
-      <View>
-        <View style={styles.row}>
-          <MaterialCommunityIcons
-            name="office-building-marker-outline"
-            color={themeStyle.colors.text}
-            size={CARD_ICON_SIZE}
-          />
-          <Text variant="medium">Address</Text>
+      {visitInfo.address && (
+        <View>
+          <View style={styles.row}>
+            <MaterialCommunityIcons
+              name="office-building-marker-outline"
+              color={themeStyle.colors.text}
+              size={CARD_ICON_SIZE}
+            />
+            <Text variant="medium">Address</Text>
+          </View>
+          <Text variant="h5">{visitInfo.address}</Text>
         </View>
-        <Text variant="h5">{visitInfo.address}</Text>
-      </View>
+      )}
       <View style={styles.rowRight}>
-        <IconButton onPress={makePhoneCall}>
-          <Feather name="phone" color={themeStyle.colors.buttons} size={ACTION_BUTTON_ICON_SIZE} />
-        </IconButton>
-        <IconButton onPress={sendEmail}>
-          <Fontisto name="email" color={themeStyle.colors.buttons} size={ACTION_BUTTON_ICON_SIZE} />
-        </IconButton>
+        {visitInfo.phone && (
+          <IconButton onPress={makePhoneCall}>
+            <Feather
+              name="phone"
+              color={themeStyle.colors.buttons}
+              size={ACTION_BUTTON_ICON_SIZE}
+            />
+          </IconButton>
+        )}
+        {visitInfo.email && (
+          <IconButton onPress={sendEmail}>
+            <Fontisto
+              name="email"
+              color={themeStyle.colors.buttons}
+              size={ACTION_BUTTON_ICON_SIZE}
+            />
+          </IconButton>
+        )}
       </View>
     </TouchableOpacity>
   );

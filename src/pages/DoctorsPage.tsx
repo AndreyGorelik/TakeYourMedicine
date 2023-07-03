@@ -42,7 +42,7 @@ function DoctorsPage({ navigation }: DoctorsPageProps) {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    padding: 15,
+    paddingHorizontal: 25,
     justifyContent: 'center',
     alignContent: 'center',
   },

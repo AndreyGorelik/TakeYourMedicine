@@ -24,10 +24,15 @@ function HomePage() {
     notifee.cancelAllNotifications();
   };
 
+  const check = async () => {
+    await notifee.requestPermission();
+  };
+
   return (
     <ScrollView style={styles.view}>
       <Button title="clear redux storage" onPress={clear} />
       <Button title="show notifications id" onPress={show} />
+      <Button title="check" onPress={check} />
       <Button title="deleete notifications" onPress={del} />
       <Button title="deep link" onPress={() => Linking.openURL('demoapp://Settings')} />
       <TextInput value={test} onChangeText={setTest} style={styles.input} />

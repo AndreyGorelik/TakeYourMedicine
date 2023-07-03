@@ -12,9 +12,10 @@ interface CheckboxItem {
 interface CheckboxFormInterface {
   data: CheckboxItem[];
   getBack?: React.Dispatch<React.SetStateAction<number>>;
+  scrollable?: boolean;
 }
 
-const CheckboxForm = ({ data, getBack }: CheckboxFormInterface) => {
+const CheckboxForm = ({ data, getBack, scrollable = true }: CheckboxFormInterface) => {
   const [checkedItem, setCheckedItem] = useState('');
 
   const chooseItem = (item: CheckboxItem) => {
@@ -24,7 +25,7 @@ const CheckboxForm = ({ data, getBack }: CheckboxFormInterface) => {
     }
   };
 
-  const renderItem = ({ item }: { item: CheckboxItem }) => {
+  const renderWithScroll = ({ item }: { item: CheckboxItem }) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -43,9 +44,33 @@ const CheckboxForm = ({ data, getBack }: CheckboxFormInterface) => {
     );
   };
 
+  const renderWithoutScroll = (item: CheckboxItem) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          Keyboard.dismiss();
+          chooseItem(item);
+        }}
+        style={styles.container}
+        key={item.id}
+      >
+        <Text>{item.label}</Text>
+        <View style={styles.radioButton}>
+          <View
+            style={checkedItem === item.id ? styles.radioButtonIconChecked : styles.radioButtonIcon}
+          />
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.view}>
-      <FlatList data={data} renderItem={renderItem} keyExtractor={(item) => item.id} />
+      {scrollable ? (
+        <FlatList data={data} renderItem={renderWithScroll} keyExtractor={(item) => item.id} />
+      ) : (
+        data.map(renderWithoutScroll)
+      )}
     </View>
   );
 };

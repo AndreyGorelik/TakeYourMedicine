@@ -59,6 +59,20 @@ function AppWrapper() {
     }
   });
 
+  notifee.onForegroundEvent(async ({ type, detail }) => {
+    const { notification, pressAction } = detail;
+    if (type === EventType.PRESS) {
+      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
+    }
+    if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsLater') {
+      notifyOnTimer();
+    }
+    if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsTaken') {
+      dispatch(decrementMedsSupply(notification!.data!.medsId));
+      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
+    }
+  });
+
   const linking = {
     prefixes: ['takeyourmeds://'],
     config: {
@@ -71,7 +85,11 @@ function AppWrapper() {
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer theme={theme.themeStyle} linking={linking}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} style={{ flex: 1 }}>
+        <TouchableWithoutFeedback
+          onPress={Keyboard.dismiss}
+          accessible={false}
+          style={styles.container}
+        >
           <Stack.Navigator
             screenOptions={{
               headerBackTitleVisible: false,

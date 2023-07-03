@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlatList, StyleSheet, Switch, TouchableOpacity, View, Platform } from 'react-native';
+import { ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -28,7 +28,7 @@ import notifyOnTimeSchedule from '../utils/notifyOnTimeSchedule';
 
 import { medsInfo } from './TreatmentPage';
 
-interface Time {
+export interface TimeInterface {
   id: string;
   time: string;
 }
@@ -36,15 +36,14 @@ interface Time {
 function EditPills(props: any) {
   const { id } = props.route.params;
   const dispatch = useAppDispatch();
+  const { themeStyle } = useTheme();
+  const [openIndex, setOpenIndex] = useState<null | number>(null);
 
   useMount(() => {
     props.navigation.setOptions({
       headerRight: () => <DeleteButton deleteItem={() => deleteMeds(id)} />,
     });
   });
-
-  const { themeStyle } = useTheme();
-  const [openIndex, setOpenIndex] = useState<null | number>(null);
 
   const itemToRender: medsInfo = useAppSelector((state) =>
     state.medsScheduleReducer.schedule.find((item: medsInfo) => item.id === id)
@@ -101,12 +100,36 @@ function EditPills(props: any) {
     dispatch(addNotificationTime(id));
   };
 
-  const renderItem = ({ item, index }: { item: Time; index: number }) => {
+  const changeMedsSupplyCount = (count: string) => {
+    dispatch(changeMedsSupply({ count, id }));
+  };
+
+  const changeMedsRestCount = (count: string) => {
+    dispatch(changeMedsRest({ count, id }));
+  };
+
+  const toggleSupplyNotifications = () => {
+    checkPermissions().then((status) => {
+      if (status) {
+        dispatch(switchSupplyNotifications(id));
+      }
+    });
+  };
+
+  const toggleTakingMedsNotifications = () => {
+    checkPermissions().then((status) => {
+      if (status) {
+        dispatch(switchNotifications(id));
+      }
+    });
+  };
+
+  const renderItem = (item: TimeInterface, index: number) => {
     const date = new Date(item.time);
     const isOpen = openIndex === index;
     const isLastElement = itemToRender.notificationTime.length === 1;
     return (
-      <View style={styles.time}>
+      <View style={styles.time} key={item.id}>
         <TouchableOpacity
           onPress={() => deleteTime(item.id)}
           style={styles.reminder}
@@ -138,43 +161,8 @@ function EditPills(props: any) {
     );
   };
 
-  const changeMedsSupplyCount = (count: string) => {
-    dispatch(changeMedsSupply({ count, id }));
-  };
-
-  const changeMedsRestCount = (count: string) => {
-    dispatch(changeMedsRest({ count, id }));
-  };
-
-  const toggleSupplyNotifications = () => {
-    if (Platform.OS === 'android') {
-      checkPermissions().then((status) => {
-        if (status) {
-          dispatch(switchSupplyNotifications(id));
-        }
-      });
-    }
-
-    if (Platform.OS === 'ios') {
-      dispatch(switchSupplyNotifications(id));
-    }
-  };
-
-  const toggleTakingMedsNotifications = () => {
-    if (Platform.OS === 'android') {
-      checkPermissions().then((status) => {
-        if (status) {
-          dispatch(switchNotifications(id));
-        }
-      });
-    }
-    if (Platform.OS === 'ios') {
-      dispatch(switchNotifications(id));
-    }
-  };
-
   return (
-    <View style={[styles.view, { backgroundColor: themeStyle.colors.back }]}>
+    <ScrollView style={[styles.view, { backgroundColor: themeStyle.colors.back }]}>
       <View style={styles.header}>
         <View>
           <Text variant="h3">{itemToRender.medsName}</Text>
@@ -193,11 +181,13 @@ function EditPills(props: any) {
             onValueChange={toggleTakingMedsNotifications}
           />
         </View>
-        <FlatList
+        {/* <FlatList
           data={itemToRender.notificationTime}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-        />
+        /> */}
+        {itemToRender.notificationTime.map(renderItem)}
+
         <TouchableOpacity style={styles.addNotification} onPress={addNewTime}>
           <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
           <Text>Добавить напоминание</Text>
@@ -221,7 +211,7 @@ function EditPills(props: any) {
           onChangeText={changeMedsRestCount}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

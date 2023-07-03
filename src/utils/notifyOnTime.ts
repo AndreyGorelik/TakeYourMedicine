@@ -8,7 +8,6 @@ import notifee, {
 import { DoctorVisit } from 'pages/DoctorAppointment';
 
 async function notifyOnTime(info: DoctorVisit) {
-  console.log(info);
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,
     timestamp: new Date(info!.notificationTimeAndDate!).getTime(),
@@ -22,6 +21,7 @@ async function notifyOnTime(info: DoctorVisit) {
     name: 'Doctors appointments',
     importance: AndroidImportance.HIGH,
     visibility: AndroidVisibility.PUBLIC,
+    sound: 'default',
   });
 
   await notifee.createTriggerNotification(
@@ -31,6 +31,7 @@ async function notifyOnTime(info: DoctorVisit) {
       body: `${info.name}, ${info.appointmentDate}`,
       android: {
         channelId: channelId,
+        sound: 'default',
         pressAction: {
           id: 'openApp',
           launchActivity: 'default',
@@ -45,6 +46,9 @@ async function notifyOnTime(info: DoctorVisit) {
             title: 'REMIND LATER',
           },
         ],
+      },
+      ios: {
+        sound: 'default',
       },
     },
     trigger

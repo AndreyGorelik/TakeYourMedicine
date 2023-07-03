@@ -315,7 +315,7 @@ function DoctorAppointment({ navigation, route }: DoctorAppointmentProps) {
                   onChange(date.toString());
                   closeReminderTimePicker();
                 }}
-                onCancel={closeTimePicker}
+                onCancel={closeReminderTimePicker}
               />
             )}
           </TouchableOpacity>

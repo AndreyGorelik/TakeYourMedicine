@@ -1,6 +1,6 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 
 import Button from 'components/Button';
 import CheckboxForm from 'components/CheckboxForm';
@@ -53,24 +53,26 @@ function PillsStepOne({ navigation }: Props) {
   };
 
   return (
-    <View style={[{ backgroundColor: themeStyle.colors.back }, styles.view]}>
-      <Text variant="h3">Basic</Text>
-      <TextInput onChangeText={setMedsName} value={medsName} placeholder="Meds name" />
-      <TextInput
-        onChangeText={setMedsDescription}
-        value={medsDescription}
-        placeholder="Meds description"
-      />
-      <ModalWithCheckbox
-        data={mockDataForm}
-        checkedItem={medsForm}
-        getBack={setMedsForm}
-        title={'Форма лекарства'}
-      />
-      <ModalWithInput label="Запас" value={medsSupply.toString()} onChangeText={setMedsSupply} />
-      <Text variant="h3">Schedule</Text>
-      <CheckboxForm data={mockData} getBack={setMedsRegularity} />
-      <View style={styles.navigationButtons}>
+    <View style={styles.view}>
+      <ScrollView style={[{ backgroundColor: themeStyle.colors.back }, styles.top]}>
+        <Text variant="h3">Basic</Text>
+        <TextInput onChangeText={setMedsName} value={medsName} placeholder="Meds name" />
+        <TextInput
+          onChangeText={setMedsDescription}
+          value={medsDescription}
+          placeholder="Meds description"
+        />
+        <ModalWithCheckbox
+          data={mockDataForm}
+          checkedItem={medsForm}
+          getBack={setMedsForm}
+          title={'Форма лекарства'}
+        />
+        <ModalWithInput label="Запас" value={medsSupply.toString()} onChangeText={setMedsSupply} />
+        <Text variant="h3">Schedule</Text>
+        <CheckboxForm data={mockData} getBack={setMedsRegularity} scrollable={false} />
+      </ScrollView>
+      <View style={[{ backgroundColor: themeStyle.colors.back }, styles.navigationButtons]}>
         <Button title="Cancel" onPress={() => navigation.goBack()} />
         <Button
           title="Next"
@@ -85,6 +87,9 @@ function PillsStepOne({ navigation }: Props) {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+  },
+  top: {
+    flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 25,
     borderTopRightRadius: 25,
@@ -95,6 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 10,
+    paddingHorizontal: 25,
   },
 });
 

@@ -21,6 +21,7 @@ async function notifyOnTimer() {
     name: 'Schedule Notifications Channel',
     importance: AndroidImportance.HIGH,
     visibility: AndroidVisibility.PUBLIC,
+    sound: 'default',
   });
 
   await notifee.createTriggerNotification(
@@ -29,6 +30,7 @@ async function notifyOnTimer() {
       title: 'TAKE MEDS',
       body: 'DON"T FORGET TO TAKE MEDS',
       android: {
+        sound: 'default',
         channelId: channelId,
         pressAction: {
           id: 'opentest',
@@ -44,6 +46,9 @@ async function notifyOnTimer() {
             title: 'REMIND LATER',
           },
         ],
+      },
+      ios: {
+        sound: 'default',
       },
     },
     trigger

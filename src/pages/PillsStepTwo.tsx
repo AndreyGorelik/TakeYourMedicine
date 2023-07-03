@@ -1,6 +1,6 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, FlatList, TouchableOpacity, Switch, Platform } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Switch, BackHandler, ScrollView } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import uuid from 'react-native-uuid';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,10 +9,13 @@ import Button from 'components/Button';
 import ModalWithInput from 'components/ModalWithInput';
 import Text from 'components/Text';
 
+import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AddPills';
 import checkPermissions from '../utils/checkPermissions';
 import convertTime from '../utils/convertTime';
+
+import { TimeInterface } from './EditPills';
 
 type Props = StackScreenProps<RootStackParamList, 'AddMedsStepTwo'>;
 
@@ -41,6 +44,15 @@ function PillsStepTwo(props: Props) {
     setNotificationTime(notificationTimers);
   }, [medsRegularity]);
 
+  useMount(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.goBack();
+      return true;
+    });
+
+    return () => backHandler.remove();
+  });
+
   const openDatePicker = (index: number) => {
     setOpenIndex(index);
   };
@@ -65,31 +77,23 @@ function PillsStepTwo(props: Props) {
   };
 
   const toggleSupplyNotifications = () => {
-    if (Platform.OS === 'android') {
-      checkPermissions().then((status) => {
-        if (status) {
-          setSupplyNotification(!supplyNotification);
-        } else {
-          setSupplyNotification(false);
-        }
-      });
-    }
-
-    setSupplyNotification(!supplyNotification);
+    checkPermissions().then((status) => {
+      if (status) {
+        setSupplyNotification(!supplyNotification);
+      } else {
+        setSupplyNotification(false);
+      }
+    });
   };
 
   const toggleTakingMedsNotifications = () => {
-    if (Platform.OS === 'android') {
-      checkPermissions().then((data) => {
-        if (data) {
-          setNotificationsOnOff(!notificationsOnOff);
-        } else {
-          setNotificationsOnOff(false);
-        }
-      });
-    }
-
-    setNotificationsOnOff(!notificationsOnOff);
+    checkPermissions().then((data) => {
+      if (data) {
+        setNotificationsOnOff(!notificationsOnOff);
+      } else {
+        setNotificationsOnOff(false);
+      }
+    });
   };
 
   const handleAddNewTime = () => {
@@ -110,13 +114,22 @@ function PillsStepTwo(props: Props) {
     ]);
   };
 
-  const renderItem = ({ item, index }: { item: Time; index: number }) => {
+  const renderItem = (item: TimeInterface, index: number) => {
     const isOpen = openIndex === index;
+    const isLastElement = notificationTime.length === 1;
     return (
-      <View style={styles.time}>
+      <View style={styles.time} key={item.id}>
         {medsRegularity > 3 && (
-          <TouchableOpacity onPress={() => deleteTime(item.id)} style={styles.reminder}>
-            <Ionicons name="ios-remove-circle-outline" size={24} color={'red'} />
+          <TouchableOpacity
+            onPress={() => deleteTime(item.id)}
+            style={styles.reminder}
+            disabled={isLastElement}
+          >
+            <Ionicons
+              name="ios-remove-circle-outline"
+              size={24}
+              color={isLastElement ? 'gray' : 'red'}
+            />
           </TouchableOpacity>
         )}
 
@@ -139,41 +152,36 @@ function PillsStepTwo(props: Props) {
   };
 
   return (
-    <View style={[{ backgroundColor: themeStyle.colors.back }, styles.view]}>
-      <View>
-        <View style={styles.switchContainer}>
-          <Text>Напоминания о приеме</Text>
-          <Switch value={notificationsOnOff} onValueChange={toggleTakingMedsNotifications} />
-        </View>
-
+    <View style={styles.view}>
+      <ScrollView style={[{ backgroundColor: themeStyle.colors.back }, styles.top]}>
         <View>
-          <FlatList
-            data={notificationTime}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
+          <View style={styles.switchContainer}>
+            <Text>Напоминания о приеме</Text>
+            <Switch value={notificationsOnOff} onValueChange={toggleTakingMedsNotifications} />
+          </View>
+
+          <View>{notificationTime.map(renderItem)}</View>
+
+          {medsRegularity > 3 && (
+            <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
+              <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
+              <Text>Добавить напоминание</Text>
+            </TouchableOpacity>
+          )}
+
+          <View style={styles.switchContainer}>
+            <Text>Напоминания об остатке</Text>
+            <Switch value={supplyNotification} onValueChange={toggleSupplyNotifications} />
+          </View>
+
+          <ModalWithInput
+            label="Остаток"
+            value={medsRest > +medsSupply ? medsSupply.toString() : medsRest.toString()}
+            onChangeText={setMedsRest}
           />
         </View>
-
-        {medsRegularity > 3 && (
-          <TouchableOpacity style={styles.addNotification} onPress={handleAddNewTime}>
-            <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
-            <Text>Добавить напоминание</Text>
-          </TouchableOpacity>
-        )}
-
-        <View style={styles.switchContainer}>
-          <Text>Напоминания об остатке</Text>
-          <Switch value={supplyNotification} onValueChange={toggleSupplyNotifications} />
-        </View>
-
-        <ModalWithInput
-          label="Остаток"
-          value={medsRest > +medsSupply ? medsSupply.toString() : medsRest.toString()}
-          onChangeText={setMedsRest}
-        />
-      </View>
-
-      <View style={styles.navigationButtons}>
+      </ScrollView>
+      <View style={[{ backgroundColor: themeStyle.colors.back }, styles.navigationButtons]}>
         <Button title="Back" onPress={() => navigation.goBack()} />
         <Button
           title="Next"
@@ -198,6 +206,9 @@ function PillsStepTwo(props: Props) {
 
 const styles = StyleSheet.create({
   view: {
+    flex: 1,
+  },
+  top: {
     flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 25,
@@ -227,11 +238,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   navigationButtons: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     gap: 10,
+    paddingHorizontal: 25,
   },
 });
 
