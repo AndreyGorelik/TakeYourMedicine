@@ -2,7 +2,7 @@ import { Text as NativeText, StyleSheet, TextStyle } from 'react-native';
 
 import useTheme from '../hooks/useTheme';
 
-type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'warning' | 'medium';
+type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'warning' | 'medium' | 'disabled';
 
 interface CustomText {
   children: string | number;
@@ -60,7 +60,9 @@ function Text({ children, variant, ...rest }: CustomText) {
       settings.fontSize = 20;
       settings.marginVertical = 5;
       break;
-
+    case 'disabled':
+      settings.color = 'gray';
+      break;
     default:
       break;
   }

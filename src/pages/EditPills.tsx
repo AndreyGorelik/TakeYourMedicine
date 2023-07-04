@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import uuid from 'react-native-uuid';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 import ModalWithInput from 'components/ModalWithInput';
 import PhotoWithModal from 'components/PhotoWithModal';
@@ -11,16 +14,7 @@ import Text from 'components/Text';
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
 import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
-import {
-  changePillsInSchedule,
-  switchNotifications,
-  deleteNotificationTime,
-  addNotificationTime,
-  changeMedsSupply,
-  changeMedsRest,
-  switchSupplyNotifications,
-  deleteSomeMeds,
-} from '../store/slices/medsScheduleSlice';
+import { deleteSomeMeds } from '../store/slices/medsScheduleSlice';
 import cancelNotification from '../utils/cancelNotification';
 import checkPermissions from '../utils/checkPermissions';
 import convertTime from '../utils/convertTime';
@@ -49,7 +43,27 @@ function EditPills(props: any) {
     state.medsScheduleReducer.schedule.find((item: medsInfo) => item.id === id)
   );
 
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: itemToRender,
+  });
+
+  const { fields, append, remove, update } = useFieldArray({
+    control,
+    name: 'notificationTime',
+  });
+
+  const onSubmit = (data) => {
+    console.log('<<<<<<<<<', data);
+  };
+
   if (!itemToRender) return null;
+
+  const supplyNotifications = watch('supplyNotification');
 
   if (itemToRender.notificationsOnOff) {
     itemToRender.notificationTime.forEach((item) => {
@@ -61,108 +75,57 @@ function EditPills(props: any) {
     });
   }
 
-  function deleteMeds(id: string) {
+  const deleteMeds = (id: string) => {
     props.navigation.navigate('TreatmentPage');
     itemToRender.notificationTime.forEach((item) => {
       cancelNotification(item.id);
     });
     dispatch(deleteSomeMeds(id));
-  }
+  };
 
   const closeDatePicker = () => {
     setOpenIndex(null);
-  };
-
-  const confirmDate = (date: Date, dateId: string) => {
-    const newDate = {
-      newTime: date.toString(),
-      dateId,
-      medsId: id,
-    };
-    dispatch(changePillsInSchedule(newDate));
-
-    if (itemToRender.notificationsOnOff) {
-      notifyOnTimeSchedule({ time: date.toString(), id: dateId }, itemToRender);
-    }
-
-    closeDatePicker();
   };
 
   const openDatePicker = (index: number) => {
     setOpenIndex(index);
   };
 
-  const deleteTime = (notificationId: string) => {
-    dispatch(deleteNotificationTime({ id, notificationId }));
-  };
-
-  const addNewTime = () => {
-    dispatch(addNotificationTime(id));
-  };
-
-  const changeMedsSupplyCount = (count: string) => {
-    dispatch(changeMedsSupply({ count, id }));
-  };
-
-  const changeMedsRestCount = (count: string) => {
-    dispatch(changeMedsRest({ count, id }));
-  };
-
-  const toggleSupplyNotifications = () => {
+  const switchNotification = (
+    newValue: boolean,
+    onChange: (event: boolean | ChangeEvent<Element>) => void
+  ) => {
     checkPermissions().then((status) => {
       if (status) {
-        dispatch(switchSupplyNotifications(id));
+        onChange(newValue);
+      } else {
+        onChange(false);
       }
     });
   };
 
-  const toggleTakingMedsNotifications = () => {
+  const switchSupplyNotification = (
+    newValue: boolean,
+    onChange: (event: boolean | ChangeEvent<Element>) => void
+  ) => {
     checkPermissions().then((status) => {
       if (status) {
-        dispatch(switchNotifications(id));
+        onChange(newValue);
+      } else {
+        onChange(false);
       }
     });
   };
 
-  const renderItem = (item: TimeInterface, index: number) => {
-    const date = new Date(item.time);
-    const isOpen = openIndex === index;
-    const isLastElement = itemToRender.notificationTime.length === 1;
-    return (
-      <View style={styles.time} key={item.id}>
-        <TouchableOpacity
-          onPress={() => deleteTime(item.id)}
-          style={styles.reminder}
-          disabled={isLastElement}
-        >
-          <Ionicons
-            name="ios-remove-circle-outline"
-            size={24}
-            color={isLastElement ? 'gray' : 'red'}
-          />
-        </TouchableOpacity>
-        <View style={styles.timePicker}>
-          <TouchableOpacity onPress={() => openDatePicker(index)} style={styles.reminder}>
-            <Text>{Number(index + 1).toString() + ' прием'}</Text>
-            {isOpen && (
-              <DatePicker
-                modal
-                open={true}
-                mode="time"
-                date={date}
-                onConfirm={(newDate) => confirmDate(newDate, item.id)}
-                onCancel={closeDatePicker}
-              />
-            )}
-            <Text>{convertTime(item.time) + '▼'}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+  const isValidMedsSupply = (count: string) => {
+    const medsRest = watch('medsRest');
+    if (+count < +medsRest && supplyNotifications) return false;
+
+    return true;
   };
 
   return (
-    <ScrollView style={[styles.view, { backgroundColor: themeStyle.colors.back }]}>
+    <ScrollView style={[styles.top, { backgroundColor: themeStyle.colors.back }]}>
       <View style={styles.header}>
         <View>
           <Text variant="h3">{itemToRender.medsName}</Text>
@@ -174,49 +137,139 @@ function EditPills(props: any) {
       </View>
       <View>
         <Text variant="h3">Расписание приема</Text>
-        <View style={styles.switchContainer}>
-          <Text>Напоминать о приеме</Text>
-          <Switch
-            value={itemToRender.notificationsOnOff}
-            onValueChange={toggleTakingMedsNotifications}
-          />
-        </View>
-        {/* <FlatList
-          data={itemToRender.notificationTime}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-        /> */}
-        {itemToRender.notificationTime.map(renderItem)}
+        <Controller
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.switchContainer}>
+              <Text>Напоминать о приеме</Text>
+              <Switch
+                value={value}
+                onValueChange={(newValue) => switchNotification(newValue, onChange)}
+              />
+            </View>
+          )}
+          name="notificationsOnOff"
+        />
 
-        <TouchableOpacity style={styles.addNotification} onPress={addNewTime}>
+        {fields.map((item, index) => {
+          return (
+            <View style={styles.time} key={item.id}>
+              <TouchableOpacity onPress={() => remove(index)} style={styles.switchContainer}>
+                <Ionicons name="ios-remove-circle-outline" size={24} />
+              </TouchableOpacity>
+
+              <Controller
+                render={({ field }) => {
+                  return (
+                    <View style={styles.timePicker}>
+                      <TouchableOpacity
+                        onPress={() => openDatePicker(index)}
+                        style={styles.switchContainer}
+                      >
+                        <Text>{Number(index + 1).toString() + ' прием'}</Text>
+                        <Text>{convertTime(item.time) + '▼'}</Text>
+                      </TouchableOpacity>
+                      {openIndex === index && (
+                        <DatePicker
+                          modal
+                          open={true}
+                          mode="time"
+                          date={new Date(field.value)}
+                          onConfirm={(newDate) => {
+                            closeDatePicker();
+                            update(index, {
+                              time: newDate.toString(),
+                              id: item.id,
+                            });
+                          }}
+                          onCancel={closeDatePicker}
+                        />
+                      )}
+                    </View>
+                  );
+                }}
+                name={`notificationTime.${index}.time`}
+                control={control}
+              />
+            </View>
+          );
+        })}
+
+        <TouchableOpacity
+          style={styles.addNotification}
+          onPress={() => {
+            append({ time: new Date().toString(), id: uuid.v4().toString() });
+          }}
+        >
           <Ionicons name="ios-add-circle-outline" size={24} color={'green'} />
           <Text>Добавить напоминание</Text>
         </TouchableOpacity>
+
         <Text variant="h3">Запасы</Text>
-        <View style={styles.switchContainer}>
-          <Text>Напоминать об остатке</Text>
-          <Switch
-            value={itemToRender.supplyNotification}
-            onValueChange={toggleSupplyNotifications}
-          />
-        </View>
-        <ModalWithInput
-          label="Запас"
-          value={itemToRender.medsSupply}
-          onChangeText={changeMedsSupplyCount}
+
+        <Controller
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.switchContainer}>
+              <Text>Напоминать об остатке</Text>
+              <Switch
+                value={value}
+                onValueChange={(newValue) => switchSupplyNotification(newValue, onChange)}
+              />
+            </View>
+          )}
+          name="supplyNotification"
         />
-        <ModalWithInput
-          label="Уведомлять при остатке"
-          value={itemToRender.medsRest.toString()}
-          onChangeText={changeMedsRestCount}
+
+        <Controller
+          control={control}
+          rules={{
+            maxLength: 5,
+            minLength: 1,
+            required: true,
+            validate: isValidMedsSupply,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <ModalWithInput
+              label="Запас"
+              value={value}
+              onChangeText={onChange}
+              disabled={!supplyNotifications}
+            />
+          )}
+          name="medsSupply"
         />
+        {errors.medsSupply && <Text variant="warning">This is weird.</Text>}
+
+        <Controller
+          control={control}
+          rules={{
+            maxLength: 100,
+            minLength: 1,
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <ModalWithInput
+              disabled={!supplyNotifications}
+              label="Уведомлять при"
+              value={value.toString()}
+              onChangeText={onChange}
+            />
+          )}
+          name="medsRest"
+        />
+        {errors.medsRest && <Text variant="warning">This is required.</Text>}
       </View>
+      <Button title="Save" onPress={handleSubmit(onSubmit)} />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   view: {
+    flex: 1,
+  },
+  top: {
     flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 25,
@@ -225,11 +278,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   switchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
-  reminder: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
@@ -258,6 +306,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+  },
+  navigationButtons: {
+    flexDirection: 'row',
+    gap: 10,
+    paddingHorizontal: 25,
+    paddingBottom: 15,
   },
 });
 

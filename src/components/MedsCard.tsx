@@ -13,8 +13,7 @@ interface MedsCardProps {
   data: medsInfo;
   navigation: any;
   selectedList: string[];
-  // eslint-disable-next-line no-unused-vars
-  setSelectedList: (arg: string[]) => void;
+  setSelectedList: React.Dispatch<React.SetStateAction<string[]>>;
 }
 const MedsCard = ({ data, navigation, selectedList, setSelectedList }: MedsCardProps) => {
   const { themeStyle } = useTheme();

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { StyleSheet, Alert, ScrollView, Linking, TextInput } from 'react-native';
 
 import Button from 'components/Button';
+import notifyInstant from '../utils/notifyInstant';
 
 function HomePage() {
   const [test, setTest] = useState('');
@@ -34,6 +35,7 @@ function HomePage() {
       <Button title="show notifications id" onPress={show} />
       <Button title="check" onPress={check} />
       <Button title="deleete notifications" onPress={del} />
+      <Button title="notify now" onPress={() => notifyInstant()} />
       <Button title="deep link" onPress={() => Linking.openURL('demoapp://Settings')} />
       <TextInput value={test} onChangeText={setTest} style={styles.input} />
     </ScrollView>

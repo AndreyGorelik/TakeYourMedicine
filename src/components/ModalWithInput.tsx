@@ -8,22 +8,24 @@ interface ModalInput {
   value: string;
   onChangeText: any;
   label: string;
+  disabled?: boolean;
 }
 
-const ModalWithInput = ({ value, onChangeText, label }: ModalInput) => {
+const ModalWithInput = ({ value, onChangeText, label, disabled = false }: ModalInput) => {
   const [visible, setVisible] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View>
       <TouchableOpacity
+        disabled={disabled}
         onPress={() => {
           Keyboard.dismiss();
           setVisible(true);
         }}
         style={styles.outerView}
       >
-        <Text>{label}</Text>
-        <Text>{value}</Text>
+        <Text variant={disabled ? 'disabled' : undefined}>{label}</Text>
+        <Text variant={disabled ? 'disabled' : undefined}>{value}</Text>
       </TouchableOpacity>
       {visible ? (
         <Modal transparent={true} onRequestClose={() => setVisible(!visible)}>
@@ -53,9 +55,6 @@ const ModalWithInput = ({ value, onChangeText, label }: ModalInput) => {
 const styles = StyleSheet.create({
   view: {
     marginRight: 10,
-  },
-  container: {
-    // flex: 1,
   },
   outerView: {
     flexDirection: 'row',
@@ -87,7 +86,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '50%',
+    width: '80%',
   },
 });
 

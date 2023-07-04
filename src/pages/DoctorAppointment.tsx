@@ -1,15 +1,7 @@
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import { ChangeEvent, useState } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  View,
-  Modal,
-  Switch,
-  Platform,
-} from 'react-native';
+import { StyleSheet, TouchableOpacity, ScrollView, View, Modal, Switch } from 'react-native';
 import { CalendarUtils } from 'react-native-calendars';
 import DatePicker from 'react-native-date-picker';
 import uuid from 'react-native-uuid';
@@ -129,17 +121,13 @@ function DoctorAppointment({ navigation, route }: DoctorAppointmentProps) {
     newValue: boolean,
     onChange: (event: boolean | ChangeEvent<Element>) => void
   ) => {
-    if (Platform.OS === 'android') {
-      checkPermissions().then((status) => {
-        if (status) {
-          onChange(newValue);
-        } else {
-          onChange(false);
-        }
-      });
-    }
-
-    onChange(newValue);
+    checkPermissions().then((status) => {
+      if (status) {
+        onChange(newValue);
+      } else {
+        onChange(false);
+      }
+    });
   };
 
   const onSubmit: SubmitHandler<DoctorVisit> = (data) => {

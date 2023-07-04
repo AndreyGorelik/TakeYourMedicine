@@ -13,7 +13,7 @@ import DoctorAppointment from 'pages/DoctorAppointment';
 import EditPills from 'pages/EditPills';
 import SettingsPage from 'pages/Settings';
 
-import { useAppDispatch } from '../hooks/redux-hooks';
+import { useAppDispatch, useAppSelector } from '../hooks/redux-hooks';
 import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
 import { cancelAllNotifications, decrementMedsSupply } from '../store/slices/medsScheduleSlice';
@@ -22,12 +22,20 @@ import notifyOnTimer from '../utils/timerNotification';
 
 import AddPills from './AddPills';
 import BottomTabsScreen from './BottomTabs';
+import notifyInstant from '../utils/notifyInstant';
 
 const Stack = createStackNavigator();
 
 function AppWrapper() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
+
+  const state = useAppSelector((state) => state.medsScheduleReducer);
+  console.log('уведомлять при', +state.schedule[0].medsRest);
+  console.log('сейчас осталось', +state.schedule[0].medsSupply);
+  if (+state.schedule[0].medsSupply < +state.schedule[0].medsRest) {
+    notifyInstant();
+  }
 
   useMount(() => {
     checkPermissions().then((permissionStatus: boolean) => {
@@ -55,7 +63,7 @@ function AppWrapper() {
     }
     if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsTaken') {
       dispatch(decrementMedsSupply(notification!.data!.medsId));
-      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
+      // Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
     }
   });
 

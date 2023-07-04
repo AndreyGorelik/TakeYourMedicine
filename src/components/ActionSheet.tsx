@@ -35,7 +35,6 @@ interface BottomSheetProps {
 }
 
 export interface BottomSheetRefProps {
-  // eslint-disable-next-line no-unused-vars
   scrollTo: (destination: number) => void;
   isActive: boolean;
 }

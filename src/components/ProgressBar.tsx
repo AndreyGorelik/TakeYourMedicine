@@ -1,10 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 interface ProgressBarInterface {
   range: number;
@@ -14,18 +9,16 @@ const ProgressBar = ({ range }: ProgressBarInterface) => {
   const progress = useSharedValue(0);
 
   if (range < 1) {
-    progress.value = withSpring(1);
+    progress.value = withTiming(1);
   } else if (range > 100) {
-    progress.value = withSpring(100);
+    progress.value = withTiming(100);
   } else {
-    progress.value = withSpring(range);
+    progress.value = withTiming(range);
   }
 
   const aStyle = useAnimatedStyle(() => {
     return {
-      width: withTiming(`${progress.value + '%'}`, {
-        duration: 100,
-      }),
+      width: `${progress.value + '%'}`,
     };
   });
 
