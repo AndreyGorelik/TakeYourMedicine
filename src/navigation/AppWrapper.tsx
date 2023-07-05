@@ -64,7 +64,8 @@ function AppWrapper() {
 
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;
-    if (type === EventType.PRESS) {
+
+    if (type === EventType.PRESS && pressAction?.id === 'openMedsScheduleItem') {
       Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
     }
     if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsLater') {
@@ -72,13 +73,14 @@ function AppWrapper() {
     }
     if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsTaken') {
       dispatch(decrementMedsSupply(notification!.data!.medsId));
-      // Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
+      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
     }
   });
 
   notifee.onForegroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;
-    if (type === EventType.PRESS) {
+
+    if (type === EventType.PRESS && pressAction?.id === 'openMedsScheduleItem') {
       Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
     }
     if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsLater') {
@@ -95,6 +97,7 @@ function AppWrapper() {
     config: {
       screens: {
         EditPills: 'EditPills/:id',
+        Settings: 'Settings',
       },
     },
   };

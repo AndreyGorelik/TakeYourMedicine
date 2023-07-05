@@ -16,7 +16,7 @@ function ModalWithCheckbox({
 }: {
   data: CheckboxItem[];
   checkedItem: CheckboxItem;
-  getBack: any;
+  getBack: React.Dispatch<React.SetStateAction<unknown>>;
   title: string;
 }) {
   const [visible, setVisible] = useState(false);

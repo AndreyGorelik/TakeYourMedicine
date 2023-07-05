@@ -32,7 +32,11 @@ async function notifyOnTimeSchedule(time: Time, meds: medsInfo) {
             newD.setDate(newD.getDate() + 1);
             return newD.getTime();
           })()
-        : new Date(notificationTime).getTime(),
+        : (() => {
+            const newD = new Date(notificationTime);
+            newD.setSeconds(0);
+            return newD.getTime();
+          })(),
     repeatFrequency: RepeatFrequency.DAILY,
     alarmManager: {
       allowWhileIdle: true,
@@ -73,7 +77,7 @@ async function notifyOnTimeSchedule(time: Time, meds: medsInfo) {
         sound: 'default',
         channelId: channelId,
         pressAction: {
-          id: 'openApp',
+          id: 'openMedsScheduleItem',
           launchActivity: 'default',
         },
         actions: [

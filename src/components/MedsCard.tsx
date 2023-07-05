@@ -41,7 +41,7 @@ const MedsCard = ({ data, navigation, selectedList, setSelectedList }: MedsCardP
         <View style={styles.leftColumn}>
           <Text variant="h3">{data.medsName}</Text>
           {data.medsDescription ? <Text>{data.medsDescription}</Text> : null}
-          <Text variant="h6">{data.medsRegularity.toString() + ' в день'}</Text>
+          <Text variant="h6">{data.notificationTime.length.toString() + ' в день'}</Text>
         </View>
         <View>
           <Image

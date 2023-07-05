@@ -6,7 +6,7 @@ import TextInput from './TextInput';
 
 interface ModalInput {
   value: string;
-  onChangeText: any;
+  onChangeText: unknown;
   label: string;
   disabled?: boolean;
 }
