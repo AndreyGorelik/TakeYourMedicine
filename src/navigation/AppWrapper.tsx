@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import DoctorAppointment from 'pages/DoctorAppointment';
+import DoctorAppointment, { DoctorVisit } from 'pages/DoctorAppointment';
 import EditPills from 'pages/EditPills';
 import SettingsPage from 'pages/Settings';
 
@@ -18,22 +18,31 @@ import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
 import { cancelAllNotifications, decrementMedsSupply } from '../store/slices/medsScheduleSlice';
 import checkPermissions from '../utils/checkPermissions';
+import notifyInstant from '../utils/notifyInstant';
 import notifyOnTimer from '../utils/timerNotification';
 
 import AddPills from './AddPills';
 import BottomTabsScreen from './BottomTabs';
-import notifyInstant from '../utils/notifyInstant';
 
-const Stack = createStackNavigator();
+export type WrapperStackParamList = {
+  Home: undefined;
+  EditPills: { id: string };
+  AddPills: undefined;
+  DoctorAppointment: { visitInfo: DoctorVisit } | undefined;
+  Settings: undefined;
+  TreatmentPage: undefined;
+  DoctorsPage: undefined;
+};
+
+const Stack = createStackNavigator<WrapperStackParamList>();
 
 function AppWrapper() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
 
   const state = useAppSelector((state) => state.medsScheduleReducer);
-  console.log('уведомлять при', +state.schedule[0].medsRest);
-  console.log('сейчас осталось', +state.schedule[0].medsSupply);
-  if (+state.schedule[0].medsSupply < +state.schedule[0].medsRest) {
+
+  if (+state.schedule[0]?.medsSupply < +state.schedule[0]?.medsRest) {
     notifyInstant();
   }
 

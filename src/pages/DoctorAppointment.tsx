@@ -1,5 +1,5 @@
-import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
-import { ChangeEvent, useState } from 'react';
+import { StackScreenProps } from '@react-navigation/stack';
+import { useState } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { StyleSheet, TouchableOpacity, ScrollView, View, Modal, Switch } from 'react-native';
 import { CalendarUtils } from 'react-native-calendars';
@@ -14,6 +14,7 @@ import TextInput from 'components/TextInput';
 import { useAppDispatch } from '../hooks/redux-hooks';
 import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
+import { WrapperStackParamList } from '../navigation/AppWrapper';
 import { saveNewAppointment, saveEditedAppointment } from '../store/slices/doctorsSlice';
 import cancelNotification from '../utils/cancelNotification';
 import checkPermissions from '../utils/checkPermissions';
@@ -34,16 +35,9 @@ export interface DoctorVisit {
   notificationTimeAndDate?: string;
 }
 
-interface DoctorAppointmentProps {
-  navigation: NavigationProp<ParamListBase>;
-  route: RouteProp<ParamListBase, 'DoctorAppointment'> & {
-    params?: {
-      visitInfo?: DoctorVisit;
-    };
-  };
-}
+type Props = StackScreenProps<WrapperStackParamList, 'DoctorAppointment'>;
 
-function DoctorAppointment({ navigation, route }: DoctorAppointmentProps) {
+function DoctorAppointment({ navigation, route }: Props) {
   const { themeStyle } = useTheme();
   const visitInfo = route.params?.visitInfo;
 
@@ -117,10 +111,7 @@ function DoctorAppointment({ navigation, route }: DoctorAppointmentProps) {
     setDatePickerVisibility(false);
   };
 
-  const switchNotification = (
-    newValue: boolean,
-    onChange: (event: boolean | ChangeEvent<Element>) => void
-  ) => {
+  const switchNotification = (newValue: boolean, onChange: any) => {
     checkPermissions().then((status) => {
       if (status) {
         onChange(newValue);

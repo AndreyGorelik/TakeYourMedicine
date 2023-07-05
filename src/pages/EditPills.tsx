@@ -1,3 +1,4 @@
+import { StackScreenProps } from '@react-navigation/stack';
 import { useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
@@ -14,7 +15,8 @@ import Text from 'components/Text';
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
 import useMount from '../hooks/useMount';
 import useTheme from '../hooks/useTheme';
-import { deleteSomeMeds } from '../store/slices/medsScheduleSlice';
+import { WrapperStackParamList } from '../navigation/AppWrapper';
+import { deleteScheduleItems, updateScheduleItem } from '../store/slices/medsScheduleSlice';
 import cancelNotification from '../utils/cancelNotification';
 import checkPermissions from '../utils/checkPermissions';
 import convertTime from '../utils/convertTime';
@@ -26,15 +28,17 @@ export interface TimeInterface {
   id: string;
   time: string;
 }
+type Props = StackScreenProps<WrapperStackParamList, 'EditPills'>;
 
-function EditPills(props: any) {
-  const { id } = props.route.params;
+function EditPills(props: Props) {
+  const { navigation, route } = props;
+  const id = route.params.id;
   const dispatch = useAppDispatch();
   const { themeStyle } = useTheme();
   const [openIndex, setOpenIndex] = useState<null | number>(null);
 
   useMount(() => {
-    props.navigation.setOptions({
+    navigation.setOptions({
       headerRight: () => <DeleteButton deleteItem={() => deleteMeds(id)} />,
     });
   });
@@ -57,30 +61,34 @@ function EditPills(props: any) {
     name: 'notificationTime',
   });
 
-  const onSubmit = (data) => {
-    console.log('<<<<<<<<<', data);
+  const onSubmit = (data: medsInfo) => {
+    if (data.notificationsOnOff) {
+      itemToRender.notificationTime.forEach((item) => {
+        cancelNotification(item.id);
+      });
+      data.notificationTime.forEach((item) => {
+        notifyOnTimeSchedule(item, data);
+      });
+    } else {
+      data.notificationTime.forEach((item) => {
+        cancelNotification(item.id);
+      });
+    }
+
+    dispatch(updateScheduleItem(data));
+    navigation.navigate('TreatmentPage');
   };
 
   if (!itemToRender) return null;
 
   const supplyNotifications = watch('supplyNotification');
 
-  if (itemToRender.notificationsOnOff) {
-    itemToRender.notificationTime.forEach((item) => {
-      notifyOnTimeSchedule(item, itemToRender);
-    });
-  } else {
-    itemToRender.notificationTime.forEach((item) => {
-      cancelNotification(item.id);
-    });
-  }
-
   const deleteMeds = (id: string) => {
-    props.navigation.navigate('TreatmentPage');
+    navigation.navigate('TreatmentPage');
     itemToRender.notificationTime.forEach((item) => {
       cancelNotification(item.id);
     });
-    dispatch(deleteSomeMeds(id));
+    dispatch(deleteScheduleItems(id));
   };
 
   const closeDatePicker = () => {
@@ -91,10 +99,7 @@ function EditPills(props: any) {
     setOpenIndex(index);
   };
 
-  const switchNotification = (
-    newValue: boolean,
-    onChange: (event: boolean | ChangeEvent<Element>) => void
-  ) => {
+  const switchNotification = (newValue: boolean, onChange: (event: boolean) => void) => {
     checkPermissions().then((status) => {
       if (status) {
         onChange(newValue);
@@ -104,10 +109,7 @@ function EditPills(props: any) {
     });
   };
 
-  const switchSupplyNotification = (
-    newValue: boolean,
-    onChange: (event: boolean | ChangeEvent<Element>) => void
-  ) => {
+  const switchSupplyNotification = (newValue: boolean, onChange: (event: boolean) => void) => {
     checkPermissions().then((status) => {
       if (status) {
         onChange(newValue);

@@ -32,7 +32,7 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'react/display-name': 'off',
-    'no-unused-vars': 'error',
+    'no-unused-vars': 'off',
     'no-empty-function': 'error',
     '@typescript-eslint/no-unused-vars': ['error'],
     'import/export': 'error',

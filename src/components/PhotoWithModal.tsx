@@ -10,7 +10,7 @@ import { deletePhoto, updatePhoto } from '../store/slices/medsScheduleSlice';
 
 import Button from './Button';
 
-enum PhotoSource {
+export enum PhotoSource {
   Camera = 'camera',
   Gallery = 'gallery',
 }

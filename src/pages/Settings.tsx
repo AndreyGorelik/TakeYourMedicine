@@ -19,7 +19,7 @@ function SettingsPage({ changeTheme }: { changeTheme: () => void }) {
   const { dark } = useTheme();
   const [darkThemeSwitch, setDarkThemeSwitch] = useState(dark ? true : false);
   const [value, setValue] = useState('en');
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const dispatch = useAppDispatch();
 
@@ -37,7 +37,7 @@ function SettingsPage({ changeTheme }: { changeTheme: () => void }) {
   return (
     <View style={styles.view}>
       <View style={styles.row}>
-        <Text>{t('darkmode')}</Text>
+        <Text>Dark Mode</Text>
         <Switch value={darkThemeSwitch} onValueChange={switchTheme} />
       </View>
 

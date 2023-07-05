@@ -1,4 +1,5 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { StackScreenProps } from '@react-navigation/stack';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
@@ -11,8 +12,8 @@ import Text from 'components/Text';
 
 import ActionSheet, { BottomSheetRefProps, ACTION_SHEET_SIZE } from '../components/ActionSheet';
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
-import { deleteSomeMeds } from '../store/slices/medsScheduleSlice';
-// import { FlatList } from 'react-native-gesture-handler';
+import { BottomTabBarParamList } from '../navigation/BottomTabs';
+import { deleteScheduleItems } from '../store/slices/medsScheduleSlice';
 
 interface NotificationTime {
   id: string;
@@ -32,7 +33,9 @@ export interface medsInfo {
   supplyNotification: boolean;
 }
 
-function TreatmentPage({ navigation }: { navigation: any }) {
+type Props = StackScreenProps<BottomTabBarParamList, 'TreatmentPage'>;
+
+function TreatmentPage({ navigation }: Props) {
   const ref = useRef<BottomSheetRefProps>(null);
   const tabBarHeight = useBottomTabBarHeight();
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
@@ -40,7 +43,7 @@ function TreatmentPage({ navigation }: { navigation: any }) {
   const dispatch = useAppDispatch();
 
   const deleteItems = useCallback(() => {
-    dispatch(deleteSomeMeds(selectedList));
+    dispatch(deleteScheduleItems(selectedList));
     setSelectedList([]);
   }, [dispatch, selectedList]);
 

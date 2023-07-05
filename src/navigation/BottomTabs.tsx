@@ -9,8 +9,15 @@ import DoctorsPage from 'pages/DoctorsPage';
 import HomePage from 'pages/Home';
 import TreatmentPage from 'pages/TreatmentPage';
 
+export type BottomTabBarParamList = {
+  TreatmentPage: undefined;
+  DoctorsPage: undefined;
+  HomePage: undefined;
+};
+
+const Tab = createBottomTabNavigator<BottomTabBarParamList>();
+
 function BottomTabsScreen() {
-  const Tab = createBottomTabNavigator();
   const { t } = useTranslation();
   return (
     <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
