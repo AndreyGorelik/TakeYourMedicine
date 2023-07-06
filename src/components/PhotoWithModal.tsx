@@ -8,7 +8,7 @@ import { noPhoto } from '../assets/images';
 import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks';
 import { deletePhoto, updatePhoto } from '../store/slices/medsScheduleSlice';
 
-import Button from './Button';
+import Text from './Text';
 
 export enum PhotoSource {
   Camera = 'camera',
@@ -64,10 +64,21 @@ function PhotoWithModal({ id }: { id: string }) {
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 {noPhoto === photo ? null : (
-                  <Button title="Delete photo" onPress={handleDeletePhoto} />
+                  <>
+                    <TouchableOpacity onPress={handleDeletePhoto}>
+                      <Text variant="h5">Delete photo</Text>
+                    </TouchableOpacity>
+                    <View style={styles.divider} />
+                  </>
                 )}
-                <Button title="Take new photo" onPress={() => takePhoto(PhotoSource.Camera)} />
-                <Button title="Upload from phone" onPress={() => takePhoto(PhotoSource.Gallery)} />
+
+                <TouchableOpacity onPress={() => takePhoto(PhotoSource.Camera)}>
+                  <Text variant="h5">Take new photo</Text>
+                </TouchableOpacity>
+                <View style={styles.divider} />
+                <TouchableOpacity onPress={() => takePhoto(PhotoSource.Gallery)}>
+                  <Text variant="h5">Upload from phone</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </TouchableOpacity>
@@ -110,6 +121,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    backgroundColor: '#e8e8e8',
   },
 });
 

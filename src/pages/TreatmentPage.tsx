@@ -79,19 +79,7 @@ function TreatmentPage({ navigation }: Props) {
     }
   };
 
-  const options = [
-    { label: 'Add pills', function: sayHi, id: '1' },
-    { label: 'Add pills', function: sayHi, id: '2' },
-    { label: 'Add pills', function: sayHi, id: '22' },
-    { label: 'Add pills', function: sayHi, id: '222' },
-    { label: 'Add pills', function: sayHi, id: '2222' },
-    { label: 'Add pills', function: sayHi, id: '222222' },
-    { label: 'Add pills', function: sayHi, id: '2222222' },
-    { label: 'Add pills', function: sayHi, id: '2212322222' },
-    { label: 'Add pills', function: sayHi, id: '222212313123222' },
-    { label: 'Add pills', function: sayHi, id: '2221231231232222' },
-    { label: 'Add pills', function: sayHi, id: '2221231231231232222' },
-  ];
+  const options = [{ label: 'Add pills', function: sayHi, id: '1' }];
 
   const renderMedsCard = ({ item }: { item: medsInfo }) => {
     return (

@@ -42,7 +42,7 @@ function ModalWithCheckbox({
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <TouchableOpacity
         onPress={() => {
           Keyboard.dismiss();
@@ -73,12 +73,10 @@ function ModalWithCheckbox({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-  },
   outerView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginVertical: 7,
   },
   modalBackground: {
     flex: 1,

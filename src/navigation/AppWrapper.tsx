@@ -26,7 +26,7 @@ import BottomTabsScreen from './BottomTabs';
 
 export type WrapperStackParamList = {
   Home: undefined;
-  EditPills: { id: string };
+  EditPills: { id: string; openFromPushStatus?: string };
   AddPills: undefined;
   DoctorAppointment: { visitInfo: DoctorVisit } | undefined;
   Settings: undefined;
@@ -65,7 +65,7 @@ function AppWrapper() {
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;
 
-    if (type === EventType.PRESS && pressAction?.id === 'openMedsScheduleItem') {
+    if (type === EventType.PRESS && notification?.data?.medsId) {
       Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
     }
     if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsLater') {
@@ -80,8 +80,10 @@ function AppWrapper() {
   notifee.onForegroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;
 
-    if (type === EventType.PRESS && pressAction?.id === 'openMedsScheduleItem') {
-      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
+    if (type === EventType.PRESS && notification?.data?.medsId) {
+      Linking.openURL(
+        'takeyourmeds://EditPills/' + notification!.data!.medsId + '?openFromPushStatus=' + 'true'
+      );
     }
     if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsLater') {
       notifyOnTimer();

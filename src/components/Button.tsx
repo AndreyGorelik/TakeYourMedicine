@@ -4,6 +4,7 @@ interface CustomButton {
   title: string;
   onPress: () => void;
   width?: number | string;
+  height?: number;
   backgroundColor?: string;
   disabled?: boolean;
 }
@@ -19,11 +20,11 @@ function Button({ title, width, onPress, backgroundColor, disabled = false }: Cu
       accessible
       accessibilityRole="button"
       style={[
+        styles.button,
         {
           width: width ? width : '100%',
           backgroundColor: disabled ? 'gray' : backgroundColor || '#0099FF',
         },
-        styles.button,
       ]}
       onPress={handlePress}
       activeOpacity={0.8}

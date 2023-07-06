@@ -149,183 +149,194 @@ function DoctorAppointment({ navigation, route }: Props) {
   };
 
   return (
-    <ScrollView style={[{ backgroundColor: themeStyle.colors.back }, styles.view]}>
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-          maxLength: 100,
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput placeholder="Name" onChangeText={onChange} value={value} />
-        )}
-        name="name"
-      />
-      {errors.name && <Text variant="warning">This is required.</Text>}
-
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-          maxLength: 100,
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput placeholder="Specialization" onChangeText={onChange} value={value} />
-        )}
-        name="specialization"
-      />
-      {errors.specialization && <Text variant="warning">This is required.</Text>}
-
-      <Controller
-        control={control}
-        rules={{
-          maxLength: 100,
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput placeholder="Address" onChangeText={onChange} value={value} />
-        )}
-        name="address"
-      />
-
-      <Controller
-        control={control}
-        rules={{
-          maxLength: 100,
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Phone"
-            onChangeText={onChange}
-            value={value}
-            keyboardType="phone-pad"
+    <View style={styles.view}>
+      <ScrollView style={[{ backgroundColor: themeStyle.colors.back }, styles.scrollview]}>
+        <View style={styles.container}>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+              maxLength: 100,
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput placeholder="Name" onChangeText={onChange} value={value} />
+            )}
+            name="name"
           />
-        )}
-        name="phone"
-      />
+          {errors.name && <Text variant="warning">This is required.</Text>}
 
-      <Controller
-        control={control}
-        rules={{
-          maxLength: 50,
-          validate: isValidEmail,
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput placeholder="E-mail" onChangeText={onChange} value={value} />
-        )}
-        name="email"
-      />
-      {errors.email && <Text variant="warning">Incorrect e-mail</Text>}
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+              maxLength: 100,
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput placeholder="Specialization" onChangeText={onChange} value={value} />
+            )}
+            name="specialization"
+          />
+          {errors.specialization && <Text variant="warning">This is required.</Text>}
 
-      <Controller
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <TouchableOpacity style={styles.reminder} onPress={openTimePicker}>
-            <Text>Appointment time</Text>
-            <Text>{convertTime(new Date(value)) + '▼'}</Text>
-            {timePickerVisibility && (
-              <DatePicker
-                modal
-                open={true}
-                mode="time"
-                date={new Date(value)}
-                onConfirm={(date) => {
-                  onChange(date.toString());
-                  closeTimePicker();
-                }}
-                onCancel={closeTimePicker}
+          <Controller
+            control={control}
+            rules={{
+              maxLength: 100,
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput placeholder="Address" onChangeText={onChange} value={value} />
+            )}
+            name="address"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              maxLength: 100,
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                placeholder="Phone"
+                onChangeText={onChange}
+                value={value}
+                keyboardType="phone-pad"
               />
             )}
-          </TouchableOpacity>
-        )}
-        name="appointmentTime"
-      />
+            name="phone"
+          />
 
-      <Controller
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <>
-            <TouchableOpacity style={styles.reminder} onPress={openDatePicker}>
-              <Text>Date</Text>
-              <Text>{value + '▼'}</Text>
-            </TouchableOpacity>
+          <Controller
+            control={control}
+            rules={{
+              maxLength: 50,
+              validate: isValidEmail,
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput placeholder="E-mail" onChangeText={onChange} value={value} />
+            )}
+            name="email"
+          />
+          {errors.email && <Text variant="warning">Incorrect e-mail</Text>}
 
-            <View>
-              <Modal
-                transparent={true}
-                visible={datePickerVisibility}
-                onRequestClose={closeDatePicker}
-              >
-                <TouchableOpacity style={styles.modalContainer} onPress={closeDatePicker}>
-                  <TouchableOpacity style={styles.modal} activeOpacity={1}>
-                    <CalendarWithSelectableDate
-                      date={value}
-                      setDate={(date) => {
-                        onChange(date as string);
-                        closeDatePicker();
-                      }}
-                    />
-                  </TouchableOpacity>
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TouchableOpacity style={styles.reminder} onPress={openTimePicker}>
+                <Text>Appointment time</Text>
+                <Text>{convertTime(new Date(value)) + '▼'}</Text>
+                {timePickerVisibility && (
+                  <DatePicker
+                    modal
+                    open={true}
+                    mode="time"
+                    date={new Date(value)}
+                    onConfirm={(date) => {
+                      onChange(date.toString());
+                      closeTimePicker();
+                    }}
+                    onCancel={closeTimePicker}
+                  />
+                )}
+              </TouchableOpacity>
+            )}
+            name="appointmentTime"
+          />
+
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <>
+                <TouchableOpacity style={styles.reminder} onPress={openDatePicker}>
+                  <Text>Date</Text>
+                  <Text>{value + '▼'}</Text>
                 </TouchableOpacity>
-              </Modal>
-            </View>
-          </>
-        )}
-        name="appointmentDate"
-      />
 
-      <Text variant="h3">Set notificiation</Text>
-
-      <Controller
-        control={control}
-        rules={{
-          validate: isValidNotificationTime,
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TouchableOpacity style={styles.reminder} onPress={openReminderTimePicker}>
-            <Text>Notification time</Text>
-            <Text>{convertTime(new Date(value)) + '▼'}</Text>
-            {reminderTimePickerVisibility && (
-              <DatePicker
-                modal
-                open={true}
-                mode="time"
-                date={new Date(value)}
-                onConfirm={(date) => {
-                  onChange(date.toString());
-                  closeReminderTimePicker();
-                }}
-                onCancel={closeReminderTimePicker}
-              />
+                <View>
+                  <Modal
+                    transparent={true}
+                    visible={datePickerVisibility}
+                    onRequestClose={closeDatePicker}
+                  >
+                    <TouchableOpacity style={styles.modalContainer} onPress={closeDatePicker}>
+                      <TouchableOpacity style={styles.modal} activeOpacity={1}>
+                        <CalendarWithSelectableDate
+                          date={value}
+                          setDate={(date) => {
+                            onChange(date as string);
+                            closeDatePicker();
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+                  </Modal>
+                </View>
+              </>
             )}
-          </TouchableOpacity>
-        )}
-        name="notificationTime"
-      />
-      {errors.notificationTime && (
-        <Text variant="warning">Notification time should be before visit time.</Text>
-      )}
+            name="appointmentDate"
+          />
 
-      <Controller
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.switchContainer}>
-            <Text>Notification</Text>
-            <Switch
-              value={value}
-              onValueChange={(newValue) => switchNotification(newValue, onChange)}
-            />
-          </View>
-        )}
-        name="notificationStatus"
-      />
+          <Text variant="h3">Set notificiation</Text>
 
-      <Button title="Save" onPress={handleSubmit(onSubmit)} />
-    </ScrollView>
+          <Controller
+            control={control}
+            rules={{
+              validate: isValidNotificationTime,
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TouchableOpacity style={styles.reminder} onPress={openReminderTimePicker}>
+                <Text>Notification time</Text>
+                <Text>{convertTime(new Date(value)) + '▼'}</Text>
+                {reminderTimePickerVisibility && (
+                  <DatePicker
+                    modal
+                    open={true}
+                    mode="time"
+                    date={new Date(value)}
+                    onConfirm={(date) => {
+                      onChange(date.toString());
+                      closeReminderTimePicker();
+                    }}
+                    onCancel={closeReminderTimePicker}
+                  />
+                )}
+              </TouchableOpacity>
+            )}
+            name="notificationTime"
+          />
+          {errors.notificationTime && (
+            <Text variant="warning">Notification time should be before visit time.</Text>
+          )}
+
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <View style={styles.switchContainer}>
+                <Text>Notification</Text>
+                <Switch
+                  value={value}
+                  onValueChange={(newValue) => switchNotification(newValue, onChange)}
+                />
+              </View>
+            )}
+            name="notificationStatus"
+          />
+        </View>
+      </ScrollView>
+      <View style={[{ backgroundColor: themeStyle.colors.back }, styles.saveArea]}>
+        <Button title="Save" onPress={handleSubmit(onSubmit)} />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingBottom: 30,
+  },
   view: {
+    flex: 1,
+  },
+  scrollview: {
     flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 25,
@@ -357,6 +368,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
+  },
+  saveArea: {
+    flexDirection: 'row',
+    paddingHorizontal: 25,
+    paddingBottom: 10,
   },
 });
 

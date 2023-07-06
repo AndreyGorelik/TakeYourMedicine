@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
   outerView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginVertical: 7,
   },
   modalBackground: {
     flex: 1,

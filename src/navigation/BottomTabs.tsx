@@ -13,6 +13,7 @@ export type BottomTabBarParamList = {
   TreatmentPage: undefined;
   DoctorsPage: undefined;
   HomePage: undefined;
+  AddPills: undefined;
 };
 
 const Tab = createBottomTabNavigator<BottomTabBarParamList>();
