@@ -37,7 +37,10 @@ function HomePage() {
       <Button title="check" onPress={check} />
       <Button title="deleete notifications" onPress={del} />
       <Button title="notify now" onPress={() => notifyInstant()} />
-      <Button title="deep link" onPress={() => Linking.openURL('takeyourmeds://Settings')} />
+      <Button
+        title="deep link"
+        onPress={() => Linking.openURL('takeyourmeds://Home/TreatmentPage')}
+      />
       <TextInput value={test} onChangeText={setTest} style={styles.input} />
     </ScrollView>
   );

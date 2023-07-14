@@ -39,7 +39,9 @@ const medsScheduleSlice = createSlice({
     },
     decrementMedsSupply(state, action) {
       const index = state.schedule.findIndex((item) => item.id === action.payload);
-      state.schedule[index].medsSupply = (+state.schedule[index].medsSupply - 1).toString();
+      if (state.schedule[index].medsSupply) {
+        state.schedule[index].medsSupply = (+state.schedule[index].medsSupply - 1).toString();
+      }
     },
     deleteScheduleItems(state, action) {
       state.schedule = state.schedule.filter((item) => !action.payload.includes(item.id));

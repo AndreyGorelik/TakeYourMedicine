@@ -26,7 +26,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>takeyourmeds</string>
+			<string>org.wtfddtdh.udyrtrhtrdhtr</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>takeyourmeds</string>
@@ -35,6 +35,8 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

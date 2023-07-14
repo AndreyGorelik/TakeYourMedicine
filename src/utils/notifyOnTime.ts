@@ -34,7 +34,6 @@ async function notifyOnTime(info: DoctorVisit) {
         sound: 'default',
         pressAction: {
           id: 'openApp',
-          launchActivity: 'default',
         },
         actions: [
           {

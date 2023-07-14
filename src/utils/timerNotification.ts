@@ -34,7 +34,6 @@ async function notifyOnTimer() {
         channelId: channelId,
         pressAction: {
           id: 'opentest',
-          launchActivity: 'default',
         },
         actions: [
           {

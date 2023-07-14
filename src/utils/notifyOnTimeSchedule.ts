@@ -16,8 +16,6 @@ interface Time {
 async function notifyOnTimeSchedule(time: Time, meds: medsInfo) {
   const { time: notificationTime, id: notificationId } = time;
 
-  await notifee.requestPermission();
-
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,
     timestamp:
@@ -78,7 +76,6 @@ async function notifyOnTimeSchedule(time: Time, meds: medsInfo) {
         channelId: channelId,
         pressAction: {
           id: 'openMedsScheduleItem',
-          launchActivity: 'default',
         },
         actions: [
           {

@@ -1,6 +1,7 @@
 import notifee, { EventType } from '@notifee/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useEffect } from 'react';
 import {
   Keyboard,
   Linking,
@@ -19,7 +20,6 @@ import useTheme from '../hooks/useTheme';
 import { cancelAllNotifications, decrementMedsSupply } from '../store/slices/medsScheduleSlice';
 import checkPermissions from '../utils/checkPermissions';
 import notifyInstant from '../utils/notifyInstant';
-import notifyOnTimer from '../utils/timerNotification';
 
 import AddPills from './AddPills';
 import BottomTabsScreen from './BottomTabs';
@@ -41,6 +41,7 @@ function AppWrapper() {
   const dispatch = useAppDispatch();
 
   const state = useAppSelector((state) => state.medsScheduleReducer);
+  console.log(state.schedule[0]?.medsSupply);
 
   if (+state.schedule[0]?.medsSupply < +state.schedule[0]?.medsRest) {
     notifyInstant();
@@ -52,56 +53,58 @@ function AppWrapper() {
         dispatch(cancelAllNotifications());
       }
     });
+  });
 
-    const navigateToInitialUrl = async () => {
-      const initialUrl = await Linking.getInitialURL();
-      if (initialUrl) {
-        await Linking.openURL(initialUrl);
+  useEffect(() => {
+    notifee.onForegroundEvent(async ({ type, detail }) => {
+      const { notification, pressAction } = detail;
+
+      if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsTaken') {
+        dispatch(decrementMedsSupply(notification?.data?.medsId));
       }
-    };
-    navigateToInitialUrl();
-  });
 
-  notifee.onBackgroundEvent(async ({ type, detail }) => {
-    const { notification, pressAction } = detail;
-
-    if (type === EventType.PRESS && notification?.data?.medsId) {
-      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
-    }
-    if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsLater') {
-      notifyOnTimer();
-    }
-    if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsTaken') {
-      dispatch(decrementMedsSupply(notification!.data!.medsId));
-      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
-    }
-  });
-
-  notifee.onForegroundEvent(async ({ type, detail }) => {
-    const { notification, pressAction } = detail;
-
-    if (type === EventType.PRESS && notification?.data?.medsId) {
-      Linking.openURL(
-        'takeyourmeds://EditPills/' + notification!.data!.medsId + '?openFromPushStatus=' + 'true'
-      );
-    }
-    if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsLater') {
-      notifyOnTimer();
-    }
-    if (type === EventType.ACTION_PRESS && pressAction?.id === 'medsTaken') {
-      dispatch(decrementMedsSupply(notification!.data!.medsId));
-      Linking.openURL(`takeyourmeds://EditPills/${notification!.data!.medsId}`);
-    }
-  });
+      if (type === EventType.PRESS && notification?.data?.medsId) {
+        Linking.openURL(
+          'takeyourmeds://Home/TreatmentPage' +
+            '?id=' +
+            `${notification.data.medsId}` +
+            '&openFromPushStatus=' +
+            'true'
+        );
+      }
+    });
+  }, [dispatch]);
 
   const linking = {
     prefixes: ['takeyourmeds://'],
     config: {
       screens: {
+        Home: {
+          path: 'Home',
+          screens: {
+            TreatmentPage: 'TreatmentPage',
+          },
+        },
         EditPills: 'EditPills/:id',
         Settings: 'Settings',
       },
     },
+    async getInitialUrl() {
+      return await Linking.getInitialURL();
+    },
+    // getStateFromPath(path, config) {
+    //   const initialState = JSON.parse(JSON.stringify(getStateFromPath(path, config)));
+    //   if (initialState.routes[0].name === 'EditPills') {
+    //     initialState?.routes.unshift({
+    //       name: 'Home',
+    //       state: {
+    //         routes: [{ name: 'TreatmentPage' }],
+    //       },
+    //     });
+    //   }
+    //   console.log(initialState);
+    //   return initialState;
+    // },
   };
 
   return (

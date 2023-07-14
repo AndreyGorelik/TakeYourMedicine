@@ -35,12 +35,21 @@ export interface medsInfo {
 
 type Props = StackScreenProps<BottomTabBarParamList, 'TreatmentPage'>;
 
-function TreatmentPage({ navigation }: Props) {
+function TreatmentPage(props: any) {
   const ref = useRef<BottomSheetRefProps>(null);
   const tabBarHeight = useBottomTabBarHeight();
   const { schedule } = useAppSelector((state) => state.medsScheduleReducer);
   const [selectedList, setSelectedList] = useState<string[]>([]);
   const dispatch = useAppDispatch();
+  const { navigation, route } = props;
+  const id = route.params?.id;
+  const openFromPushStatus = route.params?.openFromPushStatus;
+
+  useEffect(() => {
+    if (id && openFromPushStatus) {
+      navigation.navigate('EditPills', { id, openFromPushStatus });
+    }
+  }, [id, navigation, openFromPushStatus]);
 
   const deleteItems = useCallback(() => {
     dispatch(deleteScheduleItems(selectedList));

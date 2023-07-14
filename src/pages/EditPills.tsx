@@ -46,7 +46,7 @@ function EditPills(props: Props) {
 
   useMount(() => {
     navigation.setOptions({
-      title: itemToRender.medsName,
+      title: itemToRender?.medsName,
       headerRight: () => <DeleteButton deleteItem={() => deleteMeds(id)} />,
     });
   });
@@ -143,6 +143,7 @@ function EditPills(props: Props) {
           <View style={styles.header}>
             <View>
               <Text variant="h3">{itemToRender.medsName}</Text>
+              <Text variant="h3">{itemToRender.medsSupply}</Text>
               <Text>{itemToRender.medsDescription}</Text>
             </View>
             <View>

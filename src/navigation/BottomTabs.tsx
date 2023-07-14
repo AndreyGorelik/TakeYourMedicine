@@ -23,13 +23,15 @@ function BottomTabsScreen() {
   return (
     <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
       <Tab.Screen
-        name="TreatmentPage"
-        component={TreatmentPage}
+        name="DoctorsPage"
+        component={DoctorsPage}
         options={{
-          tabBarIcon: ({ color, size }) => <Icon name="pills" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="doctor" size={size} color={color} />
+          ),
           headerRight: () => <SettingsButton />,
-          tabBarLabel: 'Treatment',
-          title: 'Treatment',
+          tabBarLabel: 'Appointments',
+          title: 'Appointments',
           headerStyle: {
             height: 60,
           },
@@ -41,15 +43,13 @@ function BottomTabsScreen() {
         }}
       />
       <Tab.Screen
-        name="DoctorsPage"
-        component={DoctorsPage}
+        name="TreatmentPage"
+        component={TreatmentPage}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="doctor" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Icon name="pills" size={size} color={color} />,
           headerRight: () => <SettingsButton />,
-          tabBarLabel: 'Appointments',
-          title: 'Appointments',
+          tabBarLabel: 'Treatment',
+          title: 'Treatment',
           headerStyle: {
             height: 60,
           },
